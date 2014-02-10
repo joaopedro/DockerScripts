@@ -1,0 +1,19 @@
+uploadFile.location=/opt/agora-ocr/ocr_upload
+uploadFile.location.resources=file:/opt/agora-ocr/ocr_upload/
+
+
+tesseract.language=por
+tesseract.pageSegMode=3
+#eveything under 75% is inconclusive
+tesseract.rank=75
+
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.dialect=org.hibernate.dialect.MySQLDialect
+jdbc.url=jdbc:mysql://127.0.0.1:3306/agoraocr
+jdbc.username=root
+jdbc.password=
+
+agora.dynamicform.webservice.url=http://${agora-server-ip}:${agora-server-port}/services/DynamicFormWebService
+#agora.dynamicform.webservice.url=http://localhost:8080/agora-activiti-wsdl/services/DynamicFormWebService
+agora.dynamicform.webservice.username=super
+agora.dynamicform.webservice.password=super

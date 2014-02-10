@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+    <!--enable @AspectJ support-->
+    <aop:aspectj-autoproxy />
+
+    <!-- @AspectJ -->
+    <bean id="logAspect" class="com.sinfic.ipdms.webservices.logging.LoggingAspect" />
+
+    <bean id="webServicesProperties" class="com.sinfic.ipdms.webservices.WebServicesProperties" scope="singleton">
+        <property name="login" value="super" />
+        <property name="password" value="" />
+        <property name="codigoUtilizador" value="0" />
+        <property name="codigoEmpresa" value="18729" />
+        <property name="userByPass" value="" />
+    </bean>
+</beans>

@@ -1,0 +1,95 @@
+/*JBPM Process Image classes------------------------------------------------*/
+
+
+/*	######################	*/
+/* 	STATE AREA	*/
+/*	######################	*/
+div.pboxce {
+ position:absolute;
+ overflow:hidden;
+}
+ 
+div.pboxc, div.pboxc_s, div.pboxc_e {
+ cursor:default;
+ font-size:10px;
+ font-family: Verdana, Arial, Helvetica, sans-serif;
+ white-space:nowrap;
+ padding-left:3px;
+ padding-right:3px;
+}
+ 
+div.pboxc {
+ color:#0000ff;
+}
+
+div.pboxc_s {
+ color:#993300;
+}
+ 
+div.pboxc_e {
+ color:#993300;
+}
+
+
+/*	######################	*/
+/* 	TASK AREA	*/
+/*	######################	*/
+div.pbox, div.pbox_s, div.pbox_e, div.pbox_ns {
+ border-width:1px;
+ border-style:solid;
+ border-radius: 5px; 
+}
+ 
+div.pbox {
+ border-color:#0000ff;
+}
+ 
+div.pbox_s {
+ border-color:#aa6600;
+}
+ 
+div.pbox_e {
+ border-color:#993300;
+}
+
+div.pbox_ns {
+ border-color:#000000;
+}
+
+
+  
+/*	######################	*/
+/* 	TASK AND STATE AREA	*/
+/*	######################	*/
+div.pboxs, div.pboxs_s, div.pboxs_e {
+ position:absolute;
+}
+
+ 
+
+
+/*	######################	*/
+/* 	STATE LINK	*/
+/*	######################	*/ 
+div.pboxc a, div.pboxc_s a, div.pboxc_e a {
+ text-decoration:none;
+}
+
+div.pboxc a {
+ color:#0000ff;
+}
+ 
+div.pboxc_s a {
+ color:#aa6600;
+}
+ 
+div.pboxc_e a {
+ color:#993300;
+}
+ 
+div.pboxc a:hover, div.pboxc_s a:hover, div.pboxc_e a:hover {
+ text-decoration:underline;
+}
+
+
+/*---------------------------------------------END JBPM Process Image classes*/

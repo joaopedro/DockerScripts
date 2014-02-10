@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<!ELEMENT deamon (servicos+)>
+<!ELEMENT servicos (nome,periodicidade,inicio,classe,parametros)>
+<!ELEMENT inicio (#PCDATA)>
+<!ELEMENT nome (#PCDATA)>
+<!ELEMENT parametros (#PCDATA)>
+<!ELEMENT periodicidade (#PCDATA)>
+<!ELEMENT classe (#PCDATA)>

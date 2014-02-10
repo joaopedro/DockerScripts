@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<servicos>
+	<servico><classe>com.sinfic.kcms.servicos.conteudo.SendAprovalEMail</classe><descricao>Envio de EMail para o Gun para aprovação</descricao></servico>
+</servicos>

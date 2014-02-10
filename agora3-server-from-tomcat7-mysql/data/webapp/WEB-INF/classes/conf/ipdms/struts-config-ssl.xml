@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE struts-config PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<!-- Form Bean Definitions -->
+	<form-beans/>
+
+	<!-- Global Exception Definitions -->
+	<global-exceptions />
+
+	<!-- Global Forward Definitions -->
+	<global-forwards type="org.apache.struts.action.ActionForward" />
+
+	<!-- Action Mapping Definitions -->
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+	
+		<action path="/redirectToSSL"
+				type="com.sinfic.ipdms.security.action.RedirectToSSLAction" >
+			<set-property value="true" property="secure"/>
+			<forward name="redirect" path="ssl.ipdms.redirect" />
+		</action>	
+
+		<action path="/secureLogin"
+				type="com.sinfic.ipdms.security.action.RedirectToSSLAction" >
+			<set-property value="true" property="secure"/>
+			<forward name="redirect" path="/homepage.do2" redirect="true" module="/" contextRelative="true" />
+		</action>
+
+		<action path="/login" type="com.sinfic.ipdms.comum.action.HomepageAction">
+			<set-property value="false" property="secure"/>
+			<forward name="sucesso" path="/homepage.do2" redirect="true" module="/" contextRelative="true" />
+		</action>
+		
+	</action-mappings>
+</struts-config>

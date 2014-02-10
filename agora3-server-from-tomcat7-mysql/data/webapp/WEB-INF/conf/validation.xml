@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE form-validation PUBLIC
+     "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.2.0//EN"
+     "http://jakarta.apache.org/commons/dtds/validator_1_2_0.dtd">
+<form-validation>
+	<global>
+		<constant>
+			<constant-name>datePattern</constant-name>
+			<constant-value>yyyy-MM-dd</constant-value>
+		</constant>
+		<constant>
+			<constant-name>datePatternTime</constant-name>
+			<constant-value>yyyy-MM-dd HH:mm</constant-value>
+		</constant>
+	</global>
+  <formset>
+    <!-- Validacao para o formulario de autenticacao -->
+    <form name="loginForm">
+      <field property="user" depends="required">
+        <arg position="0" key="kcms.login.user" />
+      </field>
+
+      <field property="pass" depends="required">
+        <arg position="0" key="kcms.login.password"/>
+      </field>
+    </form>
+    
+    <form name="/editarConteudo">
+    	<field property="validade.start" depends="datePeriod" page="1">
+			<arg position="0" key="kcms.criarconteudo.validade.label" name="datePeriod"/>
+    		<arg position="0" key="kcms.criarconteudo.datainiciovalidade.label" name="date"/>
+    		<arg position="1" key="${datePatternTime}" resource="false" name="date"/>
+    	    <var><var-name>datePatternStrict</var-name><var-value>${datePatternTime}</var-value></var>
+    	    <var><var-name>endDate</var-name><var-value>validade.end</var-value></var>    								    		
+    	</field>
+    	<field property="execucao.start" depends="datePeriod" page="1">
+			<arg position="0" key="kcms.criarconteudo.execucao.label" name="datePeriod"/>
+    		<arg position="0" key="kcms.criarconteudo.datainicioexecucao.label" name="date"/>
+    		<arg position="1" key="${datePattern}" resource="false" name="date"/>
+    	    <var><var-name>datePatternStrict</var-name><var-value>${datePatternTime}</var-value></var>
+    	    <var><var-name>endDate</var-name><var-value>execucao.end</var-value></var>    								    		
+    	</field>
+    	<field property="imagemLateral" depends="file" page="1">
+    		<arg position="0" key="kcms.criarconteudo.imagem.label" />
+       	</field>
+    	<field property="thumbnail1" depends="file" page="1">
+    		<arg position="0" key="kcms.criarconteudo.thumb1.label" />
+    	</field>
+    	<field property="thumbnail2" depends="file" page="1">
+    		<arg position="0" key="kcms.criarconteudo.thumb2.label" />
+    	</field>
+    	
+    	<field property="linkEspecifico" depends="requiredif" page="1">
+    		<arg position="0" key="kcms.criarconteudo.linkespecifico.label" />
+    	    <var><var-name>field[0]</var-name><var-value>toSeguirLink</var-value></var>
+    	    <var><var-name>fieldTest[0]</var-name><var-value>EQUAL</var-value></var>    								    		
+    	    <var><var-name>fieldValue[0]</var-name><var-value>true</var-value></var>    								    		
+    	</field>
+    </form>
+
+    <!--================================================================== 
+    	 Extensão Tipo de Conteúdo 
+        ================================================================== -->
+    <form name="tipocontint">
+		<field property="extension.classeSuporte" depends="requiredif" page="1">
+    		<arg position="0" key="kcms.tipocontint.classesuporte.label" />		
+    	    <var><var-name>field[0]</var-name><var-value>extension.ecraExtensao</var-value></var>
+    	    <var><var-name>fieldTest[0]</var-name><var-value>EQUAL</var-value></var>    								    		
+    	    <var><var-name>fieldValue[0]</var-name><var-value>S</var-value></var>    								    		
+		</field> 
+		<field property="extension.codWorkflow" depends="requiredif" page="1">
+    		<arg position="0" key="kcms.tipocontint.codigoworkflow.label" />		
+    	    <var><var-name>field[0]</var-name><var-value>extension.tipoAprovacao</var-value></var>
+    	    <var><var-name>fieldTest[0]</var-name><var-value>EQUAL</var-value></var>    								    		
+    	    <var><var-name>fieldValue[0]</var-name><var-value>W</var-value></var>    								    		
+		</field>   		   	
+    </form>
+	<form name="colaboradorint">
+		<field property="extension.login" depends="login" page="1">
+    		<arg position="0" key="kcms.colaboradorint.login.label" />		
+		</field> 
+    </form>
+    
+  </formset>
+</form-validation>

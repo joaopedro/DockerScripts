@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 	xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:util="http://www.springframework.org/schema/util"
+ 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ 							http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean id="xstreamPresistenceInitializer" class="com.sinfic.ipdms.integration.xstream.XstreamPersistenceInitializer"/>
+
+	<bean id="importExportDynamicFormService" class="com.sinfic.ipdms.modules.dynamicform.services.impl.ImportExportDynamicFormServiceImpl">
+		<constructor-arg ref="defaultFileEngine" />
+		<constructor-arg ref="dynamicFormTemplateRepository" />
+		<constructor-arg index="2">
+			<bean class="com.sinfic.ipdms.modules.dynamicform.services.helper.TouchDynamicFormLazyPropertiesManipulator" />
+		</constructor-arg>
+		<constructor-arg index="3">
+			<bean class="com.sinfic.ipdms.modules.dynamicform.services.helper.BuildUpDynamicFormFromXMLManipulator" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="dynamicInstanceFactory" class="com.sinfic.ipdms.domain.business.dynamic.DynamicInstanceFactory">
+		<constructor-arg>
+			<util:map key-type="java.lang.Class">
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.EntidadeField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.EntidadeFiller">
+						<constructor-arg ref="entidadeRepository" />
+					</bean>					
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.MoradaField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.MoradaFiller">
+						<constructor-arg ref="moradaIpdmsRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.ExternalOptionField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.ExternalOptionFiller" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.CalendarField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.CalendarFiller" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.OrganicaField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.OrganicaFiller">
+						<constructor-arg ref="organicaRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.ColaboradorField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.ColaboradorFiller">
+						<constructor-arg ref="colaboradorExtendedRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.TableOfFieldsField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.TableFieldFiller" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.ProcessoField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.ProcessoFiller" >
+						<constructor-arg ref="servicoOnlineRepository" />
+					</bean>
+				</entry>
+			</util:map>
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="com.sinfic.ipdms.domain.business.dynamic.instancefiller.DefaultFiller"/>
+		</constructor-arg>
+	</bean>
+
+	<!-- Bean used during PDF rendering -->
+	<bean id="renderDynamicFieldInstanceValueFactory" class="com.sinfic.ipdms.domain.business.dynamic.RenderDynamicInstanceValueFactory">
+		<constructor-arg ref="dynamicInstanceFactory" />
+		<constructor-arg>
+			<util:map key-type="java.lang.Class">
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.EntidadeField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancerender.EntidadeExtractor" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.MoradaField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancerender.MoradaExtractor" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.ColaboradorField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancerender.ColaboradorExtractor" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.OrganicaField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancerender.OrganicaExtractor" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.BooleanField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancerender.BooleanExtractor" />
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.dynamicform.domain.ProcessoField">
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.instancerender.ProcessoExtractor" />
+				</entry>
+			</util:map>
+		</constructor-arg>
+		<constructor-arg><bean class="com.sinfic.ipdms.domain.business.dynamic.instancerender.DefaultExtractor" /></constructor-arg>
+	</bean>
+
+	<bean id="dynamicValidatorHelper" class="com.sinfic.ipdms.domain.business.dynamic.validator.DynamicValidatorHelper">
+		<constructor-arg ref="dynamicFieldValidatorsByDefault" />
+	</bean>
+	
+	<bean id="dynamicFieldValidatorsByDefault" class="java.util.HashMap">
+		<constructor-arg>
+			<map key-type="com.sinfic.ipdms.modules.dynamicform.business.FieldType" value-type="com.sinfic.ipdms.modules.dynamicform.validator.IDynamicFieldValidatorExecutor">
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.STRING" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.StringFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.INTEGER" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.IntFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.DATE" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.DateFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.RADIOINPUT" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.OptionListFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.COMBOBOX" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.OptionListFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.ALERT" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.NIVELDIMENSIONAL" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.DIMENSAO" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.MORADA" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.ENTIDADE" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.MULTILINE" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.EXTERNALOPTION" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.PHOTO" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.IgnoreFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.MULTIPLEPHOTO" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.IgnoreFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.ORGANICA" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.PROCESS" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.COLABORADOR" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.COMENTARIOPESSOAL" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.BOOLEAN" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+				</entry>
+				<entry>
+					<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.TABLEOFFIELDS" /></key>
+					<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.TableOfFieldsValidatorExecutor">
+						<constructor-arg>
+							<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.DynamicValidatorHelper">
+							<constructor-arg>
+							<map key-type="com.sinfic.ipdms.modules.dynamicform.business.FieldType" value-type="com.sinfic.ipdms.modules.dynamicform.validator.IDynamicFieldValidatorExecutor">
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.PROCESS" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.STRING" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.StringFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.INTEGER" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.IntFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.DATE" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.DateFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.RADIOINPUT" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.COMBOBOX" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.ALERT" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.NIVELDIMENSIONAL" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.DIMENSAO" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.MORADA" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.ENTIDADE" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.EXTERNALOPTION" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.ORGANICA" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.COLABORADOR" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.COMENTARIOPESSOAL" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+								<entry>
+									<key><util:constant static-field="com.sinfic.ipdms.modules.dynamicform.business.FieldType.BOOLEAN" /></key>
+									<bean class="com.sinfic.ipdms.domain.business.dynamic.validator.field.RequiredFieldValidator" />
+								</entry>
+							</map>							
+							</constructor-arg>
+							</bean>
+						</constructor-arg>
+					</bean>
+				</entry>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="exportInstancesBase" class="com.sinfic.ipdms.modules.dynamicform.services.export.impl.ExportInstancesImpl" abstract="true">
+		<constructor-arg ref="dynamicFormInstanceRepository" index="0" />
+		<constructor-arg ref="defaultFileEngine" index="1" />		
+	</bean>	
+		
+	<bean id="exportInstancesToXML" class="com.sinfic.ipdms.modules.dynamicform.services.export.impl.ExportInstancesToXML" parent="exportInstancesBase">
+		<constructor-arg ref="exportInstancesXMLUtil" />
+	</bean>	
+	
+	<bean id="exportInstancesToXLS" class="com.sinfic.ipdms.modules.dynamicform.services.export.impl.ExportInstancesToXLS" parent="exportInstancesBase">
+		<constructor-arg ref="convertInstanceToXml" index="2" />
+		<constructor-arg ref="exportInstancesXLSUtil" index="3" />
+	</bean>
+		
+	<bean id="exportInstancesXLSUtil" class="com.sinfic.ipdms.modules.dynamicform.services.export.util.ExportInstancesXLSUtil" />
+	
+	<bean id="exportInstancesXMLUtil" class="com.sinfic.ipdms.modules.dynamicform.services.export.util.ExportInstancesXMLUtil">
+		<constructor-arg index="0">
+			<bean class="com.sinfic.ipdms.modules.dynamicform.services.helper.TouchDynamicFormInstanceLazyPropertiesManipulator" />
+		</constructor-arg>
+	</bean>	
+	
+	<bean id="convertInstanceToXml" class="com.sinfic.ipdms.modules.dynamicform.services.export.impl.ConvertInstancesToXml">
+        <constructor-arg ref="xstreamBean" index="0" />
+        <constructor-arg ref="dynamicFormInstanceConverter" index="1" />  
+        <constructor-arg ref="dynamicFormInstanceWrapperBean" index="2" />                      
+    </bean>
+	
+	<bean id="domDriverBean" class="com.thoughtworks.xstream.io.xml.DomDriver" />		
+    <bean id="xstreamBean" class="com.thoughtworks.xstream.XStream">
+		<constructor-arg ref="domDriverBean" index="0" />
+	</bean>
+		
+	<bean id="dynamicFormInstanceWrapperBean" class="com.sinfic.ipdms.modules.dynamicform.services.export.wrapper.DynamicFormInstanceWrapper" />		
+			
+	<bean id="dynamicFormInstanceConverter" class="com.sinfic.ipdms.modules.dynamicform.services.export.xstream.DynamicFormInstanceWrapperConverter" />
+	
+</beans>

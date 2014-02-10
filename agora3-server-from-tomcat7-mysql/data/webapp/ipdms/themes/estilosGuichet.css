@@ -1,0 +1,480 @@
+html,body{margin:0;padding:0}
+body{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:0.75em;
+	width:100%;	/* Full width and height */
+	height:100%;
+	margin:0px;	/* No space */
+	padding:0px;	
+	background-color:#f3f3f4;	/* General <body> background color, White*/	
+}
+div#header{height:120px; padding-top:0px; background: url(../../images/guichet/banner.jpg) no-repeat; background-color:#ffffff;}
+/*.logo{background: url(../../images/guichet/logo.jpg) no-repeat 0 10px; width:167px; height:124px; margin-left:42px;}*/
+.radioCheck{margin-bottom:10px;}
+.barra{
+	background-color: #da2128; 
+	padding-left:15px;
+	padding-bottom:5px;  
+	height:23px;
+	border-bottom:4px solid #FFFFFF;
+}
+.barra img {
+	/*margin-left:-313px;*/
+}
+.barraData{
+	float:left;
+	font-size: 11px; 
+	color: #FFFFFF; 
+	padding-top:6px;
+	/*margin-left:315px;*/
+}
+.barraLogin{
+	float:right;
+	font-size: 11px; 
+	color: #FFFFFF; 
+	padding-right:15px;
+	padding-bottom:5px; 
+	padding-top:6px;
+}
+.barraLogin a{
+	display:inline;
+	padding:0px;
+	color: #FFFFFF; 
+	text-decoration:underline;
+}
+.barraLoginSeparador{
+	border-right:1px solid #FFFFFF;
+	margin-right:5px;
+	margin-left:4px;
+	font-size:8px;
+}
+.barraSeparador{
+	border-right:1px solid #000000;
+	margin-right:6px;
+	margin-left:4px;
+	font-size:9px;
+}
+div#container{width:995px; margin:0 auto; background-color:#ffffff;}
+div#content{float:right; width:750px}
+div#navigation{float:left; width:200px}
+div#extra{float:left; clear:left; width:200px}
+div#footer{clear:both;width:100%; background-color:#ffffff; height:70px; border-top:1px solid #E7E8E9;}
+div#wrapper{float:right;width:100%;margin-left:-250px}
+/*div#content{margin-left:250px; }*/
+div#areaCentral{padding-left:23px;}
+/*div#navigation{float:left; width:250px;}
+div#extra{float:left; clear:left; width:250px; color:#FFFFFF; font-weight:normal;}
+div#footer{clear:both; width:100%; padding-top:10px; border-top:1px solid black; }*/
+div#footer a{display:inline; padding:0; color: #cccccc;}
+div#footer .left{float:left;  padding:10px;}
+div#footer .right{float:right;  padding:10px; text-align:left; }
+div#breadcrumb{font-size:11px; padding-left:5px; padding-top:5px; padding-bottom:5px; color:#da2128; }
+#breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:hover, #breadcrumb a:active {
+	font-weight: normal;
+	color: #da2128;
+	text-decoration: underline;
+	display:inline;
+	padding:0px;
+}
+.barraSeparadorBreadcrumb{
+	border-right:1px solid #da2128;
+	margin-right:6px;
+	margin-left:4px;
+	font-size:8px;
+}
+.cursorMao {					
+	cursor: pointer;
+	border: none;
+}
+/* Barra do titulo área central */
+.barraTitulo{
+	font-size: 11px; 
+	background-color: #bbc8cb; 
+	padding-left:15px;
+	margin-left:8px;
+	height:23px;	
+}
+
+.barraSubTitulo{
+	font-size: 11px; 
+	background-color: #e4e6e7; 
+	padding-left:15px;
+	margin-left:-15px;
+	margin-top:3px;
+	height:23px;	
+}
+.barraAnexos{
+	font-size: 11px; 
+	background-color: #747575; 
+	padding-left:15px;
+	margin-left:-15px;
+	margin-top:3px;
+	height:23px;	
+	color:#FFFFFF;
+}
+h1{
+	float:left; 
+	font-size:100%;
+	font-weight:normal;
+	font-family: Arial, Helvetica, sans-serif;
+	margin-top:4px;
+}
+h2{
+	float:left; 
+	font-size:100%;
+	font-weight:normal;
+	font-family: Arial, Helvetica, sans-serif;
+	margin-top:4px;
+}
+
+/* Notificação de mensagens novas */
+.mensagens{
+	background-color:#bbc8cb; 
+	color:#000000; 
+	width:246px;
+	height:20px;
+	padding-top:3px;
+	padding-left:3px;
+}
+
+.mensagens a:link, .mensagens a:hover, .mensagens a:visited, .mensagens a:active{
+	background-color:#bbc8cb; 
+	color:#000000;
+	font-weight:bold;
+}
+
+/* MENU */
+.menu{
+	font-size:11px;
+}
+.menu ul{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	width: 250px; /* Width of Menu Items */
+	border-bottom: 1px solid #ccc;
+	color:#21485D;
+	line-height:20px;
+	background-color:#E7E8E9;
+}
+
+.menu .selecionado{
+	background-color:#bbc8cb;
+}
+
+.menu ul li{
+	position: relative;
+}
+	
+/*Sub level menu items */
+.menu ul li ul{
+	position: absolute;
+	width: 170px; /*sub menu width*/
+	top: 0;
+	visibility: hidden;
+}
+
+/* Sub level menu links style */
+.menu ul li a{
+	display: block;
+	overflow: auto; /*force hasLayout in IE7 */
+	color: black;
+	text-decoration: none;
+	background: #fff;
+	padding: 1px 5px;
+	border: 1px solid #FFFFFF;
+	border-bottom: 0;
+	background-color:#E7E8E9;
+}
+
+.menu ul li a:visited{
+	color: black;
+}
+
+.menu ul li a:hover{
+	background-color: #CCCCCC;
+	border-left:1px solid #E7E8E9;
+	border-right:1px solid #E7E8E9;
+	border-top:1px solid #E7E8E9;
+}
+
+.menu .subfolderstyle{
+	background: url(../../images/guichet/arrow-list.gif) no-repeat center right;
+}
+
+	
+/* Holly Hack for IE \*/
+* html .menu ul li { float: left; height: 1%; }
+* html .menu ul li a { height: 1%; }
+/* End */
+.menu2{
+	font-size:11px;
+	margin-top:10px;
+}
+.menu2 ul{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	width: 250px; /* Width of Menu Items */
+	border-bottom: 1px solid #ccc;
+	color:#21485D;
+	background-color:#E7E8E9;
+}
+
+.menu2 ul li{
+	position: relative;
+}
+
+.menu2 ul li a{
+	display: block;
+	overflow: auto; /*force hasLayout in IE7 */
+	color: black;
+	text-decoration: none;
+	background: #fff;
+	padding: 1px 5px;
+	border-right: 1px solid #E7E8E9;
+	border-bottom: 1px solid #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	background-color:#E7E8E9;
+	line-height:20px;
+}
+.tituloPesquisa{
+	background-color:#da2128; 
+	line-height:20px; 
+	color:#FFFFFF; 
+	padding-left:5px; 
+	margin-top:-2px; 
+	padding-top:2px; 
+	padding-bottom:2px; 
+	border-left:1px solid #FFFFFF;
+}
+.caixaPesquisa{
+	padding:5px; 
+	line-height:30px; 
+	border-left:1px solid #FFFFFF; 
+	border-bottom:8px solid #FFFFFF;
+}
+
+/* ROWS */
+div.row {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	width:100%;
+	clear:both;
+}
+
+div.row div.label {
+	float: left;
+	margin-top:5px;
+	font-size:11px;
+}
+
+/*** Labels ***/
+.formlabel_sf {	
+	font-size: 0.7em;
+	color: #000000;
+}
+
+.formlabel_obrigatorio {	
+	font-size: 11px;
+	font-weight:bold;
+	color: #000000;
+}
+
+.formtext_sf {
+	font-size: 0.7em;
+	color: #000000;	
+}
+
+/*** Campos de Texto ***/
+.formfield_sf {
+	font-size: 0.9em;
+	color: #000000;
+}
+
+.formtext {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.7em;
+	color: #000000;		
+}
+
+.campoCarregamentoAutomatico{
+		background-color:#E7E8E9;
+		border:1px solid #000000;
+	}
+	
+/* Row dos botões */
+.buttonRow { 
+	margin-left:-15px;
+}
+
+.buttonRow input{ 
+	margin-top:15px;
+}
+
+/* Estilo do botão */
+.btForm {						
+	height:21px;
+	font-size:11px;
+	color:#3A3636;
+	border:none;
+	background-color:#E7E8E9;
+	cursor:pointer;
+	margin-bottom:4px;
+}
+
+.btFormEscuro {						
+	height:21px;
+	font-size:11px;
+	color:#ffffff;
+	border:none;
+	background-color:#747575 ;
+	cursor:pointer;
+	margin-bottom:4px;
+}
+
+/* Caixa de erro */
+.mensagenCaixa { 
+	padding:10px;
+	padding-top:30px;
+}
+
+/* Texto de ajuda */
+.info							
+{	
+	color: #000000;
+	font-size: 11px;
+	font-weight:bold;
+}
+
+.info a:link, .info a:visited 
+{
+	color: #000000;
+	text-decoration: none;
+	float:right;
+}
+
+.info a:hover, .info a:active 
+{	
+	color: #000000;
+	text-decoration: underline;
+	float:right;
+}
+
+.info li							
+{	
+	list-style-image: url(../../images/guichet/icons/icon-seta.png);
+	list-style-type: none;
+	font-weight:normal;
+	color:#747575;
+}
+
+/* Estilos das tabelas */
+table{font-size:90%;}
+ #centro {
+  border:1px solid #E7E8E9;
+  color: #363636;  
+  width:100%;
+  margin-left:-15px;
+  margin-top:10px;
+  }
+#centro th{
+  background:#cccccc;
+  color: #363636;
+  text-align:left;
+  padding-left:5px;
+  height:23px;
+  font-weight:normal;
+  }
+#centro td{
+	padding-left:5px;
+	text-align:left;
+	height:23px;
+  }
+#centro th.alignCenter{
+	font-weight:normal;
+	background:#cccccc;
+	text-align:center;
+	padding-left:0px;
+  }
+#centro td.alignCenter{
+	text-align:center;
+  }
+#centro td.extras{
+	text-align:center;  
+  }
+#centro td a:link, #centro td a:hover, #centro td a:visited, #centro td a:active{
+  background: transparent;
+  text-decoration: underline;
+  color: #363636;
+  height:23px;  
+  }
+  
+#centro tr:hover { 
+  background: #E7E8E9;
+  color: #363636;
+  }
+
+#centro input, #centro select{
+	border:1px solid #CCCCCC;
+}
+
+.hoverTransparente {
+	background: transparent !important;
+}
+
+/* Para alinhar o botão de Eliminar por baixo das tabelas */
+#alignRight{ 
+	right:100px; 
+	text-align:right; 
+	width:97.5%;
+	margin-top:5px;
+}
+
+/* AREA DAS NOTICIAS */
+.noticia{float:left; margin-top:10px; margin-right:10px; width:98%}
+.simbolo{float:left; width:1px; margin-top:-2px; color:#da2128;}
+.blocoNoticia{float:right; width:99%;}
+
+fieldset {
+	color: #000000;
+	border: 1px solid #D81921;
+	clear:both;
+	min-height: 100px;
+	margin-bottom:10px;
+	padding-left:10px;
+	padding-top:10px;
+	padding-bottom:10px;
+	width:90%;
+	font-size: 12px;
+}
+
+legend{
+	color: #D81921;
+	text-decoration:none;
+	margin: 0px;
+	padding: 0px 0px 0px 0.4em;
+	font-size: 11px;
+}
+
+.pagelinks 
+{
+	margin-left:-10px;
+	font-size:10px;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+.pagelinks a:link,.pagelinks a:visited 
+{
+	text-decoration: none;
+	display: inline; 
+	color:#000000;
+}
+
+.pagelinks a:hover, .pagelinks a:active 
+{
+	text-decoration: underline;
+	display: inline; 
+	color:#000000;
+}

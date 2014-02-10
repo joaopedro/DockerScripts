@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+  						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">		
+    
+    <input-mapper>
+    	<input-attribute name="tipo" required="true" />
+    </input-mapper>
+
+	<start-actions>
+		<action bean="subFlowTeste" method="setupForm" />
+		<action bean="flowUtils" method="establishReferer" />		
+	</start-actions>
+    
+    <start-state idref="iniciarPedido" />	
+    	
+	<view-state id="iniciarPedido" view="webflow.subflow.inicio">
+		<transition on="cancelsub" to="cancelado"></transition>
+   		<transition on="next" to="processarPedido" />
+	</view-state>
+	<action-state id="processarPedido">
+		<action bean="subFlowTeste" method="save" />
+		<transition on="success" to="fimPedido" />
+		<transition on="error" to="iniciarPedido" />
+	</action-state>	
+	
+	<view-state id="fimPedido" view="webflow.subflow.fim">
+   		<transition on="next" to="concluir"></transition>
+	</view-state>
+	
+	<end-state id="cancelado" view="externalRedirect:${flowScope.referer}"/>
+	
+	<end-state id="concluir" view="externalRedirect:${flowScope.referer}">
+		<output-mapper>
+			<mapping target="resultMessage" source="${flowScope.subFlowTesteFlowBean.servicoOnline.idProcessoEntidade}"/>
+		</output-mapper>
+	</end-state>	
+</flow>

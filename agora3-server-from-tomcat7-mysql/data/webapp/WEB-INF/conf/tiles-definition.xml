@@ -1,0 +1,309 @@
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+    "http://struts.apache.org/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+	<!--  TODO preencher com os jsps da nova aplicacao  -->	
+	<definition name="dummy" page="dummy.jsp"></definition>
+	
+	<definition name="teste.layout" page="/example/testeLayout.jsp">
+		<put name="titulo-wizard" value="Teste do teste" type="string" />
+		<put name="titulo-ecra" value="" type="string" />
+		<put name="totalpaginas" value="1" type="string" />
+		<put name="paginas" value="1" type="string" /> 
+		<put name="body" value="" direct="true"/> 
+	</definition>
+
+	<definition name="teste.layout.ajax" page="/example/testeLayoutAjax.jsp">
+		<put name="titulo-wizard" value="Teste do teste" type="string" />
+		<put name="titulo-ecra" value="" type="string" />
+		<put name="body" value="" direct="true"/> 
+	</definition>
+
+	<definition name="webflow.teste.inicio" extends="teste.layout">
+		<put name="titulo-ecra" value="1. Ecra de teste" type="string" />
+		<put name="paginas" value="1" type="string" />
+		<put name="body" value="/example/ecra1.jsp" />
+	</definition>
+	
+	<definition name="webflow.teste.inicio.ajax" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="1. Ecra de teste" type="string" />
+		<put name="body" value="/example/ecra1.jsp" />
+	</definition>	
+
+	<definition name="webflow.teste.ecra2" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="2. Ecra de teste - Ecras2" type="string" />
+		<put name="paginas" value="2" type="string" />
+		<put name="body" value="/example/ecra2.jsp" />
+	</definition>
+	
+	<definition name="webflow.teste.popup" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="3. Ecra de teste - PopUp" type="string" />
+		<put name="paginas" value="3" type="string" />
+		<put name="body" value="/example/popup.jsp" />
+	</definition>
+	
+	<definition name="webflow.teste.anexardocumentos" extends="teste.layout">
+		<put name="titulo-ecra" value="4. Ecra de teste - Anexar Documentos" type="string" />
+		<put name="paginas" value="4" type="string" />
+		<put name="body" value="/ipdms/webflow/anexos.jsp" />
+	</definition>
+	
+	<definition name="webflow.teste.adddocumentobyitem" extends="teste.layout">
+		<put name="titulo-ecra" value="5. Ecra de teste - Anexar Documentos Por Item" type="string" />
+		<put name="paginas" value="5" type="string" />
+		<put name="body" value="/ipdms/webflow/anexosByItem.jsp" />
+	</definition>
+	
+	<definition name="webflow.teste.chooseanexomainfile" extends="teste.layout">
+		<put name="titulo-ecra" value="6. Ecra de teste - Escolher documento principal" type="string" />
+		<put name="paginas" value="6" type="string" />
+		<put name="body" value="/ipdms/webflow/chooseAnexosMainFile.jsp" />
+	</definition>	
+
+	<definition name="webflow.teste.chooseanexomainfile.ajax" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="6. Ecra de teste - Escolher documento principal" type="string" />
+		<put name="body" value="/ipdms/webflow/chooseAnexosMainFile.jsp" />
+	</definition>	
+
+	<definition name="webflow.teste.addqrcode.ajax" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="7. Ecra de teste - Adicionar Códigos QR" type="string" />
+		<put name="paginas" value="7" type="string" />
+		<put name="body" value="/ipdms/webflow/qrcode/addqrcodetofiles.jsp" />
+	</definition>	
+
+	<definition name="webflow.teste.addqrcode" extends="teste.layout">
+		<put name="titulo-ecra" value="7. Ecra de teste - Adicionar Códigos QR" type="string" />
+		<put name="paginas" value="7" type="string" />
+		<put name="body" value="/ipdms/webflow/qrcode/addqrcodetofiles.jsp" />
+	</definition>	
+
+	<definition name="webflow.teste.converttopdf" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="8. Ecra de teste - Converter documentos para formato PDF" type="string" />
+		<put name="paginas" value="8" type="string" />
+		<put name="body" value="/ipdms/webflow/qrcode/convertopdf.jsp" />
+	</definition>	
+
+	<definition name="webflow.teste.docanexasdoqrcodesticker" extends="teste.layout">
+		<put name="titulo-ecra" value="Criar Códigos QR para documentos anexados (para impressão)" type="string" />
+		<put name="paginas" value="" type="string" />
+		<put name="body" value="/ipdms/webflow/qrcode/docanexadoqrcodesticker.jsp" />
+	</definition>
+
+	<definition name="webflow.teste.docanexasdoqrcodesticker.ajax" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="Criar Códigos QR para documentos anexados (para impressão)" type="string" />
+		<put name="paginas" value="" type="string" />
+		<put name="body" value="/ipdms/webflow/qrcode/docanexadoqrcodesticker.jsp" />
+	</definition>
+
+	<definition name="webflow.teste.docitemqrcodesticker" extends="teste.layout">
+		<put name="titulo-ecra" value="Criar Códigos QR para documentos de item (para impressão)" type="string" />
+		<put name="paginas" value="" type="string" />
+		<put name="body" value="/ipdms/webflow/qrcode/docitemqrcodesticker.jsp" />
+	</definition>
+
+	<definition name="webflow.teste.relatorio" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="Pedido Registado" type="string" /> 
+		<put name="paginas" value="6" type="string"/>
+		<put name="body" value="/ipdms/webflow/relatorio.jsp" />
+	</definition>
+	
+	<definition name="webflow.pubjoram.errogravar" extends="teste.layout">
+		<put name="titulo-ecra" value="Erro ao registar" type="string" /> 
+		<put name="paginas" value="?" type="string" />
+		<put name="body" value="/ipdms/webflow/errogravar-webflow.jsp" />
+	</definition>
+
+	<definition name="test.entidade.result" extends="ipdms.base">
+		<put name="main-body" value="/example/testEntidade.jsp" />
+	</definition>
+	
+	<definition name="webflow.subflow.inicio" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="3.1. Subflow Inicio" type="string" />
+		<put name="paginas" value="" type="string" />
+		<put name="body" value="/example/subflow_inicio.jsp" />
+	</definition>
+
+	<definition name="webflow.subflow.fim" extends="teste.layout.ajax">
+		<put name="titulo-ecra" value="3.2. Subflow Fim" type="string" />
+		<put name="paginas" value="" type="string" />
+		<put name="body" value="/example/subflow_fim.jsp" />
+	</definition>
+	
+	<definition name="webflow.teste.resumo" extends="teste.layout.ajax">
+		<put name="body" value="/example/resumo.jsp" />
+	</definition>
+	
+
+	<definition name="teste.ajaxupdate" path="/example/ajaxupdate.jsp" />
+
+	<definition name="teste.liststructure" extends="ipdms.base">
+		<put name="main-body" value="/example/liststructure.jsp" />
+	</definition>
+
+	<definition name="teste.addstructuredcontent" extends="ipdms.base">
+		<put name="main-body" value="/example/addstructuredcontent.jsp" />
+	</definition>
+
+	<definition name="teste.editstructure" extends="ipdms.base">
+		<put name="main-body" value="/example/editstructure.jsp" />
+	</definition>
+
+	<definition name="teste.listartextossample" path="/example/listartextossample.jsp" />	
+	
+	<definition name="teste.groupTabingSample" path="/example/GroupingTabSample.jsp" />
+	
+	<definition name="teste.SliderSample" path="/example/SlidersTest.jsp" />
+	
+	<definition name="teste.checkTreeDragdrop" path="/example/checkedTreeDragnDrop.jsp" />
+	
+	<definition name="teste.Equipamento" path="/example/consultarEquipamento.jsp"/>
+	
+	<definition name="teste.gridPanelColumnGroup" path="/example/ExtGridPanelColumnGrouping.jsp" />
+		
+	<definition name="teste.resumo" extends="ipdms.resumo.base">
+		<put name="main-body" value="/example/resumo.jsp" />
+	</definition>		
+	
+	<definition name="ipdms.tarefas.createtemplatedocument.show" extends="ipdms.base">
+		<put name="main-body" value="/ipdms/tarefas/createTemplateDocument.jsp" />
+	</definition>
+	
+	<definition name="ipdms.tarefas.emitirtemplate" extends="ipdms.base">
+		<put name="main-body" value="/ipdms/tarefas/emitirtemplate.jsp" />
+	</definition>
+
+	<definition name="sample.notification" extends="ipdms.workflow.notification.layout">
+		<put name="body" value="/example/notification.jsp" />
+		<put name="resultPane" value="/ipdms/workflow/commons/resultDefault.jsp" />
+	</definition>
+	
+	<definition name="sample.medidata.notification" extends="ipdms.workflow.notification.layout">
+		<put name="body" value="/example/notificationListTipoRec.jsp" />
+		<put name="resultPane" value="/ipdms/workflow/commons/resultDefault.jsp" />
+	</definition>
+	
+	<!-- ########## FORMAÇAO ######## -->
+		
+	<definition name="webflow.formacaoteste.inicio" extends="teste.layout">
+		<put name="titulo-wizard" value="Teste da Formação teste" type="string" />
+		<put name="titulo-ecra" value="1. Ecra de Formação teste" type="string" />
+		<put name="paginas" value="1" type="string" />
+		<put name="body" value="/example/ecraformacao.jsp" />
+	</definition>
+		
+	<definition name="webflow.formacaoteste.inicio.ajax" extends="teste.layout.ajax">
+		<put name="titulo-wizard" value="Teste da Formação teste" type="string" />
+		<put name="titulo-ecra" value="1. Ecra de Formação teste" type="string" />
+		<put name="body" value="/example/ecraformacao.jsp" />
+	</definition>	
+		
+	<definition name="webflow.formacaoteste.resumo" extends="teste.layout.ajax">
+		<put name="titulo-wizard" value="Teste da Formação teste" type="string" />
+		<put name="body" value="/example/resumo_formacaoteste.jsp" />
+	</definition>	
+	
+	<definition name="webflow.pessoa.resumo" extends="teste.layout.ajax">
+		<put name="titulo-wizard" value="Teste Pessoa" type="string" />
+		<put name="body" value="/example/resumo_pessoa.jsp" />
+	</definition>
+		
+	<definition name="webflow.formacaoteste.relatorio" extends="teste.layout.ajax">
+		<put name="titulo-wizard" value="Teste da Formação teste" type="string" />
+		<put name="titulo-ecra" value="Pedido Registado" type="string" /> 
+		<put name="paginas" value="6" type="string"/>
+		<put name="body" value="/ipdms/webflow/relatorio.jsp" />
+	</definition>	
+		
+	<definition name="webflow.pessoa.inicio" extends="teste.layout">
+		<put name="titulo-wizard" value="Teste da Pessoa" type="string" />
+		<put name="titulo-ecra" value="1. Ecra da Pessoa" type="string" />
+		<put name="paginas" value="1" type="string" />
+		<put name="body" value="/example/pessoa.jsp" />
+	</definition>
+	
+	<definition name="webflow.pessoa.inicio.ajax" extends="teste.layout.ajax">
+		<put name="titulo-wizard" value="Teste da Pessoa" type="string" />
+		<put name="titulo-ecra" value="1. Ecra de Pessoa" type="string" />
+		<put name="body" value="/example/pessoa.jsp" />
+	</definition>
+		
+	<definition name="tarefa.showetapatemposistema">
+		<put name="main-body" value="/example/tarefas/showtemposistemaetapa.jsp" />
+	</definition>
+				
+	<!-- Vista Especifica Teste -->
+	<definition name="formacao.vistaespecificateste" extends="ipdms.workflow.notification.layout">
+		<put name="body" value="/example/vistaespecificatestebody.jsp" />
+		<put name="resultPane" value="/ipdms/workflow/commons/resultDefault.jsp" /> 
+	</definition>
+	
+	<!-- Módulo -->
+	<definition name="ipdms.formacao.modules.gestaocarros.list" extends="ipdms.base">
+		<put name="main-body" value="/example/modulo/listCarros.jsp" />
+	</definition>
+	
+	<definition name="ipdms.formacao.modules.gestaocarros.edit" extends="ipdms.base">
+		<put name="main-body" value="/example/modulo/editCarro.jsp" />
+	</definition>
+		
+	<definition name="ipdms.formacao.modules.listagemprocessos.list" extends="ipdms.base">
+		<put name="main-body" value="/example/modulo/listagemprocessos.jsp" />
+	</definition>
+			
+	<!-- Vista Especifica Teste -->
+	
+	<!-- ########## FORMAÇAO ######## -->
+	
+	<!-- TEMPLATE FLOW -->
+	<definition name="templateWebflow.layout" page="/example/template/webflow/templateWebflowLayout.jsp">
+		<put name="titulo-wizard" value="Teste do teste" type="string" />
+		<put name="titulo-ecra" value="" type="string" />
+		<put name="body" value="" direct="true"/> 
+	</definition>
+
+	<definition name="templateWebflow.layout.ajax" page="/example/template/webflow/templateAjaxLayout.jsp">
+		<put name="titulo-wizard" value="Teste do teste" type="string" />
+		<put name="titulo-ecra" value="" type="string" />
+		<put name="body" value="" direct="true"/> 
+	</definition>
+	
+	<!-- form screen -->	
+	<definition name="webflow.template.formscreen" extends="templateWebflow.layout">
+		<put name="titulo-ecra" value="Escolher template" type="string" />
+		<put name="body" value="/example/template/webflow/formScreen.jsp" />
+	</definition>	
+	<definition name="webflow.template.listtemplates" path="/example/template/webflow/listTemplates.jsp" />			
+	<definition name="webflow.template.formscreen.ajax" extends="templateWebflow.layout.ajax">
+		<put name="titulo-ecra" value="Escolher template" type="string" />	
+		<put name="body" value="/example/template/webflow/formScreen.jsp" />
+	</definition>
+	
+	<!-- generated documents screen -->
+	<definition name="webflow.template.generateddocs" extends="templateWebflow.layout.ajax">
+		<put name="titulo-ecra" value="Descarregar documentos gerados" type="string" />
+		<put name="body" value="/example/template/webflow/generatedDocumentsScreen.jsp" />
+	</definition>	
+	<definition name="webflow.template.generateddocs.ajax" extends="templateWebflow.layout.ajax">
+		<put name="titulo-ecra" value="Descarregar documentos gerados" type="string" />	
+		<put name="body" value="/example/template/webflow/generatedDocumentsScreen.jsp" />
+	</definition>
+	
+	<!-- resume screen -->
+	<definition name="webflow.template.resumo" extends="templateWebflow.layout.ajax">
+		<put name="titulo-ecra" value="Resumo" type="string" />
+		<put name="body" value="/example/template/webflow/resumo.jsp" />
+	</definition>
+	<definition name="template.resumo.external" extends="ipdms.resumo.base">
+		<put name="main-body" value="/example/template/webflow/resumo.jsp" />
+	</definition>
+	
+	<!-- end screen -->
+	<definition name="webflow.template.endscreen" extends="templateWebflow.layout.ajax">
+		<put name="titulo-ecra" value="Fim de instrução" type="string" />
+		<put name="body" value="/example/template/webflow/endScreen.jsp" />
+	</definition>
+	
+	<!-- TEMPLATE FLOW -->	
+	
+</tiles-definitions>

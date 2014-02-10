@@ -1,0 +1,46 @@
+#https://github.com/dotcloud/docker/wiki/Public-docker-images
+#http://docs.docker.io/en/latest/use/working_with_volumes/#volume-def
+#Docker defines a unit of software delivery called a Standard Container. The goal of a Standard Container is to encapsulate a software #component and all its dependencies in a format that is self-describing and portable, so that any compliant runtime can run it without extra #dependency, regardless of the underlying machine and the contents of the container.
+
+# To build a image from script:
+    docker build -t jpedro/mysql .
+
+# To mount a directory in the container:
+    docker run -v /var/logs:/var/host_logs:ro <image>    
+
+# Bind TCP port 8080 of the container to TCP port 80 on 127.0.0.1 of the host machine.    
+    docker run -p 127.0.0.1:80:8080 <image> <cmd>
+
+#linking 2 containers
+    docker run -d -link agora_db:db -name agora-server jpedro/agora-server
+
+# Inspect container configuration
+    docker inspect <containerId>
+
+# Docker Keep configuration on commit
+    docker commit -run='{
+        "Cmd": [
+            "/bin/sh",
+            "-c",
+            "/useEnv.sh \u0026\u0026 service tomcat7 start \u0026\u0026 tail -f /var/lib/tomcat7/logs/catalina.out"
+        ],"PortSpecs": ["8080"]}' <containerId> jpedro/agora-server    
+
+#How to stop remove all containers    
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+
+#My mysql containerId
+    docker run -t -i -p 3316:3306 jpedro/mysql
+
+#Use env variables of linked containers
+cat /var/lib/tomcat7/webapps/agora-server/WEB-INF/classes/conf/ipdmsConfig.properties.template | sed -e 's/\${db_ip}/`echo $DB_PORT_3306_TCP_ADDR`/' -e 's/\${db_port}/`echo $DB_PORT_3306_TCP_PORT`/' > /var/lib/tomcat7/webapps/agora-server/WEB-INF/classes/conf/ipdmsConfig.properties
+
+#Push image to private registry
+    # Tag to create a repository with the full registry location.
+    docker tag 8dbd9e392a96 localhost.localdomain:5000/ubuntu
+    # push the new repository to its home location.
+    docker push localhost.localdomain:5000/ubuntu
+
+#Atach a terminal to a running container 
+    docker ps -notrunc
+    sudo lxc-attach -n <ID>

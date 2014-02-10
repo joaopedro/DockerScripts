@@ -1,0 +1,92 @@
+/*JBPM Process Image classes------------------------------------------------*/
+
+/*	######################	*/
+/* 	TASK AREA				*/
+/*	######################	*/
+div.pbox, div.pbox_s, div.pbox_e, div.pbox_ns {
+ border-width:1px;
+ border-style:solid;
+}
+ 
+div.pbox {
+ border-color:#0000ff;
+}
+ 
+div.pbox_s {
+ border-color:#aa6600;
+}
+ 
+div.pbox_e {
+ border-color:#cc0000;
+}
+
+div.pbox_ns {
+ border-color:#000000;
+}
+
+
+
+
+ 
+div.pboxs, div.pboxs_s, div.pboxs_e {
+ position:absolute;
+ border-right-width:1px;
+ border-right-style:solid;
+ border-bottom-width:1px;
+ border-bottom-style:solid;
+}
+ 
+div.pboxs {
+ border-right-color:#9999ff;
+ border-bottom-color:#9999ff;
+}
+ 
+div.pboxs_s {
+ border-right-color:#ffaa99;
+ border-bottom-color:#ffaa99;
+}
+ 
+div.pboxs_e {
+ border-right-color:#660000;
+ border-bottom-color:#660000;
+}
+ 
+div.pboxce {
+ position:absolute;
+ overflow:hidden;
+}
+ 
+div.pboxc, div.pboxc_s, div.pboxc_e {
+ cursor:default;
+ font-size:10px;
+ font-family: Verdana, Arial, Helvetica, sans-serif;
+ white-space:nowrap;
+ padding-left:3px;
+ padding-right:3px;
+ border-width:1px;
+}
+ 
+div.pboxc {
+ border-color:#0000ff;
+ background-color:#0000ff;
+}
+ 
+div.pboxc_s {
+ border-color:#aa6600;
+ background-color:#aa6600;
+}
+ 
+div.pboxc_e {
+ border-color:#cc0000;
+ background-color:#cc0000;
+}
+ 
+div.pboxc a, div.pboxc_s a, div.pboxc_e a {
+ color:#ffffff;
+ text-decoration:none;
+}
+ 
+div.pboxc a:hover, div.pboxc_s a:hover, div.pboxc_e a:hover {
+ text-decoration:underline;
+}
+/*---------------------------------------------END JBPM Process Image classes*/

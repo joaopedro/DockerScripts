@@ -1,0 +1,321 @@
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+    "http://struts.apache.org/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<!-- DEFINICOES BASE -->
+	<definition name="guichetelectronico.base" 
+				path="/guichetelectronico/publico/layout/guichetelectronicoLayout.jsp"
+				controllerClass="com.sinfic.guichetelectronico.comum.controller.MenuController">
+		<put name="guichetScriptsThemes" value="/guichetelectronico/publico/layout/guichetScriptsThemes.jsp" />
+		<put name="header" value="/guichetelectronico/publico/base/header.jsp" />
+		<put name="menu" value="/guichetelectronico/publico/base/menu.jsp" />
+		<put name="main-body" value="/blank.jsp" />
+		<put name="footer" value="/guichetelectronico/publico/base/footer.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.homepage.base" 
+				path="/guichetelectronico/publico/layout/guichetelectronicoLayout.jsp"
+				controllerClass="com.sinfic.guichetelectronico.comum.controller.MenuController">
+		<put name="guichetScriptsThemes" value="/guichetelectronico/publico/layout/guichetScriptsThemes.jsp" />
+		<put name="header" value="/guichetelectronico/publico/base/header.jsp" />
+		<put name="menu" value="/guichetelectronico/publico/base/menu.jsp" />
+		<put name="main-body" value="/blank.jsp" />
+		<put name="footer" value="/guichetelectronico/publico/base/footer.jsp" />
+	</definition>
+
+	<definition name="guichetelectronico.error.runtime" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/base/runtimeError.jsp" />
+	</definition>
+
+	<definition name="guichetelectronico.acessonegado" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/base/wrongaccess.jsp" />
+	</definition>
+
+	<definition name="guichetelectronico.erro" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/base/error.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.homepage" extends="guichetelectronico.homepage.base">
+		<put name="main-body" value="/guichetelectronico/publico/base/homepage.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.ajax.noticias" 
+				path="/guichetelectronico/publico/base/noticiasguichet.jsp" />
+	
+	<definition name="guichetelectronico.pesquisar.list" extends="guichetelectronico.homepage.base">
+		<put name="main-body" value="/guichetelectronico/publico/base/searchnoticiasguichet.jsp" />
+	</definition>
+	
+	<!-- WORKFLOW -->
+	
+	<definition name="guichetelectronico.workflow.listaprocessospendentes" extends="guichetelectronico.homepage.base">
+		<put name="main-body" value="/guichetelectronico/secure/workflow/listaprocessospendentesguichet.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.workflow.listaprocessosfechados" extends="guichetelectronico.homepage.base">
+		<put name="main-body" value="/guichetelectronico/secure/workflow/listaprocessosfechadosguichet.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.workflow.notificationdetail" extends="guichetelectronico.homepage.base">
+		<put name="main-body" value="/guichetelectronico/secure/workflow/notificationdetail.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.workflow.listaprocessos" extends="guichetelectronico.homepage.base">
+		<put name="main-body" value="/guichetelectronico/secure/workflow/listprocessesguichet.jsp"/>
+	</definition>
+	
+	<!-- WEBFLOW -->
+	
+	<definition name="ipdms.webflow.layout" page="/ipdms/webflow/webFlowLayoutGuichet.jsp">
+		<put name="titulo-wizard" value="titulo-wizard" type="string" />
+		<put name="titulo-ecra" value="titulo-ecra" type="string" />
+		<put name="totalpaginas" value="1" type="string" />
+		<put name="paginas" value="1" type="string" /> 
+		<put name="body" value="" direct="true"/> 
+	</definition>
+	
+	<definition name="ipdms.webflow.anexos"  extends="ipdms.webflow.layout">
+		<put name="body" value="/ipdms/webflow/anexos.jsp" />
+	</definition>
+	
+	<definition name="ipdms.resumo.base" page="/ipdms/webflow/resumoLayout.jsp">
+		<put name="header" value="/ipdms/base/header.jsp" />
+		<put name="menu" value="/ipdms/base/menu.jsp" />
+		<put name="login" value="/ipdms/base/login.jsp" />
+		<put name="main-body" value="/blank.jsp" />
+		<put name="footer" value="/ipdms/base/footer.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.listarVariantes" extends="guichetelectronico.homepage.base">
+		<put name="main-body" value="/guichetelectronico/publico/accao/listvariantesprocesso.jsp" />
+	</definition>
+	
+	<!-- ### Reclamacoes Webflow ### -->
+	
+	<definition name="ipdms.gestaoReclamacoes.inicio" extends="ipdms.webflow.layout">
+		<put name="titulo-wizard" value="ipdms.so.gestaoReclamacoes.gestaoReclamacoes" type="string" />
+		<put name="titulo-ecra" value="ipdms.so.gestaoReclamacoes.dadosReclamacao" type="string" />
+		<put name="body" value="/ipdms/webflow/gestaoreclamacoes/inicio.jsp" />
+	</definition>
+	
+	<definition name="ipdms.gestaoReclamacoes.anexos" extends="ipdms.webflow.anexos">
+		<put name="titulo-wizard" value="ipdms.so.gestaoReclamacoes.gestaoReclamacoes" type="string" />
+		<put name="titulo-ecra" value="ipdms.so.gestaoAusencias.anexos" type="string" />
+	</definition>
+	
+	<definition name="ipdms.gestaoReclamacoes.resumo" extends="ipdms.webflow.layout">
+		<put name="titulo-wizard" value="ipdms.so.gestaoReclamacoes.gestaoReclamacoes" type="string" />
+		<put name="titulo-ecra" value="ipdms.so.gestaoReclamacoes.dadosReclamacao" type="string" />
+		<put name="body" value="/ipdms/webflow/gestaoreclamacoes/resumo.jsp" />
+	</definition>
+		
+	<definition name="ipdms.gestaoReclamacoes.resumoSimples" extends="ipdms.resumo.base">
+		<put name="main-body" value="/ipdms/webflow/gestaoreclamacoes/resumo.jsp" />
+	</definition>
+
+	<definition name="ipdms.gestaoReclamacoes.relatorio" extends="ipdms.webflow.layout">
+		<put name="titulo-wizard" value="ipdms.so.gestaoReclamacoes.gestaoReclamacoes" type="string" />
+		<put name="titulo-ecra" value="ipdms.so.gestaoReclamacoes.registoPedido" type="string" />
+		<put name="body" value="/guichetelectronico/webflow/relatorio.jsp" />
+	</definition>
+	
+	<!-- ### Sugestoes Webflow ### -->
+	
+	<definition name="ipdms.gestaoSugestoes.inicio" extends="ipdms.webflow.layout">
+		<put name="titulo-wizard" value="ipdms.so.gestaoSugestoes.gestaoSugestoes" type="string" />
+		<put name="titulo-ecra" value="ipdms.so.gestaoSugestoes.dadosSugestao" type="string" />
+		<put name="body" value="/ipdms/webflow/gestaosugestoes/inicio.jsp" />
+	</definition>
+	
+	<definition name="ipdms.gestaoSugestoes.resumo" extends="ipdms.webflow.layout">
+		<put name="titulo-wizard" value="ipdms.so.gestaoSugestoes.gestaoSugestoes" type="string" />
+		<put name="titulo-ecra" value="ipdms.so.gestaoSugestoes.dadosSugestao" type="string" />
+		<put name="body" value="/ipdms/webflow/gestaosugestoes/resumo.jsp" />
+	</definition>
+		
+	<definition name="ipdms.gestaoSugestoes.resumoSimples" extends="ipdms.resumo.base">
+		<put name="main-body" value="/ipdms/webflow/gestaosugestoes/resumo.jsp" />
+	</definition>
+
+	<definition name="ipdms.gestaoSugestoes.relatorio" extends="ipdms.webflow.layout">
+		<put name="titulo-wizard" value="ipdms.so.gestaoSugestoes.gestaoSugestoes" type="string" />
+		<put name="titulo-ecra" value="ipdms.so.gestaoSugestoes.registoPedido" type="string" />
+		<put name="body" value="/guichetelectronico/webflow/relatorio.jsp" />
+	</definition>
+	
+	<!-- LOGIN -->
+	
+	<definition name="guichetelectronico.login.inicio" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/login/login.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.login.verificacao" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/login/loginVerification.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.login.sucessopassword" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/login/successNewPassword.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.login.erro" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/login/errorLogin.jsp" />
+	</definition>
+	
+	<!-- LOGIN - RESET PASSWORD -->
+	
+	<definition name="guichetelectronico.resetpassword.sucesso" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/login/confirmacaoSucesso.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.resetpassword.erro" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/login/confirmacaoErro.jsp" />
+	</definition>
+	
+	<!-- REGISTO -->
+	
+	<definition name="guichetelectronico.registo.inicio" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/registo/registoInicio.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.registo.sucesso" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/registo/registoSucesso.jsp" />
+	</definition>
+	
+	<!-- CONFIRMACAO REGISTO -->
+	
+	<definition name="guichetelectronico.confirmacaoregisto" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/publico/registo/confirmacaoRegisto.jsp" />
+	</definition>
+	
+	<!-- EDIÇÃO DE DADOS PESSOAIS -->
+	
+	<definition name="guichetelectronico.editdadospessoais.edit" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/secure/editdadospessoais/editdadosguichet.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.editdadospessoais.sucesso" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/secure/editdadospessoais/editdadosguichetsucesso.jsp" />
+	</definition>
+	
+	<!-- SUBMETER PEDIDO -->
+	
+	<definition name="guichetelectronico.pedido.edit" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/secure/pedido/savepedidoguichet.jsp" />
+	</definition>
+	
+	<!-- MENUS -->
+	
+	<definition name="guichetelectronico.menu.detail" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/secure/menus/menudetalhe.jsp" />
+	</definition>
+	
+	<definition name="guichetelectronico.menuinformacao.detail" extends="guichetelectronico.base">
+		<put name="main-body" value="/guichetelectronico/secure/menus/menuinformacaodetalhe.jsp" />
+	</definition>
+
+	<definition name="ipdms.morada.popup.pt" 				page="/ipdms/base/morada/moradaPT.jsp"/>
+	<definition name="ipdms.morada.popup.ao" 				page="/ipdms/base/morada/moradaAO.jsp"/>
+	<definition name="ipdms.morada.popup.br" 				page="/ipdms/base/morada/moradaBR.jsp"/>
+	<definition name="ipdms.morada.saveMessage" 			page="/ipdms/base/morada/moradaSaveMessage.jsp"/>
+	<definition name="ipdms.morada.renderOptions" 			page="/ipdms/base/morada/renderOptions.jsp"/>
+	<definition name="ipdms.morada.renderLocalidadeOptions"	page="/ipdms/base/morada/renderLocalidadeOptions.jsp"/>
+	<definition name="ipdms.morada.renderDescription" 		page="/ipdms/base/morada/renderDescription.jsp"/>
+	
+	
+	<!-- Dynamic Forms -->
+	<!-- ServicoOnline Formulario Dinamico Flow -->
+		
+	<definition name="ipdms.dynamicWebflow.layout" page="/ipdms/webflow/dynamic/dynamicWebflowLayoutGuichet.jsp">
+		<put name="titulo-ecra" value="" type="string" />
+		<put name="totalpaginas" value="1" type="string" />
+		<put name="paginas" value="1" type="string" /> 
+		<put name="body" value="" direct="true"/> 
+	</definition>
+
+	<definition name="dynamicWebflow.layout.ajax" page="/ipdms/webflow/dynamic/dynamicAjaxLayout.jsp">		
+		<put name="body" value="" direct="true"/> 
+		<put name="titulo-ecra" value="" type="string" />
+	</definition>
+		
+	<definition name="webflow.dynamic.formscreen" extends="ipdms.dynamicWebflow.layout">
+		<put name="titulo-ecra" value="" type="string" />
+		<put name="paginas" value="1" type="string" />
+		<put name="body" value="/ipdms/webflow/dynamic/formscreen.jsp" />
+	</definition>
+
+	<definition name="webflow.dynamic.formscreen.ajax" extends="dynamicWebflow.layout.ajax">
+		<put name="body" value="/ipdms/webflow/dynamic/formscreen.jsp" />
+	</definition>
+
+	<definition name="webflow.dynamic.sig.esri" extends="dynamicWebflow.layout.ajax">
+		<put name="body" value="/ipdms/webflow/dynamic/SigEsri.jsp" />
+	</definition>
+
+	<definition name="webflow.dynamic.resumoscreen" extends="dynamicWebflow.layout.ajax">
+		<put name="titulo-ecra" value="ipdms.webflow.dynamic.resumoscreen" type="string" />
+		<put name="body" value="/ipdms/webflow/dynamic/resumoscreen.jsp" />
+	</definition>
+	
+	<definition name="webflow.dynamic.anexardocumentos" extends="ipdms.dynamicWebflow.layout">
+		<put name="titulo-ecra" value="ipdms.tarefas.anexarDocs.anexados" type="string" />
+		<put name="paginas" value="5" type="string" />
+		<put name="body" value="/ipdms/webflow/anexos.jsp" />
+	</definition>
+	
+	<definition name="webflow.dynamic.anexardocumentos.ajax" extends="dynamicWebflow.layout.ajax">
+		<put name="titulo-ecra" value="ipdms.tarefas.anexarDocs.anexados" type="string" />
+		<put name="body" value="/ipdms/webflow/anexos.jsp" />
+	</definition>
+	
+	<definition name="webflow.dynamic.adddocumentobyitem" extends="ipdms.dynamicWebflow.layout">
+		<put name="titulo-ecra" value="ipdms.webflow.docsAdicionados" type="string" />
+		<put name="paginas" value="5" type="string" />
+		<put name="body" value="/ipdms/webflow/anexosByItem.jsp" />
+	</definition>
+
+	<definition name="webflow.dynamic.adddocumentobyitem.ajax" extends="dynamicWebflow.layout.ajax">
+		<put name="titulo-ecra" value="ipdms.webflow.docsAdicionados" type="string" />
+		<put name="paginas" value="5" type="string" />
+		<put name="body" value="/ipdms/webflow/anexosByItem.jsp" />
+	</definition>
+		
+	<definition name="webflow.dynamic.chooseanexomainfile" extends="ipdms.dynamicWebflow.layout">
+		<put name="titulo-ecra" value="ipdms.webflow.dynamic.chooseanexomainfile" type="string" />
+		<put name="paginas" value="5" type="string" />
+		<put name="body" value="/ipdms/webflow/dynamic/chooseAnexosMainFile.jsp" />
+	</definition>
+	
+	<definition name="webflow.dynamic.chooseanexomainfile.ajax" extends="dynamicWebflow.layout.ajax">
+		<put name="titulo-ecra" value="ipdms.webflow.dynamic.chooseanexomainfile" type="string" />
+		<put name="body" value="/ipdms/webflow/dynamic/chooseAnexosMainFile.jsp" />
+	</definition>	
+	
+	<definition name="webflow.dynamic.resumoscreenwithfiles" extends="ipdms.dynamicWebflow.layout">
+		<put name="titulo-ecra" value="ipdms.webflow.dynamic.resumoscreenwithfiles" type="string" />
+		<put name="body" value="/ipdms/webflow/dynamic/resumoscreenwithfiles.jsp" />
+	</definition>
+
+	<definition name="webflow.dynamic.resumoscreenwithfiles.ajax" extends="dynamicWebflow.layout.ajax">
+		<put name="titulo-ecra" value="ipdms.webflow.dynamic.resumoscreenwithfiles" type="string" />
+		<put name="body" value="/ipdms/webflow/dynamic/resumoscreenwithfiles.jsp" />
+	</definition>
+		
+	<definition name="webflow.dynamic.endscreen" extends="dynamicWebflow.layout.ajax">
+		<put name="titulo-ecra" value="ipdms.webflow.dynamic.endscreen" type="string" />
+		<put name="body" value="/ipdms/webflow/dynamic/endscreen.jsp" />
+	</definition>
+
+	<definition name="webflow.dynamic.resumoscreen.external" extends="ipdms.resumo.base">
+		<put name="main-body" value="/ipdms/webflow/dynamic/resumoscreen.jsp" />
+	</definition>
+		
+	<definition name="webflow.dynamic.resumoscreenwithfiles.external" extends="ipdms.resumo.base">
+		<put name="main-body" value="/ipdms/webflow/dynamic/resumoscreenwithfiles.jsp" />
+	</definition>
+	
+	<!-- Fim SO Formulario Dinamico -->
+	
+	
+</tiles-definitions>

@@ -1,0 +1,88 @@
+*
+{
+	border-collapse:collapse;
+    font-family: Helvetica, Georgia, sans-serif;
+	font-size: 1em;
+}
+BODY
+{
+}
+
+.cascadeLink
+{
+	color: #666666;
+	text-decoration: bold;
+	font-size: 1em;
+}
+
+.menuBar
+{
+    POSITION: relative;
+    BACKGROUND-COLOR: white;
+    TEXT-ALIGN: center;
+    text-decoration: bold;
+}
+.Bar
+{
+    FLOAT: left;
+    CURSOR: hand;
+    TEXT-INDENT: 5px;
+    POSITION: relative;
+    TEXT-ALIGN: center;
+	color: gray;
+	text-decoration: bold;
+}
+.menu
+{
+    BORDER: #cc1111 1px solid;
+    /*VISIBILITY: hidden;*/
+    DISPLAY: none;
+    CURSOR: hand;
+    WIDTH: 200px;
+    LINE-HEIGHT: 140%;
+    POSITION: absolute;
+    BACKGROUND-COLOR: white;
+	COLOR: #003800;
+}
+
+.menuItem
+{
+    PADDING-RIGHT: 15px;
+    PADDING-LEFT: 10px;
+    WIDTH: 100%;
+    CURSOR: hand;
+    LINE-HEIGHT: 16px;
+    TEXT-ALIGN: left;
+    BORDER-BOTTOM: whitesmoke 1px solid;
+}
+.ItemMouseOver
+{
+    PADDING-RIGHT: 15px;
+    PADDING-LEFT: 10px;
+    WIDTH: 100%;
+    CURSOR: hand;
+    LINE-HEIGHT: 16px;
+    BORDER-BOTTOM: white 1px solid;
+    TEXT-ALIGN: left;
+    BACKGROUND-COLOR: #cc1111;
+	COLOR: #FFFFFF;
+}
+
+.menuLink:hover
+{
+	color: white;
+}
+
+.ItemMouseOut
+{
+    WIDTH: 100%
+}
+.barOver
+{
+    FLOAT: left;
+    CURSOR: hand;
+    TEXT-INDENT: 5px;
+    POSITION: relative;
+    TEXT-ALIGN: center;
+	color: #003800;
+}

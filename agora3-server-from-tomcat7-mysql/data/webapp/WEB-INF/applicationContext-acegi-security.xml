@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+	"http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<!--
+   O Acegi utiliza um esquema de filtros.
+   # FilterChainProxy #
+   Foram implementadas duas cadeias de filtros. Uma para o Guichet, outra para o IPDMS. 
+   Estas cadeias são alteradas no FilterChainProxy e definem não só os filtros como a ordem dos mesmos na cadeia. 
+-->
+
+<beans>
+	
+	<!-- 
+		Controls user login failure's, locking and unlocking user. This service is used in the next bean "authenticationManagerListener"
+		but also in application actions (that control de flow of locking/unlocking users 
+	-->
+	<bean id="userAuthenticationManager" class="com.sinfic.ipdms.security.authentication.services.impl.UserAuthenticationManagerImpl">
+		<constructor-arg ref="colaboradorExtendedRepository" />
+		<constructor-arg ref="defaultMailSender" />
+		<constructor-arg value="Desbloqueio do utilizador {0}"/>
+		<constructor-arg>
+			<value><![CDATA[Para efectuar o desbloqueio do utilizador {0} clique no link abaixo:<br><br>
+<a href="http://localhost:8080/IPDMS25Web/public/unlockUserByCode.do2?username={0}&code={1}">
+Desbloqueio de utilizador</a><br><br>Por favor não responda a este e-mail.]]>
+			</value>
+		</constructor-arg>
+		<property name="maxFailAttempts" value="5" />
+	</bean>
+	
+	<!-- 
+		Authentication listener. It records the failed attempts and uses the service userAuthenticationManager
+		to control de lock/unlock of users.
+		To disable number o attempts of login comment this bean
+	 -->	
+	<bean id="authenticationManagerListener" class="com.sinfic.ipdms.security.authentication.listener.AuthenticationSecurityListener">
+		<constructor-arg ref="userAuthenticationManager" />
+	</bean>
+	
+	<!-- Logger -->
+	<bean id="loggerListener" class="org.springframework.security.event.authentication.LoggerListener"/>
+
+	<!-- 
+		Authentication Filter chain
+	 -->
+	<bean id="filterChainProxy" class="org.springframework.security.util.FilterChainProxy">
+		<property name="filterInvocationDefinitionSource">
+			<value><![CDATA[
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT
+				/guichetelectronico/**=httpSessionContextIntegrationFilter,logoutFilterGuichet,authenticationProcessingFilterGuichet,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilterGuichet,filterInvocationInterceptor
+				/rest/**=httpSessionContextIntegrationFilter,logoutFilter,basicAuthenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+				/services=httpSessionContextIntegrationFilter,logoutFilter,basicAuthenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+				/services/**=httpSessionContextIntegrationFilter,logoutFilter,basicAuthenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+				/file/getdocumento.do2**=httpSessionContextIntegrationFilter,logoutFilter,basicAuthenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+				/**=httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+			]]></value>
+		</property>
+	</bean>
+	 
+	<bean id="wsResourceAutenticationProcessingFilter" class="com.sinfic.ipdms.security.authentication.acegy.WSResourceAuthenticationProcessingFilter">
+		<constructor-arg value="super" index="0"/>
+		<constructor-arg value="super" index="1"/>
+	</bean>
+
+	<bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
+
+	<bean id="logoutFilter" class="org.springframework.security.ui.logout.LogoutFilter">
+		<constructor-arg value="/newlayout/login.do2"/> <!-- URL redirected to after logout -->
+		<constructor-arg>
+			<list>
+				<ref bean="rememberMeServices"/>
+				<bean class="org.springframework.security.ui.logout.SecurityContextLogoutHandler"/>
+			</list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/j_acegi_logout"/>
+	</bean>
+
+	<bean id="logoutFilterGuichet" class="org.springframework.security.ui.logout.LogoutFilter">
+		<constructor-arg value="/guichetelectronico/publico/homepage.do2"/> <!-- URL redirected to after logout -->
+		<constructor-arg>
+			<list>
+				<ref bean="rememberMeServices"/>
+				<bean class="org.springframework.security.ui.logout.SecurityContextLogoutHandler"/>
+			</list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/guichetelectronico/publico/j_acegi_logout_guichet"/>
+	</bean>
+	
+	<bean id="baseAuthenticationProcessingFilter" class="com.sinfic.ipdms.security.authentication.acegy.AuthenticationProcessingFilter" abstract="true">
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="rememberMeServices" ref="rememberMeServices"/>
+		<property name="lockUserUrl" value="/public/unlockUserForm.do2" />
+	</bean>
+
+	<bean id="basicAuthenticationProcessingFilter" class="org.springframework.security.ui.basicauth.BasicProcessingFilter">
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="rememberMeServices" ref="rememberMeServices"/>
+		<property name="authenticationEntryPoint">
+			<bean class="org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint">
+				<property name="realmName" value="ipdms"/>
+			</bean>
+		</property>
+		
+		
+	</bean>
+	
+	<bean id="authenticationProcessingFilter" parent="baseAuthenticationProcessingFilter">
+		<property name="authenticationFailureUrl" value="/newlayout/login.do2?erro=true"/>
+		<property name="defaultTargetUrl" value="/homepage.do2"/>
+		<property name="filterProcessesUrl" value="/j_acegi_security_check"/>
+	</bean>
+	
+	<bean id="authenticationProcessingFilterGuichet" parent="baseAuthenticationProcessingFilter">
+		<property name="authenticationFailureUrl" value="/guichetelectronico/publico/login.do2?erro=1"/>
+		<property name="defaultTargetUrl" value="/guichetelectronico/publico/homepage.do2"/>
+		<property name="filterProcessesUrl" value="/guichetelectronico/publico/j_acegi_security_check_guichet"/>
+	</bean>
+	
+	<bean id="securityContextHolderAwareRequestFilter" class="org.springframework.security.wrapper.SecurityContextHolderAwareRequestFilter">
+		<property name="wrapperClass" value="com.sinfic.ipdms.integration.springsecurity.wrapper.CustomSecurityContextHolderAwareRequestWrapper"/>
+	</bean>
+		
+	<bean id="rememberMeProcessingFilter" class="org.springframework.security.ui.rememberme.RememberMeProcessingFilter">
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="rememberMeServices" ref="rememberMeServices"/>
+	</bean>
+
+	<bean id="anonymousProcessingFilter" class="org.springframework.security.providers.anonymous.AnonymousProcessingFilter">
+		<!-- The key is shared between the filter and authentication provider, so that tokens created by the former are accepted by the latter.-->
+		<property name="key" value="ipdms33"/> 
+		<property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
+	</bean>
+
+	<bean id="exceptionTranslationFilter" class="com.sinfic.ipdms.integration.springsecurity.filter.CustomExceptionTranslationFilter">
+		<property name="logoutUrl" value="/j_acegi_logout"/>
+		<property name="authenticationEntryPoint"><ref local="authenticationProcessingFilterEntryPoint"/></property>
+		<property name="accessDeniedHandler">
+			<bean class="org.springframework.security.ui.AccessDeniedHandlerImpl">
+				<property name="errorPage" value="/accessDenied.jsp"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="exceptionTranslationFilterGuichet" class="com.sinfic.ipdms.integration.springsecurity.filter.CustomExceptionTranslationFilter">
+		<property name="logoutUrl" value="/guichetelectronico/publico/j_acegi_logout_guichet"/>
+		<property name="authenticationEntryPoint"><ref local="authenticationProcessingFilterEntryPointGuichet"/></property>
+		<property name="accessDeniedHandler">
+			<bean class="org.springframework.security.ui.AccessDeniedHandlerImpl">
+				<property name="errorPage" value="/accessDeniedGuichet.jsp"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+  		<property name="loginFormUrl"><value>/newlayout/login.do2</value></property>
+  		<property name="forceHttps"><value>false</value></property>
+	</bean>
+
+	<bean id="authenticationProcessingFilterEntryPointGuichet" class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+  		<property name="loginFormUrl"><value>/guichetelectronico/publico/login.do2</value></property>
+  		<property name="forceHttps"><value>false</value></property>
+	</bean>
+
+	<bean id="filterInvocationInterceptor" class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="accessDecisionManager">
+			<bean class="org.springframework.security.vote.AffirmativeBased">
+				<property name="allowIfAllAbstainDecisions" value="false"/>
+				<property name="decisionVoters">
+					<list>
+						<bean class="org.springframework.security.vote.RoleVoter"/>
+						<bean class="org.springframework.security.vote.AuthenticatedVoter"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="objectDefinitionSource">
+			<value><![CDATA[
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT
+				/ipdms/webflow/qrcode/jzebra.jar=ROLE_INTERNO,ROLE_ANONYMOUS,ROLE_CIDADAO
+				/public/**=ROLE_INTERNO,ROLE_ANONYMOUS,ROLE_CIDADAO
+				/guichetelectronico/index.html=ROLE_CIDADAO,ROLE_ANONYMOUS
+				/guichetelectronico/secure/servicos.do2=ROLE_ANONYMOUS,ROLE_CIDADAO
+				/newlayout/login.do2=ROLE_INTERNO,ROLE_ANONYMOUS
+				/j_acegi_security_check=ROLE_INTERNO,ROLE_ANONYMOUS
+				/guichetelectronico/applicationflow.do2=ROLE_ANONYMOUS,ROLE_CIDADAO
+				/guichetelectronico/publico/**=ROLE_CIDADAO,ROLE_ANONYMOUS
+				/guichetelectronico/secure/**=ROLE_CIDADAO
+				/guichetelectronico/**=ROLE_CIDADAO
+				/userlocked.html=ROLE_INTERNO,ROLE_ANONYMOUS
+				/**=ROLE_INTERNO
+			]]></value>
+		</property>
+	</bean>
+
+	<bean id="rememberMeServices" class="org.springframework.security.ui.rememberme.TokenBasedRememberMeServices">
+		<property name="userDetailsService" ref="jdbcDaoImpl"/>
+		<property name="key" value="ipdms44"/>
+	</bean>
+
+	<bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
+		<property name="providers">
+			<list>
+				<bean class="com.sinfic.ipdms.security.authentication.provider.CheckUserStatusProvider">
+					<constructor-arg ref="userAuthenticationManager" />
+				</bean>
+				<ref local="daoAuthenticationProvider"/>
+				<bean class="org.springframework.security.providers.anonymous.AnonymousAuthenticationProvider">
+					<property name="key" value="ipdms33"/>
+				</bean>
+				<bean class="org.springframework.security.providers.rememberme.RememberMeAuthenticationProvider">
+					<property name="key" value="ipdms44"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+<!-- Password Encoding --> 
+<!--      <bean id="daoSaltSource"  -->
+<!-- 			class="org.springframework.security.providers.dao.salt.ReflectionSaltSource"> -->
+<!--        		<property name="userPropertyToUse" value="username"/> -->
+<!--      </bean> -->
+<!-- 	<bean id="daoPasswordEncoder" class="org.springframework.security.providers.encoding.Md5PasswordEncoder"/> -->
+<!-- 	<bean id="daoPasswordEncoder" class="org.springframework.security.providers.encoding.PlaintextPasswordEncoder"/> -->
+<!-- END Password Encoding -->	<bean id="daoAuthenticationProvider" class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
+    	<property name="userDetailsService"><ref local="jdbcDaoImpl"/></property>
+<!--     	<property name="passwordEncoder" ref="daoPasswordEncoder"/> -->
+<!--  		<property name="saltSource" ref="daoSaltSource"/>    	 -->
+  	</bean>
+  	   
+	<bean id="jdbcDaoImpl" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
+    	<property name="dataSource"><ref bean="dataSource"/></property>
+    	<property name="usersByUsernameQuery">
+      		<value>
+          		SELECT col.login as username, col.password,1 as enabled
+		  		FROM colaborador col, conteudo cont 
+		  		WHERE col.login = ?
+		  		and col.NUMEROCONTEUDO = cont.numeroconteudo
+		  		and col.versaoconteudo = cont.versaoconteudo
+		  		and cont.activo='S'
+		  		and (cont.datafimconteudo is null
+		  		or cont.datafimconteudo > sysdate())
+      		</value>
+    	</property>
+    	<property name="authoritiesByUsernameQuery">
+      		<value>
+				select distinct login as username, authority
+        		from
+            	((select login, 'ROLE_INTERNO' as authority
+                from colaborador col, conteudo c
+                where c.numeroconteudo=col.numeroconteudo
+                and c.activo='S' 
+                and col.interno = 'I')
+                union all
+                (select col.login, 'ROLE_CIDADAO' as authority
+                from colaborador col, colaboradorinfo cinfo, conteudo c
+                where col.versaoconteudo = cinfo.versaoconteudo
+                and col.versaoconteudo = cinfo.versaoconteudo
+                and col.numeroconteudo = c.numeroconteudo
+                and c.activo='S'
+                and col.interno = 'E'
+                and cinfo.tipo = 'C')
+                union all
+                (select login, 'ROLE_EXTERNO' as authority
+                from colaborador col, conteudo c 
+                where c.numeroconteudo=col.numeroconteudo
+                and c.activo='S' 
+                and interno = 'E')
+                union all
+                (select login,'SU' as authority from colaborador col, conteudo c
+                where c.numeroconteudo=col.numeroconteudo
+                and c.activo='S'
+                 and superuser = 'S')
+                )  sq
+        		where  sq.login = ?	
+      		</value>
+    	</property>
+  	</bean>
+  
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName"><value>${sessionFactory.hibernate.connection.ipdms.driver_class}</value></property>
+    	<property name="url"><value>${sessionFactory.hibernate.connection.ipdms.url}</value></property>
+    	<property name="username"><value>${sessionFactory.hibernate.connection.ipdms.username}</value></property>
+    	<property name="password"><value>${sessionFactory.hibernate.connection.ipdms.password}</value></property>
+  	</bean>
+
+	<bean id="authByAdapterProvider" class="org.springframework.security.adapters.AuthByAdapterProvider">
+  		<property name="key"><value>my_password</value></property>
+	</bean> 
+	
+	<!-- Exemplo de configuração por LDAP ou Active Directory -->
+	<!-- 
+	<bean id="initialDirContextFactory"
+            class="org.springframework.security.ldap.DefaultInitialDirContextFactory">
+      <constructor-arg value="${ldap.server}"/>
+      <property name="managerDn"><value>${ldap.adminlogin}</value></property>
+      <property name="managerPassword"><value>${ldap.adminpass}</value></property>
+    </bean>
+
+    <bean id="userSearch"
+            class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+      <constructor-arg index="0">
+        <value>CN=Users,DC=vmpe,DC=local</value>
+      </constructor-arg>
+      <constructor-arg index="1">
+        <value>CN={0}</value>
+      </constructor-arg>
+      <constructor-arg index="2">
+        <ref local="initialDirContextFactory" />
+      </constructor-arg>
+      <property name="searchSubtree">
+        <value>true</value>
+      </property>
+    </bean>
+
+    <bean id="ldapAuthProvider"
+            class="org.springframework.security.providers.ldap.LdapAuthenticationProvider">
+      <constructor-arg>
+        <bean class="org.springframework.security.providers.ldap.authenticator.BindAuthenticator">
+           <constructor-arg><ref local="initialDirContextFactory"/></constructor-arg>
+           <property name="userSearch" ref="userSearch" />
+        </bean>
+      </constructor-arg>
+      <constructor-arg>
+		<bean
+			class="com.sinfic.ipdms.integration.springsecurity.providers.UserDetailsServiceAuthoritiesPopulator">
+			<constructor-arg ref="jdbcDaoImpl" />
+		</bean>
+      </constructor-arg>
+    </bean>
+	 
+	 Falta adiconar este ldapAuthProvider à chain de providers do AuthenticationManager
+	  -->
+	
+</beans>

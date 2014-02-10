@@ -1,0 +1,8 @@
+
+docker run -d -name agora-db -v /home/agora/mysql/var/log/mysql:/var/log/mysql -v /home/agora/mysql/var/lib/mysql:/var/lib/mysql -p 127.0.0.1:3316:3306 development.bp.sinfic.pt:5000/mysql
+
+docker run -d -name agora-db -v /home/agora/mysql/var/log/mysql:/var/log/mysql -v /home/agora/mysql/var/lib/mysql:/var/lib/mysql -p 3306 development.bp.sinfic.pt:5000/mysql
+
+docker run -d -name agora-db -p 3316:3306 development.bp.sinfic.pt:5000/mysql
+
+docker run -d -link agora-db:db -p 9090:8080 -lxc-conf="lxc.network.hwaddr=00:21:6a:81:17:d6" -name agora-server development.bp.sinfic.pt:5000/agora-server

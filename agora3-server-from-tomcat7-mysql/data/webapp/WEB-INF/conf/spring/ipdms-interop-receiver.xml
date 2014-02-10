@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+	
+	<!-- STATIC LOCAL SYSTEM IDENTIFIER -->
+	<!--  
+	<bean id="localSystemIdentifier" class="com.sinfic.ipdms.domain.business.config.StaticLocalSystemIdentifier">
+		<constructor-arg value="IPDMSID" />
+	</bean>
+	-->
+
+	<!-- DATABASE SYSTEM IDENTIFIER -->
+	<bean id="localSystemIdentifier" class="com.sinfic.ipdms.domain.business.config.DatabaseLocalSystemIdentifier">
+		<constructor-arg ref="configEntryRepository" />
+	</bean>
+
+	<!-- ********************************************************************* -->  
+	<!--  Interoperability Organica, Funcao                                    -->
+	<!-- ********************************************************************* -->
+	 
+	<bean id="receiveFuncaoService" class="com.sinfic.ipdms.services.domain.organica.ReceiveFuncao">
+		<constructor-arg ref="localSystemIdentifier" />
+		<constructor-arg ref="funcaoRepository" />
+	</bean>
+	
+	<bean id="receiveFuncaoExporter" parent="receiveObjectExporter">
+		<property name="service" ref="receiveFuncaoService" />
+	</bean>
+
+	<bean id="receiveOrganicaService" class="com.sinfic.ipdms.services.domain.organica.ReceiveOrganica">
+		<constructor-arg ref="localSystemIdentifier" />
+		<constructor-arg ref="organicaRepository" />
+		<constructor-arg ref="funcaoRepository" />
+	</bean>
+	
+	<bean id="receiveOrganicaExporter" parent="receiveObjectExporter">
+		<property name="service" ref="receiveOrganicaService" />
+	</bean>	
+
+
+	<!-- ********************************************************************* -->  
+	<!--  Interoperability Entidade Singular, Colectiva                        -->
+	<!-- ********************************************************************* -->
+
+	<bean abstract="true" id="receiveEntidadeService">
+		<constructor-arg ref="localSystemIdentifier" />
+		<constructor-arg ref="entidadeRepository" />
+		<constructor-arg ref="entidadeRelationRoleRepository" />
+		<constructor-arg>
+			<util:map id="moradaManipulators" map-class="java.util.HashMap" key-type="java.lang.Class" value-type="com.sinfic.ipdms.modules.entidade.services.manipulator.AbstractMoradaCompatibilityManipulator">
+				<entry key="com.sinfic.ipdms.modules.entidade.domain.MoradaEntidadeEstrangeira" >
+					<bean class="com.sinfic.ipdms.modules.entidade.services.manipulator.MoradaEstrangeiraCompatibility" />
+				</entry>
+ 				 <entry key="com.sinfic.ipdms.modules.entidade.domain.MoradaEntidadePT" >
+ 					<bean class="com.sinfic.ipdms.modules.entidade.services.manipulator.MoradaPtCompatibility">
+ 						<constructor-arg ref="moradaRepository" />
+ 					</bean>
+ 				</entry>
+		 		<!-- For AO moradas-->
+<!-- 				<entry key="com.sinfic.ipdms.modules.entidade.domain.MoradaEntidadeAO" > -->
+<!-- 					<bean class="com.sinfic.ipdms.modules.entidade.services.manipulator.MoradaAoCompatibility"> -->
+<!-- 						<constructor-arg ref="moradaRepository" /> -->
+<!-- 					</bean> -->
+<!-- 				</entry> -->
+		 		<!-- For BR moradas--> 
+				<!--<entry key="com.sinfic.ipdms.modules.entidade.domain.MoradaEntidadeBR" >-->
+					<!--<bean class="com.sinfic.ipdms.modules.entidade.services.manipulator.MoradaBrCompatibility">-->
+						<!--<constructor-arg ref="moradaRepository" />-->
+					<!--</bean>-->
+				<!--</entry>-->
+			</util:map>
+		</constructor-arg>
+		<constructor-arg ref="entidadeUtil"/>
+	</bean>
+
+	<bean abstract="true" id="receiveObjectExporter" class="com.sinfic.ipdms.integration.spring.remoting.HttpInvokerServiceExporter">
+		<property name="serviceInterface" value="com.sinfic.ipdms.integration.ipdms.service.ReceiveObjectFromRemoteIPDMS" />
+	</bean>
+
+	<bean id="receiveEntidadeSingularService" class="com.sinfic.ipdms.modules.entidade.services.impl.ReceiveEntidadeSingular" parent="receiveEntidadeService" />
+
+	<bean id="receiveEntidadeColectivaService" class="com.sinfic.ipdms.modules.entidade.services.impl.ReceiveEntidadeColectiva" parent="receiveEntidadeService" />
+	
+	<bean id="receiveEntidadeSingularExporter" parent="receiveObjectExporter">
+		<property name="service" ref="receiveEntidadeSingularService" />
+	</bean>
+	
+	<bean id="receiveEntidadeColectivaExporter" parent="receiveObjectExporter">
+		<property name="service" ref="receiveEntidadeColectivaService" />
+	</bean>
+	
+	
+	<!-- ********************************************************************* -->  
+	<!--  Interoperability ColaboradorInfo                                     -->
+	<!-- ********************************************************************* -->
+		
+	<bean id="receiveColaboradorService" class="com.sinfic.ipdms.services.domain.colaborador.ReceiveColaboradorInfo">
+		<constructor-arg ref="localSystemIdentifier" />
+		<constructor-arg ref="colaboradorExtendedRepository" />
+		<constructor-arg ref="organicaRepository" />
+		<constructor-arg ref="funcaoRepository" />
+		<constructor-arg ref="colOrganicaFuncaoRepository" />
+	</bean>
+	
+	<bean id="receiveColaboradorExporter" parent="receiveObjectExporter">
+		<property name="service" ref="receiveColaboradorService" />
+	</bean>
+	
+	
+	<!-- ********************************************************************* -->  
+	<!--  Interoperability Dimensao                                     -->
+	<!-- ********************************************************************* -->
+		
+	<bean id="receiveDimensaoService" class="com.sinfic.ipdms.modules.dimensoes.services.ReceiveDimensao">
+		<constructor-arg ref="localSystemIdentifier" />
+		<constructor-arg ref="dimensaoRepository" />
+		<constructor-arg ref="nivelDimensionalRepository" />
+		<constructor-arg ref="valorDimensionalRepository" />
+	</bean>
+	
+	<bean id="receiveDimensaoExporter" parent="receiveObjectExporter">
+		<property name="service" ref="receiveDimensaoService" />
+	</bean>	
+
+	<bean id="receiveValorDimensionalService" class="com.sinfic.ipdms.modules.dimensoes.services.ReceiveValorDimensional">
+		<constructor-arg ref="localSystemIdentifier" />
+		<constructor-arg ref="valorDimensionalRepository" />
+		<constructor-arg ref="nivelDimensionalRepository" />
+	</bean>
+	
+	<bean id="receiveValorDimensionalExporter" parent="receiveObjectExporter">
+		<property name="service" ref="receiveValorDimensionalService" />
+	</bean>	
+	
+	<!-- ********************************************************************* -->  
+	<!--  Interoperability ServicoOnline                                       -->
+	<!-- ********************************************************************* -->
+
+	<bean id="receiveProcessService"
+		class="com.sinfic.ipdms.integration.ipdms.service.impl.ReceiveProcessFromAnotherIPDMSService">
+		<constructor-arg ref="remoteSystemRepository" />
+		<constructor-arg ref="defaultFileEngine" />
+		<constructor-arg>
+			<map>
+<!-- 				<entry key="com.sinfic.ipdms.example.instrucao.TesteBean"> -->
+<!-- 					<list> -->
+<!-- 						<bean -->
+<!-- 							class="com.sinfic.ipdms.integration.ipdms.transformer.impl.LoadFlowBeanObjectManipulator" -->
+<!-- 							parent="domainObjectLoaderManipulator" /> -->
+<!-- 					</list> -->
+<!-- 				</entry> -->
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="receiveProcessExporter" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+		<property name="service" ref="receiveProcessService" />
+		<property name="serviceInterface" value="com.sinfic.ipdms.integration.ipdms.service.IReceiveProcessService" />
+	</bean>
+
+	<!--
+	<bean id="conjuntoBySiglaLocator"
+		class="com.sinfic.ipdms.integration.ipdms.locator.impl.ConjuntoBySiglaLocator">
+		<constructor-arg ref="conjuntoRepository" />
+	</bean>	
+	<bean id="conjuntoByIdLocator"
+		class="com.sinfic.ipdms.integration.ipdms.locator.impl.ConjuntoByIdLocator">
+		<constructor-arg ref="conjuntoRepository" />
+	</bean>
+	-->
+	
+	<bean id="listaOpcoesBySiglaLocator"
+		class="com.sinfic.ipdms.integration.ipdms.locator.impl.ListaOpcoesBySiglaLocator">
+		<constructor-arg ref="listaOpcoesRepository" />
+	</bean>	
+	<bean id="listaOpcoesByIdLocator"
+		class="com.sinfic.ipdms.integration.ipdms.locator.impl.ListaOpcoesByIdLocator">
+		<constructor-arg ref="listaOpcoesRepository" />
+	</bean>
+
+	<bean id="domainObjectLoaderManipulator"
+		class="com.sinfic.ipdms.integration.ipdms.transformer.impl.LoadLocalObjectFlowBeanManipulator"
+		abstract="true">
+		<property name="locators">
+			<map>
+				<entry key="com.sinfic.ipdms.domain.entity.Variante">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.VarianteBySiglaLocator">
+						<constructor-arg ref="processoRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.domain.entity.ServicoOnline">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.ServicoOnlineByNumberAndTypeAndSystemLocator">
+						<constructor-arg ref="servicoOnlineRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.domain.entity.Etapa">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.EtapaByCodWorkflowLocator">
+						<constructor-arg ref="etapaRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.domain.entity.Processo">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.ProcessoByWorkflowIdLocator">
+						<constructor-arg ref="processoRepository" />
+					</bean>
+				</entry>
+				
+				<!--
+				<entry key="com.sinfic.ipdms.domain.entity.Conjunto"
+					value-ref="conjuntoBySiglaLocator" />
+								
+				<entry key="com.sinfic.ipdms.domain.entity.ItemConjunto">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.ItemConjuntoBySiglaLocator">
+						<constructor-arg ref="conjuntoByIdLocator" />
+					</bean>
+				</entry>
+				-->
+				
+				<entry key="com.sinfic.ipdms.domain.entity.ListaOpcoes" value-ref="listaOpcoesBySiglaLocator" />
+								
+				<entry key="com.sinfic.ipdms.domain.entity.Opcao">
+					<bean class="com.sinfic.ipdms.integration.ipdms.locator.impl.OpcaoBySiglaLocator">
+						<constructor-arg ref="listaOpcoesByIdLocator" />
+					</bean>
+				</entry>
+				
+				<entry key="com.sinfic.ipdms.modules.entidade.domain.Entidade">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.EntidadeByIdLocator">
+						<constructor-arg ref="entidadeRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.domain.entity.EntidadeRole">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.EntidadeRoleBySiglaLocator">
+						<constructor-arg ref="entidadeRoleRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.modules.templates.domain.Template">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.TemplateByTituloLocator">
+						<constructor-arg ref="templateRepository" />
+					</bean>
+				</entry>
+				<entry
+					key="com.sinfic.ipdms.domain.entity.documento.TipoDocumentoAnexado">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.TipoDocumentoAnexadoBySiglaLocator">
+						<constructor-arg ref="tipoDocumentoAnexadoRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.domain.entity.ColaboradorInfo">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.ColaboradorByLoginLocator">
+						<constructor-arg ref="colaboradorExtendedRepository" />
+					</bean>
+				</entry>
+				<entry key="com.sinfic.ipdms.domain.entity.TipoMovimento">
+					<bean
+						class="com.sinfic.ipdms.integration.ipdms.locator.impl.TipoMovimentoByIdLocator">
+						<constructor-arg ref="tipoMovimentoRepository" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+</beans>

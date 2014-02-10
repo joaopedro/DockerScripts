@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+  						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">		
+
+	<start-actions>
+		<action bean="dynamicFormAction" method="setupForm" />
+		<action bean="dynamicFormAction" method="preFillSessionValues" />
+		<action bean="flowUtils" method="establishReferer" />		
+	</start-actions>
+  						
+  	<start-state idref="formScreen" />
+
+	<!-- DYNAMIC SCREEN FORM -->
+	<view-state id="formScreen" view="webflow.dynamic.formscreen">
+   		<transition on="next" to="processDynamicForm" />
+   		<transition on="refreshDynamicValues" to="formScreenAjax">
+   			<action bean="dynamicFormAction" method="refreshDynamicValues" />
+   		</transition>
+   		<transition on="suspend" to="suspender" />
+	</view-state>
+	<view-state id="formScreenAjax" view="webflow.dynamic.formscreen.ajax">
+   		<transition on="next" to="processDynamicForm" />
+   		<transition on="refreshDynamicValues" to="formScreenAjax">
+   			<action bean="dynamicFormAction" method="refreshDynamicValues" />
+   		</transition>
+   		<transition on="suspend" to="suspender" />
+	</view-state>
+	<action-state id="processDynamicForm">
+		<entry-actions>
+			<action bean="dynamicFormAction" method="bindDynamicValues" />
+		</entry-actions>
+		<action bean="dynamicFormAction" method="bindAndValidate">
+			<attribute name="validatorMethod" value="validateDynamicForm" />
+		</action>
+		<transition on="success" to="createDocAnexadoQrCodeStickerAjax" />
+		<transition on="error" to="formScreenAjax" />
+	</action-state>
+
+	<!-- Impressão de ARCode -->
+
+	<view-state id="createDocAnexadoQrCodeSticker" view="webflow.teste.docanexasdoqrcodesticker">
+		<transition to="preencherDocumentos" on="next">
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+		<transition to="createDocAnexadoQrCodeStickerAjax" on="createqrcode">
+			<action bean="dynamicFormAction" method="addNewBarCodeStickerDocAnexado" />
+		</transition>
+		<transition to="formScreen" on="back">
+			<action bean="dynamicFormAction" method="bind"/>
+		</transition>
+	</view-state>
+	<view-state id="createDocAnexadoQrCodeStickerAjax" view="webflow.teste.docanexasdoqrcodesticker.ajax">
+		<transition to="preencherDocumentos" on="next">
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+		<transition to="createDocAnexadoQrCodeStickerAjax" on="createqrcode">
+			<action bean="dynamicFormAction" method="addNewBarCodeStickerDocAnexado" />
+		</transition>
+		<transition to="formScreen" on="back">
+			<action bean="dynamicFormAction" method="bind"/>
+		</transition>
+	</view-state>
+	
+	<!-- Ecra de Anexar Documento -->
+
+	<view-state id="preencherDocumentosAjax" view="webflow.dynamic.anexardocumentos.ajax">
+		<transition on="back" to="createDocAnexadoQrCodeSticker">
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+   		<transition on="next" to="processarDocumentos" />
+   		<transition on="add" to="preencherAdicionarDocumentos" />
+   		<transition on="delete" to="preencherDocumentos">
+   			<action bean="dynamicFormAction" method="deleteDocumentosAnexados" />
+   		</transition>
+   		<transition on="recover" to="preencherDocumentos">
+   			<action bean="dynamicFormAction" method="recoverDocumentosAnexados" />
+   		</transition>
+	</view-state>
+	<view-state id="preencherDocumentos" view="webflow.dynamic.anexardocumentos">
+		<transition on="back" to="createDocAnexadoQrCodeSticker">
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+   		<transition on="next" to="processarDocumentos" />
+   		<transition on="add" to="preencherAdicionarDocumentos" />
+   		<transition on="delete" to="preencherDocumentos">
+   			<action bean="dynamicFormAction" method="deleteDocumentosAnexados" />
+   		</transition>
+   		<transition on="recover" to="preencherDocumentos">
+   			<action bean="dynamicFormAction" method="recoverDocumentosAnexados" />
+   		</transition>
+	</view-state>
+	<action-state id="processarDocumentos">
+		<action bean="dynamicFormAction" method="uploadFiles">
+			<attribute name="validatorMethod" value="validateMandatoryTipificacoes" />
+		</action>
+		<transition on="success" to="addQrCodeToFiles" />
+		<transition on="error" to="preencherDocumentos" />
+		<transition on="dirs-nok" to="servicoindisponivel" />
+	</action-state>
+	<action-state id="preencherAdicionarDocumentos">
+		<action bean="dynamicFormAction" method="uploadFiles" />
+		<transition on="success" to="preencherDocumentos" />
+		<transition on="error" to="preencherDocumentos" />
+		<transition on="dirs-nok" to="servicoindisponivel" />
+	</action-state>
+
+	<!-- Ecra para adicionar QR Codes -->
+	<view-state id="addQrCodeToFiles" view="webflow.teste.addqrcode">
+		<entry-actions>
+			<action bean="dynamicFormAction" method="initializeBarCodeAndPDFProps" />
+		</entry-actions>
+		<transition to="convertToPdf" on="convertToPdf">
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+		<transition to="resumo" on="next">
+			<action bean="dynamicFormAction" method="addBarCodeToFiles" />
+		</transition>
+		<transition to="preencherDocumentosAjax" on="back">
+			<action bean="dynamicFormAction" method="bind"/>
+		</transition>
+	</view-state>
+
+	<view-state id="addQrCodeToFilesAjax" view="webflow.teste.addqrcode.ajax">
+		<entry-actions>
+			<action bean="dynamicFormAction" method="initializeBarCodeAndPDFProps" />
+		</entry-actions>
+		<transition to="convertToPdf" on="convertToPdf">
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+		<transition to="resumo" on="next">
+			<action bean="dynamicFormAction" method="addBarCodeToFiles" />
+		</transition>
+		<transition to="preencherDocumentosAjax" on="back">
+			<action bean="dynamicFormAction" method="bind"/>
+		</transition>
+	</view-state>
+	
+	<!-- Ecra para converter documentos para PDF -->
+	<view-state id="convertToPdf" view="webflow.teste.converttopdf">
+		<transition to="addQrCodeToFilesAjax" on="back">
+			<action bean="dynamicFormAction" method="bind"/>
+		</transition>
+		<transition to="convertToPdf" on="convert">
+			<action bean="dynamicFormAction" method="bind"/>
+			<action bean="dynamicFormAction" method="convertDocumentsToPdf" />
+		</transition>
+	</view-state>
+	
+	<!-- Ecra adicionar documentos por item de conjunto 
+	<view-state id="adicionarDocumentos" view="webflow.dynamic.adddocumentobyitem">
+		<transition on="back" to="preencherDocumentos">
+			<action bean="dynamicFormAction" method="resetDocumentoFisico" />
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+		<transition on="next" to="uploadAdicionarDocumentos">
+			<action bean="dynamicFormAction" method="resetDocumentoFisico" />
+		</transition>
+	</view-state>
+	<action-state id="uploadAdicionarDocumentos">
+		<action bean="dynamicFormAction" method="uploadFilesOfItens">
+			<attribute name="validatorMethod" value="validateMandatoryTipificacoesInItemFiles" />
+		</action>
+		<transition to="adicionarDocumentos" on="error" />
+		<transition to="escolherDocumentoPrincipal" on="success" />
+	</action-state>
+-->
+	<!-- Ecra para seleccionar o documento principal
+	<view-state id="escolherDocumentoPrincipal" view="webflow.dynamic.chooseanexomainfile">
+		<transition on="back" to="adicionarDocumentos">
+			<action bean="dynamicFormAction" method="bind"/>
+   		</transition>
+		<transition on="next" to="escolheDocumentoPrincipal" />
+	</view-state>
+	<view-state id="escolherDocumentoPrincipalAjax" view="webflow.dynamic.chooseanexomainfile.ajax">
+		<transition on="back" to="adicionarDocumentos">
+			<action bean="dynamicFormAction" method="bind"/>
+   		</transition>
+		<transition on="next" to="escolheDocumentoPrincipal" />
+	</view-state>
+	<action-state id="escolheDocumentoPrincipal">
+		<action bean="dynamicFormAction" method="bindAndValidate">
+			<attribute name="validatorMethod" value="validateMainFile" />			
+		</action>
+		<transition to="escolherDocumentoPrincipalAjax" on="error" />
+		<transition to="resumo" on="success" />
+	</action-state>
+	-->
+	
+	<!-- PRESUBMIT SCREEN -->
+	<view-state id="resumo" view="webflow.dynamic.resumoscreenwithfiles">
+		<transition on="back" to="escolherDocumentoPrincipalAjax">
+			<action bean="dynamicFormAction" method="bind" />
+		</transition>
+		<transition on="next" to="save" />
+	</view-state>
+	
+	<!-- SAVE -->
+	<action-state id="save">
+		<action bean="dynamicFormAction" method="save"/>
+		<transition on="success" to="relatorio"/>
+		<transition on="error" to="resumo"/>
+	</action-state>
+
+	<!-- END SCREEN -->
+	<view-state id="relatorio" view="webflow.dynamic.endscreen">
+		<transition on="next" to="concluir" />
+	</view-state>
+	
+	<!-- GLOBAL END STATES -->
+	<end-state id="concluir" view="externalRedirect:${flowScope.relativeReferer}" />
+	<end-state id="cancelar" view="externalRedirect:${flowScope.relativeReferer}" />
+	
+	<global-transitions>
+		<transition on="cancel" to="cancelar" />
+	</global-transitions>
+</flow>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 	xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:util="http://www.springframework.org/schema/util"
+ 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ 							http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- 
+		Security Access Controller for DOCUMENTO
+	 -->
+	<bean id="documentAccessController" class="com.sinfic.ipdms.security.access.SecurityAccessController">
+		<!-- Inject trough constructor one or more filters -->
+		<constructor-arg>		
+			<list>
+				<!-- Filtro para o processo Pai (servicoOnline pai) -->
+				<bean class="com.sinfic.ipdms.security.access.impl.UserSecurityAccessByRuleFilterImpl">
+					<constructor-arg ref="servicoOnlineAccessRuleEngine" />
+					<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.business.rules.ServicoOnlineAccessRuleCallback" />
+					<constructor-arg value="servicoOnline.processoPai" />
+				</bean>
+				<!-- Filtro para o processo -->
+				<bean class="com.sinfic.ipdms.security.access.impl.UserSecurityAccessByRuleFilterImpl">
+					<constructor-arg ref="documentAccessRuleEngine" />
+					<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.business.rules.DocumentoAccessRuleCallback" />
+				</bean>			
+			</list>				
+		</constructor-arg>
+	</bean>
+	
+	<!-- 
+		Security Access Controller for SERVICOONLINE
+	 -->
+	<bean id="servicoOnlineAccessController" class="com.sinfic.ipdms.security.access.SecurityAccessController">
+		<!-- Inject trough constructor one or more filters -->
+		<constructor-arg>
+			<!-- Programatic access filter -->
+			<!--  bean class="com.sinfic.ipdms.domain.security.DisplayServicoOnlineAccessFilter" / -->
+			
+			<!--  Rule based access filter -->
+			<list>
+				<!-- Filtro para o processo Pai -->
+				<bean class="com.sinfic.ipdms.security.access.impl.UserSecurityAccessByRuleFilterImpl">
+					<constructor-arg ref="servicoOnlineAccessRuleEngine" />
+					<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.business.rules.ServicoOnlineAccessRuleCallback" />
+					<constructor-arg value="processoPai" />
+				</bean>
+				<!-- Filtro para o processo -->
+				<bean class="com.sinfic.ipdms.security.access.impl.UserSecurityAccessByRuleFilterImpl">
+					<constructor-arg ref="servicoOnlineAccessRuleEngine" />
+					<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.business.rules.ServicoOnlineAccessRuleCallback" />
+				</bean>
+			</list>					
+		</constructor-arg>
+	</bean>
+	
+	 <!-- 
+		Security Access Controller for locking/unlocking documento
+	 -->
+	 <bean id="documentLockAccessController" class="com.sinfic.ipdms.security.access.SecurityAccessController">
+		<constructor-arg>
+			<!-- Programatic access filter -->
+			<!--bean class="com.sinfic.ipdms.domain.security.DocumentoLockAccessFilter">
+				<constructor-arg ref="colaboradorExtendedRepository" />
+			</bean-->
+			<!--  Rule based access filter -->
+			<bean class="com.sinfic.ipdms.security.access.impl.UserSecurityAccessByRuleFilterImpl">
+				<constructor-arg ref="documentoLockRuleEngine" />
+				<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.business.rules.DocumentoLockAccessRuleCallback" />
+			</bean>					
+		</constructor-arg>	 
+	 </bean>
+	 
+	 <!-- FILTERING PROCESSORS! -->
+	 
+	 <!-- 
+	 	Filter a list of Processo by the logged user organica
+	  -->
+	 <bean id="processoByOrganicaFilteringProcessor" class="com.sinfic.ipdms.security.filtering.SecurityFilteringProcessor" scope="singleton">
+	 	<constructor-arg>
+	 		<bean class="com.sinfic.ipdms.domain.security.ProcessoByUserOrganicaAccessFilter" />
+	 	</constructor-arg>
+	 </bean>
+	 
+	 <!-- 
+	 	Filter a list of ServicoOnline by the logged user organica
+	  -->
+ 	 <bean id="servicoOnlineByOrganicaFilteringProcessor" class="com.sinfic.ipdms.security.filtering.SecurityFilteringProcessor">
+	 	<constructor-arg>
+	 		<bean class="com.sinfic.ipdms.domain.security.ServicoOnlineByUserOrganicaAccessFilter" />
+	 	</constructor-arg>
+	 </bean>
+	 
+	 
+	 <!-- 
+	 	Service to control the access to the Modulos
+	  -->
+	<bean id="checkModuleAccessService" class="com.sinfic.ipdms.modules.commons.services.impl.CheckModuleAccessImpl">
+		<constructor-arg ref="colaboradorExtendedRepository" />
+		<constructor-arg ref="moduloRepository" />
+	</bean>
+	
+	<!-- 
+		User Input Sanitizer for XSS attacks
+	 -->
+	 <bean id="xssUserInputSanitizer" class="com.sinfic.ipdms.security.xss.UserInputSanitizer">
+	 	<constructor-arg type="java.net.URL"> <value>/WEB-INF/conf/xss/antisamy-slashdot-1.4.4.xml</value></constructor-arg>
+	 </bean>
+	 
+	 <!--
+	 	List of uri's that are excluded from the XSS Sanitizer Process 
+	  -->
+	 <util:list id="excludeUrisFromXSSFilterList" list-class="java.util.ArrayList">
+	 	<value>/plugin/uploadPluginAction</value>
+	 </util:list>
+	 
+</beans>

@@ -1,0 +1,559 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5" metadata-complete="true">
+
+	<!--
+	<context-param>
+		<param-name>com.sinfic.kcms.hibernate.configuration</param-name>
+		<param-value>/conf/hibernate.cfg.xml</param-value>
+	</context-param>
+	-->
+
+	<!-- 
+		LOG Configuration
+		Adds the location of log4j properties file into server context and uses 
+		the Spring Config Listener to bootstrapt it
+	-->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/conf/log.properties</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	
+	<!-- 
+		JSTL Fmt initialization
+		Adds the location of the resource file for the use of <fmt> tags
+	 -->
+	<context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>/resources/IPDMSResources</param-value>
+    </context-param>
+
+	
+	<!-- 
+		Spring Initialization
+		Adds the locations of the multiple configuration spring files 
+		and uses the Spring Initialization Listener
+	 -->	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/*-context.xml,
+            /WEB-INF/*-beans.xml,
+            /WEB-INF/applicationContext-acegi-security.xml,
+            /WEB-INF/conf/spring/*.xml,
+            /WEB-INF/conf/spring/appServlet/*.xml,
+           classpath:workflow-connector-context.xml,
+           classpath:ipdms-services-context.xml</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+
+	<!--listener>
+		<listener-class>com.sinfic.ipdms.utils.license.SessionCounterListener</listener-class>	
+	</listener-->
+	
+	<!-- 
+		KCMS Initialization
+		This listener initialize some static structures of KCMS like:
+		SessionUtil, TransactionUtil, etc...
+	 -->
+	<listener>
+		<listener-class>com.sinfic.kcms.presentation.listener.ApplicationContextListener</listener-class>	
+	</listener>
+
+	<!-- 
+		Big Faceless PDF Integration - Initialize Licence Key
+	 -->
+	<listener>
+		<listener-class>com.sinfic.ipdms.integration.bdo.BFOInitializeLicenseListener</listener-class>	
+	</listener>
+
+	
+	<!-- 	#######	BIRT #######	-->
+	<!-- 	#######		 #######	-->
+ 	<!-- Output image/chart directory. Default to ${birt home}/report/images -->
+	<context-param>
+		<param-name>BIRT_VIEWER_IMAGE_DIR</param-name>
+		<param-value>docs/birt/images</param-value>
+	</context-param>
+		
+	<!-- BIRT Initialization
+		 Initialized BIRT Runtime Engine to generate reports
+	
+	<listener>
+		<listener-class>com.sinfic.ipdms.integration.birt.InitializeBirtEngineListener</listener-class>
+	</listener>-->
+ 
+	<!-- Servlet Http Session Listener -->
+	<listener>
+		<listener-class>com.sinfic.ipdms.integration.birt.BirtHttpSessionListener</listener-class>		
+	</listener>
+	<!-- 	#######		 #######	-->
+	<!-- 	#######	BIRT #######	-->
+
+	
+	<!-- XSS Anti Filter -->
+	<filter>
+		<filter-name>xssAntiFilter</filter-name>
+		<filter-class>com.sinfic.ipdms.security.xss.XssFilter</filter-class>
+		<init-param>
+			<param-name>xssConfigFile</param-name>
+			<param-value>/WEB-INF/conf/xss/antisamy-slashdot-1.4.4.xml</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>xssAntiFilter</filter-name>
+		<url-pattern>/j_acegi_security_check</url-pattern>
+	</filter-mapping>	
+	<!-- 
+	<filter-mapping>
+		<filter-name>xssAntiFilter</filter-name>
+		<url-pattern>*.rest</url-pattern>
+	</filter-mapping>	
+	-->
+	
+	<!-- 
+		Struts Action Transactional Filter
+		This filter is configured to wrap a action call within a transaction. 
+		If an exception is thrown rollbacks the transaction. 
+	 -->
+	<filter>
+		<filter-name>transactionFilter</filter-name>
+		<filter-class>com.sinfic.ipdms.integration.struts.filter.StrutsTransactionFilter</filter-class>
+	</filter>
+
+	<!-- 
+		KCMS Filter
+		TODO: Javadoc
+	 -->
+	<filter>
+		<filter-name>wrapperFilter</filter-name>
+		<filter-class>com.sinfic.ipdms.integration.kcms.filter.CustomRequestWrapperFilter</filter-class>
+	</filter>
+
+	<!-- 
+		KCMS Filter
+		TODO: Javadoc
+	 -->
+	<filter>
+		<filter-name>securityFilter</filter-name>
+		<filter-class>com.sinfic.kcms.security.KCMSSecurityFilter</filter-class>
+	</filter>
+	
+	<!-- 
+		Security Filter
+		Responsible for the security chain applied to the request to the webapp
+	 -->	
+	<filter>
+        <filter-name>Acegi Filter Chain Proxy</filter-name>
+        <filter-class>org.springframework.security.util.FilterToBeanProxy</filter-class>
+        <init-param>
+            <param-name>targetClass</param-name>
+            <param-value>org.springframework.security.util.FilterChainProxy</param-value>
+        </init-param>
+    </filter>
+    
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping >
+		
+	<filter-mapping>
+      <filter-name>Acegi Filter Chain Proxy</filter-name>
+      <url-pattern>/guichetelectronico/publico/j_acegi_security_check_guichet</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+      <filter-name>Acegi Filter Chain Proxy</filter-name>
+      <url-pattern>/j_acegi_security_check</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+      <filter-name>Acegi Filter Chain Proxy</filter-name>
+      <url-pattern>/guichetelectronico/publico/j_acegi_logout_guichet</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+      <filter-name>Acegi Filter Chain Proxy</filter-name>
+      <url-pattern>/j_acegi_logout</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+      <filter-name>Acegi Filter Chain Proxy</filter-name>
+      <url-pattern>*.do2</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>Acegi Filter Chain Proxy</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
+ 	
+	<filter-mapping>
+		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<url-pattern>/services/*</url-pattern>
+	</filter-mapping>	
+	
+	<filter-mapping>
+		<filter-name>transactionFilter</filter-name>
+		<url-pattern>/informacoes.do2</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+    <filter-mapping>
+        <filter-name>transactionFilter</filter-name>
+        <url-pattern>*.do2</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>transactionFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+	<filter-mapping>
+		<filter-name>transactionFilter</filter-name>
+		<servlet-name>receiveProcessExporter</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>transactionFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>*.do2</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+	<filter-mapping>
+		<filter-name>securityFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>securityFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>		
+	</filter-mapping>
+
+	
+
+	<!-- 
+		DAEMON Servlet
+		Responsible for the periodic batch processes
+	 -->
+	<servlet>
+		<servlet-name>DaemonServiceServlet</servlet-name>
+		<servlet-class>com.sinfic.daemon.servlet.DaemonServiceServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<!-- 
+		STRUS Action Servlet
+		Main servlet responsible for the .do2 requests
+	 -->
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/conf/ipdms/struts-config.xml,/conf/ipdms/struts-config-administration.xml,/WEB-INF/conf/struts-config.xml,/conf/guichetelectronico/struts-config.xml</param-value>
+        </init-param>
+        <!-- <init-param>
+            <param-name>config/backoffice</param-name>
+            <param-value>/conf/backoffice/struts-config.xml</param-value>
+        </init-param> -->
+        <init-param>
+            <param-name>config/guichetelectronico</param-name>
+            <param-value>/conf/guichetelectronico/struts-config.xml,/WEB-INF/conf/guichetelectronico/struts-config.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>config/ssl</param-name>
+            <param-value>/WEB-INF/conf/struts-config-ssl.xml,/conf/ipdms/struts-config-ssl.xml</param-value>
+        </init-param>
+<!--         <init-param> -->
+<!--         	<param-name>config/calendario</param-name> -->
+<!--         	<param-value>/WEB-INF/conf/calendario/struts-config.xml, /conf/struts/struts-config-calendario.xml</param-value> -->
+<!--         </init-param> -->
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>3</param-value>
+        </init-param>
+        <init-param>
+            <param-name>detail</param-name>
+            <param-value>3</param-value>
+        </init-param>
+        <init-param>
+            <param-name>validating</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+        	<param-name>validate</param-name>
+        	<param-value>true</param-value>
+        </init-param>
+        <init-param>
+        	<param-name>redirect-login-form</param-name>
+        	<param-value>/informacoes.do2</param-value>
+        </init-param>
+        <init-param>
+        	<param-name>moduleAccessSpringService</param-name>
+        	<param-value>checkModuleAccessService</param-value>
+        </init-param>
+        <init-param>
+        	<param-name>xssUserInputSpringService</param-name>
+        	<param-value>xssUserInputSanitizer</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <!-- 
+    	SIG OpenLayers Servlet
+     -->   
+    <servlet>
+    	<description>SIG Servlet</description>
+    	<display-name>openLayersProxy</display-name>
+    	<servlet-name>openLayersProxy</servlet-name>
+    	<servlet-class>com.sinfic.ipdms.comum.util.OpenLayersProxyServlet</servlet-class>
+    </servlet>
+    
+    
+	<!-- 
+    	Axis Servlet 
+    	Servlet responsible to handler webservice's calls	
+    -->
+	<servlet>
+		<display-name>Apache-Axis Servlet</display-name>
+		<servlet-name>AxisServlet</servlet-name>
+		<servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+    <servlet>
+        <servlet-name>Jersey REST Service</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.sinfic.ipdms.mobile.rest.RestApplicationDeployer</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+	<servlet-mapping>
+	  <servlet-name>Jersey REST Service</servlet-name>
+	  <url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+	
+	
+  	<servlet-mapping>
+    	<servlet-name>AxisServlet</servlet-name>
+    	<url-pattern>*.jws</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>AxisServlet</servlet-name>
+    	<url-pattern>/services/*</url-pattern>
+  	</servlet-mapping>
+    
+    
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do2</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>openLayersProxy</servlet-name>
+    	<url-pattern>/openLayersProxy</url-pattern>
+    </servlet-mapping>
+	
+
+	<servlet>
+	    <servlet-name>receiveProcessExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveProcessExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveProcess</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>receiveEntidadeSingularExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveEntidadeSingularExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveEntidadeSingular</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>receiveEntidadeColectivaExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveEntidadeColectivaExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveEntidadeColectiva</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>receiveFuncaoExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveFuncaoExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveFuncao</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>receiveOrganicaExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveOrganicaExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveOrganica</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>receiveColaboradorExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveColaboradorExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveColaborador</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>exportServicoOnlineStatsExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>exportServicoOnlineStatsExporter</servlet-name>
+	    <url-pattern>/remoting/ExportServicoOnlineStats</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>receiveDimensaoExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveDimensaoExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveDimensao</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>registeredExternalFolderServiceExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>registeredExternalFolderServiceExporter</servlet-name>
+	    <url-pattern>/remoting/RegisteredExternalFolders</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>receiveValorDimensionalExporter</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>receiveValorDimensionalExporter</servlet-name>
+	    <url-pattern>/remoting/ReceiveValorDimensional</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+        <description>AtmosphereServlet</description>
+        <servlet-name>AtmosphereServlet</servlet-name>
+        <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+        <async-supported>true</async-supported>
+        <!-- Use it with mvn jetty:run -->
+        <init-param>
+            <param-name>org.atmosphere.cpr.packages</param-name>
+			<!--comma separated packages-->
+			<param-value>com.sinfic.ipdms.websockets</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AtmosphereServlet</servlet-name>
+        <url-pattern>/websockets/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Handles all requests into the application -->
+    <servlet>
+        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value></param-value>
+            <!--<param-value>-->
+                <!--/WEB-INF/conf/spring/appServlet/servlet-context.xml-->
+            <!--</param-value>-->
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <!--
+    	Other configurations 
+     -->
+	<session-config>
+		<session-timeout>180</session-timeout>
+	</session-config>
+	
+	<welcome-file-list>
+ 		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<jsp-config>
+	    <jsp-property-group>
+			<url-pattern>*.jspx</url-pattern>
+			<is-xml>true</is-xml>
+	    </jsp-property-group>
+	    <taglib>
+			<taglib-uri>/tags/html</taglib-uri>
+			<taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+	
+</web-app>

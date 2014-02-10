@@ -1,0 +1,20 @@
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+    "http://struts.apache.org/dtds/tiles-config_1_1.dtd">
+<tiles-definitions>
+
+	<definition name="ipdms.base" 
+				path="/ipdms/layout/ipdmsLayout.jsp"
+				controllerClass="com.sinfic.ipdms.comum.controller.MenuController">
+		<put name="ipdmsScriptsThemes" value="/ipdms/layout/ipdmsScriptsThemes.jsp" />
+		<put name="header" value="/ipdms/base/header.jsp" />
+		<put name="menu" value="/ipdms/base/menu.jsp" />
+		<put name="login" value="/ipdms/base/login.jsp" />
+		<put name="main-body" value="/ipdms/blank.jsp" />
+		<put name="footer" value="/ipdms/base/footer.jsp" />
+	</definition>
+
+	<definition name="ssl.ipdms.redirect" extends="ipdms.base">
+		<put name="main-body" value="/ipdms/ssl/redirectToSSL.jsp" />
+	</definition>		
+</tiles-definitions>

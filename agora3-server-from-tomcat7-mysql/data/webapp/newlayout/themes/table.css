@@ -1,0 +1,67 @@
+	/* 
+	Generic Styling, for Desktops/Laptops 
+	*/
+	#Table table { 
+		width: 100%; 
+		border-collapse: collapse; 
+		font-size: 0.625em;
+		}
+
+	#Table table  tr:nth-of-type(odd) { 
+		background: #eee;
+		}
+	#Table table  tr:nth-of-type(even) { 
+		background: #eee;	 
+		}
+	#Table table tr.no_read {
+		font-weight:bold;
+		}
+	#Table table tr td a {
+		display:block;
+		height:100%;
+		width:100%;
+				}
+	#Table table th { 
+		background: #c1cd1d; 
+		color: white; 
+		font-weight: normal; 
+		white-space:nowrap;
+		}
+	#Table table td, th { 
+		padding: 6px; 
+		border-right:1px solid white;
+		border-bottom:1px solid white;
+		
+		}
+	#Table table tr:hover { background: #e8e8e8; } 
+	#Table table td:last-child,
+	#Table table th:last-child {
+   		 border-right: none;
+	 	}
+
+	#Table table th:first-child,
+	#Table table td:first-child {
+		border-left: none;
+		}
+
+
+	.sortable {
+	    background-image: url("../images/sorter_bg.png") !important;
+	    background-position: right center !important;
+	    background-repeat: no-repeat !important;
+	    cursor: pointer !important;
+	}
+	
+	.sortable-asc {
+	    background-image: url("../images/sorter_asc.png") !important;
+	    background-position: right center !important;
+	    background-repeat: no-repeat !important;
+	    cursor: pointer !important;
+	}
+	
+	.sortable-desc {
+	    background-image: url("../images/sorter_desc.png") !important;
+	    background-position: right center !important;
+	    background-repeat: no-repeat !important;
+	    cursor: pointer !important;
+	}

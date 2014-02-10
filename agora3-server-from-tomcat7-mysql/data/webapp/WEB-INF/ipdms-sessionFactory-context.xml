@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:util="http://www.springframework.org/schema/util"
+ 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ 							http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+	<bean id="propertyPlaceholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  		<property name="location" value="classpath:conf/ipdmsConfig.properties" />
+ 	</bean>
+ 	
+	<!-- ========================= RESOURCE DEFINITIONS ========================= -->
+	<bean id="servicoOnlineSaveEventListener" class="com.sinfic.ipdms.tramitacao.listener.ServicoOnlineSaveEventListener">
+        <property name="saveServicoOnlineListeners">
+            <list>
+                <bean class="com.sinfic.ipdms.tramitacao.listener.SaveServicoOnlineStartWorkflowListener"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Standart DataSource -->
+ 	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${sessionFactory.hibernate.connection.ipdms.driver_class}" />
+		<property name="url" value="${sessionFactory.hibernate.connection.ipdms.url}" />
+		<property name="username" value="${sessionFactory.hibernate.connection.ipdms.username}" />
+		<property name="password" value="${sessionFactory.hibernate.connection.ipdms.password}" />
+	</bean>
+
+ <!-- JNDI DataSource  
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">  
+		<property name="jndiName" value="java:comp/env/jdbc/ipdms" />  
+	</bean>  -->
+
+    <bean id="agoraMapings" parent="workflowMappings" class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="sourceList">
+            <list merge="true">
+                <value>classpath:mappings/ipdms/**/*.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+  	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  		<property name="dataSource"><ref local="dataSource"/></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">${sessionFactory.hibernate.ipdms.show_sql}</prop>
+				<prop key="hibernate.current_session_context_class">${sessionFactory.hibernate.ipdms.current_session_context_class}</prop>
+				<prop key="hibernate.dialect">${sessionFactory.hibernate.ipdms.dialect}</prop>
+				<prop key="hibernate.cache.provider_class">${sessionFactory.hibernate.cache.ipdms.provider_class}</prop>
+				<prop key="connection.pool_size">1</prop>
+			</props>
+		</property>
+		<property name="eventListeners">
+			<map>
+				<entry key="save-update"><ref local="servicoOnlineSaveEventListener" /></entry>
+			</map>
+		</property>
+
+		<property name="mappingJarLocations">
+			<list>
+				<value>WEB-INF/lib/kcms*.jar</value>
+				<value>WEB-INF/lib/ipdms*.jar</value>
+			</list>
+		</property>
+		
+    <!-- 		<property name="mappingResources">
+		    <list>
+                 <value>mappings/Ecra1.hbm.xml</value>
+                 <value>mappings/Ecra2.hbm.xml</value>
+                 <value>mappings/DocumentoEntidade.hbm.xml</value>
+                  Formacao Only
+                 <value>mappings/EcraFormacao.hbm.xml</value>
+                 <value>mappings/Pessoa.hbm.xml</value> 
+			</list>
+		</property>
+	-->
+        <property name="mappingLocations" ref="agoraMapings"/>
+
+<!--         <property name="mappingLocations"> -->
+<!--         	<list> -->
+<!--         		<value>classpath:org/jbpm/identity/*.hbm.xml</value> -->
+<!--         		<value>classpath:org/jbpm/db/*.hbm.xml</value> -->
+<!--          		<value>classpath:org/jbpm/instantiation/*.hbm.xml</value>       		 -->
+<!--         		<value>classpath:org/jbpm/graph/**/*.hbm.xml</value> -->
+<!--         		<value>classpath:org/jbpm/bytes/*.hbm.xml</value> -->
+<!--          		<value>classpath:org/jbpm/**/def/*.hbm.xml</value>  -->
+<!--          		<value>classpath:org/jbpm/job/*.hbm.xml</value>  -->
+<!--         		<value>classpath:org/jbpm/**/exe/*.hbm.xml</value>    -->
+<!--         		<value>classpath:org/jbpm/**/log/*.hbm.xml</value>         -->
+<!--         		<value>classpath:org/jbpm/**/log/**/*.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/ByteArrayInstance.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/DateInstance.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/DoubleInstance.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/HibernateLongInstance.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/HibernateStringInstance.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/LongInstance.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/NullInstance.hbm.xml</value> -->
+<!-- 				<value>classpath:org/jbpm/context/exe/variableinstance/StringInstance.hbm.xml</value> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+
+
+
+        <property name="entityCacheStrategies">
+		   	<props>
+		     	<prop key="com.sinfic.kcms.domain.Configentry">read-write</prop>
+		     	<prop key="com.sinfic.kcms.data.conteudo.Conteudo">read-write</prop>
+		     	<prop key="com.sinfic.kcms.data.conteudo.Relacao">read-write</prop>
+		   	</props>
+		</property>
+	</bean>
+	
+ 	<bean id="dataSource2"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${sessionFactory.hibernate.connection.ipdms.driver_class}" />
+		<property name="url" value="${sessionFactory.hibernate.connection.ipdms.url}" />
+		<property name="username" value="${sessionFactory.hibernate.connection.ipdms.username}" />
+		<property name="password" value="${sessionFactory.hibernate.connection.ipdms.password}" />
+	</bean>
+
+	<bean id="sessionFactory2" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  		<property name="dataSource"><ref local="dataSource2"/></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">${sessionFactory.hibernate.ipdms.show_sql}</prop>
+				<prop key="hibernate.current_session_context_class">${sessionFactory.hibernate.ipdms.current_session_context_class}</prop>
+				<prop key="hibernate.dialect">${sessionFactory.hibernate.ipdms.dialect}</prop>
+				<prop key="hibernate.cache.provider_class">${sessionFactory.hibernate.cache.ipdms.provider_class}</prop>
+				<prop key="connection.pool_size">1</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="sessionFactoryGeneric" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  		<property name="dataSource"><ref local="dataSource"/></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">${sessionFactory.hibernate.ipdms.show_sql}</prop>
+				<prop key="hibernate.current_session_context_class">${sessionFactory.hibernate.ipdms.current_session_context_class}</prop>
+				<prop key="hibernate.dialect">${sessionFactory.hibernate.ipdms.dialect}</prop>
+				<prop key="hibernate.cache.provider_class">${sessionFactory.hibernate.cache.ipdms.provider_class}</prop>
+				<prop key="connection.pool_size">1</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="auditSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  		<property name="dataSource"><ref local="dataSource"/></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">${sessionFactory.hibernate.ipdms.show_sql}</prop>
+				<prop key="hibernate.current_session_context_class">${sessionFactory.hibernate.ipdms.current_session_context_class}</prop>
+				<prop key="hibernate.dialect">${sessionFactory.hibernate.ipdms.dialect}</prop>
+				<prop key="hibernate.cache.provider_class">${sessionFactory.hibernate.cache.ipdms.provider_class}</prop>
+				<prop key="connection.pool_size">1</prop>
+			</props>
+		</property>
+ 		<property name="mappingJarLocations">
+			<list>
+				<value>WEB-INF/lib/kcms*.jar</value>
+				<value>WEB-INF/lib/ipdms*.jar</value>
+			</list>
+		</property>
+        <property name="mappingLocations">
+        	<list>
+           	<!-- IPDMS -->
+        	    <value>classpath:mappings/ipdms/**/*.hbm.xml</value>
+			</list>
+		</property>		
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="entityInterceptor" ref="chainedInterceptor"/>
+	</bean>
+  	<bean id="transactionManager2" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory2" />
+	</bean>
+  	<bean id="transactionManagerGeneric" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactoryGeneric" />
+	</bean>
+
+	<bean id="chainedInterceptor" class="com.sinfic.ipdms.integration.hibernate.util.ChainedInterceptor">
+ 		<constructor-arg>
+			<list>
+				<bean class="com.sinfic.ipdms.persistence.comunication.CrossSystemInterceptor" />
+				<bean class="com.sinfic.ipdms.persistence.versioning.VersionInterceptor">
+                    <property name="sessionFactory" ref="sessionFactory" />
+                    <property name="tipoConteudoMapper" ref="tipoConteudoMapper" />
+                    <property name="sessionContext" ref="ipdmsSessionContextBean"/>                    
+				</bean>
+				<bean name="auditingInterceptor" class="com.sinfic.framework.audit.AuditInterceptor">
+					<constructor-arg>
+						<ref bean="auditSessionFactory"/>
+					</constructor-arg>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- ========================= TRANSACTION DEFINITIONS ========================= -->
+	<!-- bean id="transactionFilter" class="com.sinfic.framework.spring.SpringTransactionFilter">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean-->
+
+    <!-- Proxy/Deproxy Util -->
+    <bean id="proxyUtil" class="com.sinfic.ipdms.integration.hibernate.util.HibernateProxyHelper"/>
+</beans>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+  						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">		
+
+	<start-actions>
+		<action bean="pessoaFormAction" method="setupForm" />
+		<action bean="flowUtils" method="establishReferer" />		
+	</start-actions>
+  						
+  	<start-state idref="iniciarPedido" />
+
+	<!-- Ecrã Inicial do processo -->
+	<view-state id="iniciarPedido" view="webflow.pessoa.inicio">
+   		<transition on="next" to="processarPedido" />
+   		<transition on="suspend" to="suspender" />
+	</view-state>
+	<view-state id="iniciarPedidoAjax" view="webflow.pessoa.inicio.ajax">
+   		<transition on="next" to="processarPedido" />
+   		<transition on="suspend" to="suspender" />
+	</view-state>
+	<action-state id="processarPedido">
+		<action bean="pessoaFormAction" method="bindAndValidate">
+			<attribute name="validatorMethod" value="validate" />
+		</action>
+		<transition on="success" to="resumo" />
+		<transition on="error" to="iniciarPedidoAjax" />
+	</action-state>
+	
+	
+
+	<!-- Ecra resumo formacao teste -->
+	<view-state id="resumo" view="webflow.pessoa.resumo">
+		<transition on="back" to="iniciarPedidoAjax">
+			<action bean="pessoaFormAction" method="bind" />
+		</transition>
+		<transition on="next" to="save" />
+	</view-state>
+	
+	
+	<!-- GRAVAÇÃO -->
+	<action-state id="save">
+		<action bean="pessoaFormAction" method="save"/>
+		<transition on="success" to="relatorio"/>
+		<transition on="error" to="resumo"/>
+	</action-state>
+
+	<!-- RELATÓRIO -->
+	<view-state id="relatorio" view="webflow.formacaoteste.relatorio">
+		<transition on="next" to="concluir" />
+	</view-state>
+
+
+	<!-- ECRÃS FINAIS -->
+	<end-state id="concluir" view="externalRedirect:${flowScope.referer}" />
+	<end-state id="cancelar" view="externalRedirect:${flowScope.referer}" />
+	
+	<global-transitions>
+		<transition on="cancel" to="cancelar" />
+	</global-transitions>
+</flow>

@@ -1,0 +1,238 @@
+/*Form User Login*/
+
+form#UserLogin {
+	width:34%;
+	margin:0 auto;
+	padding:20px 0 0 0px;
+	color:#555;
+
+	}
+	
+form#UserLogin span.h1 {
+		/*font-size:16px;*/
+		font-size:1em; 
+		}
+form#UserLogin label, input{
+	display:inline-block;
+	}
+form#UserLogin label{
+	width:28%;
+	min-width:25%;
+	padding:0 5px 0 0;
+	text-align:right;
+	font-size: 0.625em;
+	}	
+form#UserLogin input[type="text"], input[type="password"]{
+			background:#e8e8e8;
+			border:0;
+			padding:0.5em 0.2em;
+   			margin-right: 2%;
+			}
+
+form#UserLogin input[type="submit"]{
+			border:0;
+			background:#e8e8e8;
+			padding:0.4em 0.2em;
+			}
+			
+/*Search and User*/
+
+form#Search {
+	border:0;
+	padding:0;
+	margin:0;
+	}
+	form#Search input[type="submit"]{
+		background:url(../images/icones/Ico_pesquisa1.png) no-repeat 0 center ; 
+		border:0 !important;
+		padding:5px 10px;
+		margin-left:5px;
+		}
+	form#Search input[type="search"]{
+		margin:5px 0;
+		padding:2px;
+		border:0 !important;
+		background:#e8e8e8;
+		}
+		
+/*Menu*/
+	
+form#nav input[type="button"] {
+		background:#EFEFEF;
+		padding:0.4em 0.2em;
+		line-height:20px;
+		border:0;
+
+		} 		
+form#nav input[type="button"].close {
+		background:none;
+		padding:0;
+		border:0;
+		margin:0 0 0 5px;
+		color:#fff;
+		font-size: 1em;
+		} 
+	form#nav input[type="button"].close:hover{
+		padding:0;
+		border:0;
+		margin:0 0 0 5px;
+		
+		}
+	form#nav input[type="button"].more {
+			background:none;
+			padding:0 4px;
+			border:0;
+			color:#fff;
+			font-size: 1em;
+			} 
+	form#nav input[type="button"].more:hover{
+			padding:0 4px;
+			border:0;
+			color:#555;
+			background:#ddd;
+			}
+	form#nav div.FormCellLeft {
+		width:30%;
+		float:left;
+		}
+	form#nav div.FormCellLeft label{
+		width:30%;
+		min-width:20%;
+		float:left;
+		text-align:right;
+		padding:0 5px 0 0;
+		}
+	 
+form#nav div.FormCellLeft input[type=text] {
+	border:0px solid #ccc;
+	background:#e8e8e8;
+	margin:0 8px 0 0;
+	padding:0;
+	display:inline-block;
+	max-width:100%;
+	min-width:50%;
+	}
+
+/*Geral*/
+/* * { */
+/* 	border:0; */
+/* 	} */
+
+a img{
+	border:0;
+	}
+
+form.Geral input[type=text], textarea, select{
+	color:#555;
+	background:#e8e8e8;
+	max-width:100%;
+	min-width:50%;
+	display:inline;
+	}
+	
+/* form.Geral fieldset { */
+/* 	padding:0; */
+/* 	margin:0; */
+/* 	display:table; */
+/* 	position:relative; */
+/* 	} */
+
+.formGeralFieldset {
+	padding:0;
+	margin:0;
+	display:table;
+	position:relative;
+	border: 0 none;
+	}
+
+/* form.Geral legend { */
+/* 	text-indent:5px; */
+/* 	width:99.9%; */
+/* 	padding:2px 0 2px 2px; */
+/* 	margin:0 0 5px 0; */
+/* 	background:#999; */
+/* 	color:white; */
+/* 	font-size: 0.625em; */
+/* 	} */
+
+.formGeralLegend {
+	text-indent:5px;
+	width:99.9%;
+	padding:2px 0 2px 2px;
+	margin:0 0 5px 0;
+	background:#999;
+	color:white;
+	font-size: 0.625em;
+	}
+
+div.FormRow {
+	margin:5px 0;
+	width:100%;
+	display:inline-block;
+	font-size: 0.625em;
+	}
+div.FormRow div.FormCellLeft {
+	float:left;
+	width:49.6%;
+	}
+div.FormRow div.FormCellRight {
+	width:49.6%;
+	float:right;
+	}
+div.FormCellLeft label{
+	width:40%;
+	min-width:30%;
+	float:left;
+	text-align:right;
+	padding:0 5px 0 0;
+	}
+ 
+div.FormCellRight label{
+	width:40%;
+	min-width:30%;
+	float:left;
+	text-align:right;
+	padding:0 5px 0 0;
+	}
+
+div.button {
+	padding:5px;
+	display:inline-block;
+	}
+	
+input[type="button"] {
+	/*font-size:10px;*/
+	font-size:0.625em;
+	color:#555;	
+	margin:0 5px 0 0;
+	padding:4px;
+	border: 0 none;
+	}
+	
+input[type="button"].BT_primary {
+	/*font-size:10px;*/
+	font-size:0.625em;
+	color:white;	
+	margin:0 5px 0 0;
+	background:#00a4e8;
+	}
+	
+textarea:focus, input:focus {
+	border: 0.1em solid #ccc;
+	}
+
+
+/*SortByDate*/			
+		
+fieldset#HiddenDiv_1 {
+	background:#fff;
+	margin:0;
+	padding:1em 1em 0.25em 1em;
+	font-size:0.625em;
+	}
+
+	fieldset#HiddenDiv_1 input[type="text"]{
+		margin:5px 0;
+		padding:2px;
+		border:0;
+		}

@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:annotation-config/>
+
+
+	<!-- Declared to spring inject applicationcontext -->
+	<bean id="ipdmsRepositoryFactory" class="com.sinfic.ipdms.persistence.repository.RepositoryFactory" />
+
+    <bean id="hibernateDaoSupportRepository" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="ipdmsrepository" abstract="true">
+		<constructor-arg ref="sessionFactory" />
+	</bean>
+	
+	<bean id="genericRepository" abstract="true" parent="ipdmsrepository"
+			class="com.sinfic.ipdms.persistence.repository.hibernate.GenericPersistentEntityRepository" />
+	
+	<bean id="genericVersionableRepository" parent="ipdmsrepository" abstract="true"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.GenericVersionableEntityRepository">
+		<constructor-arg><bean class="com.sinfic.ipdms.integration.kcms.persistence.hibernate.KCMSVersionableCriteriaHelper" /></constructor-arg>
+	</bean>	
+	
+	<bean id="configEntryRepository" class="com.sinfic.ipdms.integration.kcms.persistence.hibernate.ConfigentryRepository" parent="hibernateDaoSupportRepository">
+	   <property name="ipdmsSessionContext" ref="ipdmsSessionContextBean" />
+	</bean>
+
+	<bean id="conteudoExtendedRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.ConteudoExtendedRepository" parent="hibernateDaoSupportRepository">
+	   <property name="ipdmsSessionContext" ref="ipdmsSessionContextBean" />
+	</bean>
+				
+
+	<bean id="colaboradorExtendedRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.ColaboradorRepository" parent="ipdmsrepository">
+        <constructor-arg ref="conteudoExtendedRepository" />
+        <constructor-arg ref="ipdmsSessionContextBean" />        
+		<property name="getByLoginCache">
+			<bean class="com.sinfic.ipdms.utils.cache.LRUTimedCache">
+				<constructor-arg value="10" />
+				<property name="cacheName" value="getByLogin" />
+				<property name="maxAge" value="6000" /> 
+			</bean>
+		</property>
+	</bean>
+ 
+
+	<bean id="tipoConteudoExtendedRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.TipoConteudoExtendedRepository"
+		parent="hibernateDaoSupportRepository" >
+		<property name="conteudoRepository" ref="conteudoExtendedRepository" />
+	</bean>	
+
+	<bean id="relatorioRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.Relatorio" />
+	</bean>
+
+	<bean id="organicaRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.OrganicaRepository" parent="ipdmsrepository">
+		<constructor-arg ref="organicaFuncaoRepository" />
+		<constructor-arg ref="processoRepository" />
+	</bean>
+		
+		
+	<bean id="colOrganicaFuncaoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ColOrganicaFuncaoRepository" parent="ipdmsrepository" />
+
+	<bean id="funcaoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.FuncaoRepository" parent="ipdmsrepository">
+		<constructor-arg ref="organicaFuncaoRepository" />
+	</bean>
+
+	<bean id="organicaFuncaoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.OrganicaFuncaoRepository" parent="ipdmsrepository">
+		<constructor-arg ref="etapaRepository" />
+		<constructor-arg ref="colaboradorExtendedRepository" />
+		<constructor-arg ref="moduloRepository" />
+	</bean>
+
+	<bean id="grupoRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.GrupoRepository" parent="ipdmsrepository" />
+
+	<bean id="grupoVarianteRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.GrupoVariante" />
+	</bean>
+
+	<bean id="etapaGrupoVarianteRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.EtapaGrupoVarianteRepository" parent="ipdmsrepository" />
+
+	<bean id="moduloRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ModuloRepository" parent="ipdmsrepository" />
+
+	<!--
+	<bean id="itemConjuntoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ItemConjuntoRepository" parent="genericVersionableRepository" />
+		
+	<bean id="conjuntoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ConjuntoRepository" parent="genericVersionableRepository" />
+		
+	<bean id="classificacaoConjuntoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ClassificacaoConjuntoRepository"
+		parent="ipdmsrepository" />
+	-->
+
+	<bean id="varianteRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.VarianteRepository" parent="conteudoExtendedRepository" />
+		
+	<bean id="processoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ProcessoRepository" parent="genericVersionableRepository" />
+
+	<bean id="etapaRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.EtapaRepository"
+		parent="genericVersionableRepository" />
+
+	<bean id="tarefaRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.TarefaRepository" parent="ipdmsrepository" />
+
+	<bean id="distribuicaoEtapaRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.DistribuicaoEtapa" />
+	</bean>
+
+	<bean id="mailboxRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.MailboxRepository" parent="ipdmsrepository" />
+
+	<bean id="servicoOnlineRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ServicoOnlineRepository" parent="conteudoExtendedRepository">
+		<constructor-arg ref="colaboradorExtendedRepository" />
+		<constructor-arg ref="entidadeRepository" />
+		<constructor-arg ref="processoRepository" />
+		<constructor-arg ref="tipoMovimentoRepository" />					
+	</bean>
+		
+
+	<bean id="soComentarioRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.SoComentarioRepository" parent="ipdmsrepository">
+		<constructor-arg ref="soLogRepository" />
+	</bean>
+
+	<bean id="informacaoRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.Informacao" />	
+	</bean>
+
+	<bean id="documentoRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.DocumentoRepository" parent="conteudoExtendedRepository" />
+							
+	<bean id="documentoSubProcessoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.DocumentoSubProcessoRepository"
+		parent="ipdmsrepository" />
+
+	<bean id="soLogRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.SoLogRepository"
+		parent="ipdmsrepository">
+		<constructor-arg ref="servicoOnlineRepository" />
+		<constructor-arg ref="etapaRepository" />
+	</bean>
+		
+	<bean id="entidadeRepository" 
+		class="com.sinfic.ipdms.modules.entidade.persistence.hibernate.EntidadeRepository" parent="ipdmsrepository" />
+
+	<bean id="entidadeRelationRoleRepository" 
+		class="com.sinfic.ipdms.modules.entidade.persistence.hibernate.EntidadeRelationRoleRepository" parent="ipdmsrepository" />
+
+	<bean id="entidadeRoleRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.EntidadeRoleRepository" parent="ipdmsrepository" />
+
+	<bean id="soConhecimentoRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.SoConhecimentoRepository" parent="ipdmsrepository" />
+
+	<bean id="processoEncarregarRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.ProcessoEncarregarRepository" parent="ipdmsrepository"/>
+	
+	<bean id="moradaRepository" class="com.sinfic.ipdms.modules.morada.pt.MoradaRepository" parent="hibernateDaoSupportRepository" />
+
+	<!-- No caso de o LocaleDependent Repository ser o AO e ser necessário ter acesso 
+		às popups de morada (Distrito, Concelho, Freguesia) do IPDMS então deve ser
+		Defenido um bean com o  com.sinfic.ipdms.modules.morada.pt.MoradaRepository de forma
+		a que as acções das popups consigam usar este repositório.
+	<bean id="moradaPtRepository" class="com.sinfic.ipdms.modules.morada.pt.MoradaRepository" parent="hibernateDaoSupportRepository" />
+	 -->
+	
+	<bean id="moradaIpdmsRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.MoradaIpdmsPTRepository" parent="hibernateDaoSupportRepository" />
+
+	<bean id="alertRepository" class="com.sinfic.ipdms.modules.alert.persistence.hibernate.AlertRepository" parent="ipdmsrepository" />
+	
+	<bean id="tipoTemplateRepository" class="com.sinfic.ipdms.modules.templates.persistence.hibernate.TipoTemplateRepository" parent="ipdmsrepository" />
+
+	<bean id="templateRepository" class="com.sinfic.ipdms.modules.templates.persistence.hibernate.TemplateRepository" parent="ipdmsrepository" />
+
+	<bean id="tipoMovimentoRepository"  parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.TipoMovimento" />
+	</bean>	
+	
+	<bean id="gestaoAusenciasRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.GestaoAusenciasRepository" parent="conteudoExtendedRepository">
+		<constructor-arg ref="organicaRepository" />					
+		<!-- Cache object to be used in the getByLoginCache method -->
+		<property name="colaboradoresSubsCache">
+			<bean class="com.sinfic.ipdms.utils.cache.LRUTimedCache">
+				<constructor-arg value="10" />
+				<property name="cacheName" value="colaboradorSubstitutosCache" />
+				<property name="maxAge" value="86400000" /> <!-- In miliseconds -->
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="gestaoReclamacoesRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.GestaoReclamacoesRepository" parent="conteudoExtendedRepository" />		
+
+	<bean id="gestaoSugestoesRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.GestaoSugestoesRepository" parent="conteudoExtendedRepository" />
+	
+	<bean id="comunicacaoParecerRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.ComunicacaoParecerRepository" parent="ipdmsrepository" />
+		
+	<bean id="menuGuichetRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.MenuGuichetRepository" parent="ipdmsrepository"/>
+	
+	<bean id="menuItemGuichetRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.MenuItemGuichetRepository" parent="ipdmsrepository"/>
+
+	<bean id="geographicServiceRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.GeographicServiceRepository" parent="ipdmsrepository" />
+	
+	<bean id="geographicObjectRepository"  parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.GeographicObject" />
+	</bean>
+	
+	<bean id="dynamicRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.DynamicRepository" parent="hibernateDaoSupportRepository" />
+	
+	<bean id="dimensaoRepository" class="com.sinfic.ipdms.modules.dimensoes.persistence.hibernate.DimensaoRepository" parent="conteudoExtendedRepository" />
+			
+	<bean id="nivelDimensionalRepository" class="com.sinfic.ipdms.modules.dimensoes.persistence.hibernate.NivelDimensionalRepository" parent="conteudoExtendedRepository" />
+						
+	<bean id="valorDimensionalRepository" class="com.sinfic.ipdms.modules.dimensoes.persistence.hibernate.ValorDimensionalRepository" parent="conteudoExtendedRepository" />
+						
+	<bean id="tipoDocumentoAnexadoRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.documento.TipoDocumentoAnexado" />
+	</bean>
+
+	<bean id="apresentacaoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ApresentacaoRepository" parent="hibernateDaoSupportRepository" />
+	
+
+
+	<bean id="geographicLayerRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.GeographicLayer" />		
+	</bean>	
+	<bean id="anexoGuichetRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.AnexoGuichet" />		
+	</bean>	
+	
+	<bean id="noticiaGuichetRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.NoticiaGuichetRepository"
+		parent="genericRepository" />
+	
+	<bean id="soAprovacaoColRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.SOAprovacaoColRepository" parent="conteudoExtendedRepository" />
+			
+	<bean id="geographicFeatureSnapshotRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.GeographicFeatureSnapshot" />		
+	</bean>	
+
+	<bean id="varianteTipoDocumentoAnexadoRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.VarianteTipoDocumentoAnexado" />		
+	</bean>
+			
+
+	<bean id="documentoLockRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.DocumentoLockRepository" parent="ipdmsrepository" />
+		
+	<bean id="certificateInfoRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.CertificateInfoRepository" parent="ipdmsrepository" />
+
+	<bean id="remoteSystemRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.RemoteSystemRepository" parent="ipdmsrepository" />
+
+	<bean id="dynamicFormTemplateRepository"  class="com.sinfic.ipdms.modules.dynamicform.persistence.hibernate.DynamicFormTemplateRepository" parent="ipdmsrepository" />
+
+	<bean id="dynamicFieldTemplateRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.DynamicFieldTemplateRepository" parent="ipdmsrepository" />
+	
+	<bean id="dynamicFormInstanceRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.DynamicFormInstanceRepository" parent="ipdmsrepository" />
+	
+	<bean id="dynamicFieldInstanceRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.DynamicFieldInstanceRepository" parent="ipdmsrepository" >
+		<constructor-arg ref="soLogRepository" />	
+		<constructor-arg ref="dynamicFormInstanceRepository" />
+		<constructor-arg ref="dynamicFieldTemplateRepository" />
+	</bean>
+	
+	<bean id="dynamicIndexedFieldInstanceRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.DynamicIndexedFieldInstanceRepository" parent="ipdmsrepository" />
+	
+	<bean id="sendServicoOnlineRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.SendServicoOnlineRepository" parent="ipdmsrepository" />
+	
+	<bean id="sendMailRegistryRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.SendMailRegistryRepository" parent="ipdmsrepository" />
+
+	<bean id="servicoOnlineStatRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.ServicoOnlineStatRepository" parent="ipdmsrepository" />
+
+	<bean id="roleHistoryRepository" class="com.sinfic.ipdms.persistence.repository.hibernate.RoleHistoryRepository" 
+		parent="ipdmsrepository" />
+
+	<bean id="auditLogRecordRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.AuditLogRecordRepository" parent="hibernateDaoSupportRepository" />
+
+	<bean id="listaOpcoesRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ListaOpcoesRepository" parent="ipdmsrepository" />
+		
+	<bean id="opcaoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.OpcaoRepository" parent="ipdmsrepository" />
+
+	<bean id="exportBundleRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ExportBundleRepository" parent="ipdmsrepository" />
+	
+	<bean id="importBundleRepository" parent="genericRepository">
+		<constructor-arg type="java.lang.Class" value="com.sinfic.ipdms.domain.entity.documento.ImportBundle" />
+	</bean>
+
+	<bean id="comentarioPessoalRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.ComentarioPessoalRepository"  
+		parent="ipdmsrepository" />
+		
+	<bean id="nodeIdGraficoRepository"
+		class="com.sinfic.ipdms.persistence.repository.hibernate.NodeIdGraficoRepository" parent="ipdmsrepository" />
+		
+	<bean id="logAdministrativoRepository" 
+		class="com.sinfic.ipdms.persistence.repository.hibernate.LogAdministrativoRepository" parent="ipdmsrepository" />
+
+	<bean name="menuCache" class="com.sinfic.ipdms.utils.cache.LRUTimedCache" >
+		<constructor-arg value="10" />
+		<property name="cacheName" value="mainMenu" />
+		<property name="maxAge" value="86400000" /> 
+	</bean>	
+	 			<bean id="numeracaoRepository" 
+		class="com.sinfic.ipdms.persistence.core.repository.hibernate.NumeracaoRepository" parent="ipdmsrepository" />
+	
+	<bean id="numeracaoSelectorRepository" 
+		class="com.sinfic.ipdms.persistence.core.repository.hibernate.NumeracaoSelectorRepository"  parent="ipdmsrepository" />	   
+		
+
+	<bean id="numeracaoHelper" class="com.sinfic.ipdms.utils.NumeracaoHelper">
+	   <property name="numeracaoRepository" ref="numeracaoRepository" />
+	   <property name="numeracaoSelectorRepository" ref="numeracaoSelectorRepository" />
+	</bean>
+
+    <!--##################################-->
+    <!--##### Begin of Service Beans #####-->
+    <!--##################################-->
+
+    <bean id="grupoCRUDService" class="com.sinfic.ipdms.administration.GrupoCRUDService" />
+
+    <bean id="colaboradorService" class="com.sinfic.ipdms.administration.ColaboradorService" />
+
+    <bean id="organicaCRUDService" class="com.sinfic.ipdms.administration.OrganicaCRUDService" />
+
+    <bean id="organicaFuncaoService" class="com.sinfic.ipdms.administration.OrganicaFuncaoService" />
+
+    <bean id="colOrganicaFuncaoCRUDService" class="com.sinfic.ipdms.administration.ColOrganicaFuncaoCRUDService" />
+
+    <bean id="distribuicaoEtapaCRUDService" class="com.sinfic.ipdms.administration.DistribuicaoEtapaCRUDService" />
+
+    <bean id="dynamicFormTemplateCRUDService" class="com.sinfic.ipdms.administration.DynamicFormTemplateCRUDService" />
+
+    <bean id="etapaService" class="com.sinfic.ipdms.administration.EtapaCRUDService" />
+
+    <bean id="listaOpcoesService" class="com.sinfic.ipdms.administration.ListaOpcoesCRUDService" />
+
+    <bean id="opcaoCRUDService" class="com.sinfic.ipdms.administration.OpcaoCRUDService" />
+
+    <bean id="processoService" class="com.sinfic.ipdms.administration.ProcessoCRUDService" />
+
+    <bean id="funcaoCRUDService" class="com.sinfic.ipdms.administration.FuncaoCRUDService" />
+
+    <bean id="apresentacaoService" class="com.sinfic.ipdms.administration.ApresentacaoService" />
+
+    <bean id="entidadeRoleCRUDService" class="com.sinfic.ipdms.administration.EntidadeRoleCRUDService" />
+
+    <bean id="informacaoCRUDService" class="com.sinfic.ipdms.administration.InformacaoCRUDService" />
+
+    <bean id="varianteCRUDService" class="com.sinfic.ipdms.administration.VarianteCRUDService" />
+
+    <bean id="geographicServiceService" class="com.sinfic.ipdms.administration.GeographicServiceService" />
+
+
+    <bean id="resourcerepository"
+          class="com.sinfic.ipdms.modules.resources.persistence.hibernate.ResourcesRepository" parent="ipdmsrepository" />
+
+    <bean id="raterepository"
+          class="com.sinfic.ipdms.modules.resources.persistence.hibernate.RateRepository" parent="ipdmsrepository" />
+
+    <bean id="resourceClassificationRepository"
+          class="com.sinfic.ipdms.modules.resources.persistence.hibernate.ResourcesClassificationRepository" parent="ipdmsrepository" />
+
+    <bean id="resourceCategoryRepository"
+          class="com.sinfic.ipdms.modules.resources.persistence.hibernate.ResourcesCategoryRepository" parent="ipdmsrepository" />
+
+    <bean id="calendarrepository" class="com.sinfic.ipdms.modules.calendar.persistence.hibernate.CalendarRepository" parent="ipdmsrepository"/>
+
+    <bean id="distribuicaoRepository"
+          class="com.sinfic.ipdms.persistence.repository.hibernate.DistribuicaoEtapaRepository" parent="ipdmsrepository" />
+
+    <bean id="etapaTarefaRepository"
+          class="com.sinfic.ipdms.persistence.repository.hibernate.EtapaTarefaRepository" parent="ipdmsrepository" />
+
+    <bean id="etapaResourceRepository"
+          class="com.sinfic.ipdms.persistence.repository.hibernate.EtapaResourceAssociationRepository" parent="ipdmsrepository" />
+
+    <!--<bean id="ldapUsersService" class="com.sinfic.ipdms.integration.spring.ldap.LDAPUsersService" />-->
+
+    <bean id="conteudoEntityFactory" class="com.sinfic.ipdms.integration.kcms.util.ConteudoEntityFactory" />
+
+    <bean id="interopRoleHelper" class="com.sinfic.ipdms.utils.InteropRoleHelper" />
+
+    <!--<bean id="diskFileForm" class="com.sinfic.ipdms.comum.formbean.upload.DiskFileForm" />-->
+
+    <bean id="processoHelper" class="com.sinfic.ipdms.domain.ProcessoHelper" />
+
+    <bean id="configEntryHelper" class="com.sinfic.ipdms.utils.ConfigEntryHelper" />
+
+    <bean id="springIntegrationService" class="com.sinfic.ipdms.integration.spring.web.SpringIntegrationService" />
+
+    <bean id="numeracaoCRUDService" class="com.sinfic.ipdms.administration.NumeracaoCRUDService" />
+
+    <bean id="numeracaoSelectorCRUDService" class="com.sinfic.ipdms.administration.NumeracaoSelectorCRUDService" />
+
+    <!--##################################-->
+    <!--###### End of Service Beans ######-->
+    <!--##################################-->
+	
+</beans>

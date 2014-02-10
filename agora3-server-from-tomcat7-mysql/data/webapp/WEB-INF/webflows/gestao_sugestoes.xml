@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+  						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+	<start-actions>
+		<action bean="gestaoSugestoesFormAction" method="setupForm" />
+		<action bean="flowUtils" method="establishReferer" />
+	</start-actions>
+	
+	<start-state idref="gestaoSugestoes.inicio" />
+	
+	<!-- 1. Dados da Sugestao -->
+	<view-state id="gestaoSugestoes.inicio" view="ipdms.gestaoSugestoes.inicio">
+		<transition on="next" to="gestaoSugestoes.resumo">
+			<action bean="gestaoSugestoesFormAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validarSugestao" />
+			</action>
+		</transition>
+	</view-state>
+	
+	<!-- 2. Resumo da Sugestao  -->
+	<view-state id="gestaoSugestoes.resumo" view="ipdms.gestaoSugestoes.resumo">
+		<transition on="prev" to="gestaoSugestoes.inicio">
+			<action bean="gestaoSugestoesFormAction" method="bind" />
+		</transition>
+		<transition on="next" to="gestaoSugestoes.gravar" />
+	</view-state>
+	
+	<!-- 3. Gravação da Sugestao  -->
+	<action-state id="gestaoSugestoes.gravar">
+		<action bean="gestaoSugestoesFormAction" method="save" /><!-- suspend -->
+		<transition on="success" to="gestaoSugestoes.relatorio"/>
+		<transition on="save-error" to="gestaoSugestoes.resumo"/>
+		<transition on="error" to="gestaoSugestoes.resumo"/>
+	</action-state>
+	
+	<!-- 5. Relatório da Sugestao  -->
+	<view-state id="gestaoSugestoes.relatorio"  view="ipdms.gestaoSugestoes.relatorio" >
+		<transition on="next" to="gestaoSugestoes.concluir">
+			<action bean="gestaoSugestoesFormAction" method="bind" />
+		</transition>
+	</view-state>
+	
+	<!-- ECRÃS FINAIS -->
+	<end-state id="gestaoSugestoes.concluir" view="externalRedirect:${flowScope.referer}" />
+	<end-state id="gestaoSugestoes.cancelar" view="externalRedirect:${flowScope.referer}" />
+	
+	<global-transitions>
+		<transition on="cancel" to="gestaoSugestoes.cancelar" />
+	</global-transitions>
+	
+</flow>

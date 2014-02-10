@@ -1,0 +1,1 @@
+Proj4js.defs["EPSG:20790"] = "+title=Hayford-Gauss, Datum Lisboa, Militar +proj=tmerc +lat_0=39.66666666666666 +lon_0=1 +k=1.000000 +x_0=200000 +y_0=300000 +ellps=intl +pm=lisbon +units=m +nadgrids=ptdLX";

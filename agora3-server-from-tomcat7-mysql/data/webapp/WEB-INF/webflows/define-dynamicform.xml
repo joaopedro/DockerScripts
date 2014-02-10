@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.4.xsd">
+
+<on-start>
+        <evaluate expression="defineDynamicFormFlow.initFlow"/>
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </on-start>
+    <view-state id="editFormFull" view="ipdms.module.dynamicform.editform">
+        <transition on="newfield" to="choosefieldtype">
+            <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes">
+                <attribute name="returnView" value="editForm"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.bind"/>
+        </transition>
+        <transition on="editField" to="choosefieldtypedecision">
+            <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes">
+                <attribute name="returnView" value="editForm"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.editField"/>
+        </transition>
+        <transition on="toresumo" to="resumoaction"/>
+        <transition on="removeFields" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.removeFields"/>
+        </transition>
+        <transition on="upField" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.upField"/>
+        </transition>
+        <transition on="downField" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.downField"/>
+        </transition>
+        <transition on="editvalidators" to="editFormValidators">
+            <evaluate expression="defineDynamicFormFlow.bind"/>
+        </transition>
+        <transition on="groupfields" to="listGroupFields">
+            <evaluate expression="defineDynamicFormFlow.bind"/>
+        </transition>
+        <transition on="preview" to="previewForm">
+            <evaluate expression="defineDynamicFormFlow.previewForm"/>
+        </transition>
+        <transition on="toggleChangeLine" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.toggleChangeLine"/>
+        </transition>
+        <transition on="rightCol" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.rightCol"/>
+        </transition>
+        <transition on="leftCol" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.leftCol"/>
+        </transition>
+        <transition on="upRow" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.upRow"/>
+        </transition>
+        <transition on="downRow" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.downRow"/>
+        </transition>
+        <transition on="changeRow" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.changeRow"/>
+        </transition>
+        <transition on="changeColumn" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.changeColumn"/>
+        </transition>
+        <transition on="changeAlignment" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.changeAlignment"/>
+        </transition>
+        <transition on="layoutChanged" to="editForm">
+            <evaluate expression="defineDynamicFormFlow.changeLayout"/>
+        </transition>
+    </view-state>
+
+    <!-- Edit/Create new dynamic form view --><view-state id="editForm" view="ipdms.module.dynamicform.editform.ajax">
+    <transition on="newfield" to="choosefieldtype">
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes">
+            <attribute name="returnView" value="editForm"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+    <transition on="editField" to="choosefieldtypedecision">
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes">
+            <attribute name="returnView" value="editForm"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.editField"/>
+    </transition>
+    <transition on="toresumo" to="resumoaction">
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate"/>
+    </transition>
+    <transition on="removeFields" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.removeFields"/>
+    </transition>
+    <transition on="upField" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.upField"/>
+    </transition>
+    <transition on="downField" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.downField"/>
+    </transition>
+    <transition on="editvalidators" to="editFormValidators">
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+    <transition on="groupfields" to="listGroupFields">
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+    <transition on="preview" to="previewForm">
+        <evaluate expression="defineDynamicFormFlow.previewForm"/>
+    </transition>
+    <transition on="toggleChangeLine" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.toggleChangeLine"/>
+    </transition>
+    <transition on="rightCol" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.rightCol"/>
+    </transition>
+    <transition on="leftCol" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.leftCol"/>
+    </transition>
+    <transition on="upRow" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.upRow"/>
+    </transition>
+    <transition on="downRow" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.downRow"/>
+    </transition>
+    <transition on="changeRow" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.changeRow"/>
+    </transition>
+    <transition on="changeColumn" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.changeColumn"/>
+    </transition>
+    <transition on="changeAlignment" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.changeAlignment"/>
+    </transition>
+    <transition on="layoutChanged" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.changeLayout"/>
+    </transition>
+</view-state>
+
+    <!-- Preview Form --><view-state id="previewForm" view="ipdms.module.dynamicform.previewform">
+    <transition on="back" to="editForm"/>
+</view-state>
+
+    <!-- Form Validators --><view-state id="editFormValidators" view="ipdms.module.dynamicform.editformvalidators">
+    <transition on="back" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateFormValidators"/>
+        </evaluate>
+    </transition>
+    <transition on="addvalidator" to="editFormValidators">
+        <evaluate expression="defineDynamicFormFlow.addValidatorToForm"/>
+    </transition>
+    <transition on="removevalidator" to="editFormValidators">
+        <evaluate expression="defineDynamicFormFlow.removeValidatorOfForm"/>
+    </transition>
+</view-state>
+
+    <!-- GROUPS --><view-state id="listGroupFields" view="ipdms.module.dynamicform.listgroupfields">
+    <transition on="back" to="editForm"/>
+    <transition on="newgroup" to="editGroupField">
+        <evaluate expression="defineDynamicFormFlow.newGroup"/>
+    </transition>
+    <transition on="editgroup" to="editGroupField">
+        <evaluate expression="defineDynamicFormFlow.editGroup"/>
+    </transition>
+    <transition on="upGroup" to="listGroupFields">
+        <evaluate expression="defineDynamicFormFlow.upGroup"/>
+    </transition>
+    <transition on="downGroup" to="listGroupFields">
+        <evaluate expression="defineDynamicFormFlow.downGroup"/>
+    </transition>
+    <transition on="changeGroupRow" to="listGroupFields">
+        <evaluate expression="defineDynamicFormFlow.changeGroupRow"/>
+    </transition>
+    <transition on="changeGroupColumn" to="listGroupFields">
+        <evaluate expression="defineDynamicFormFlow.changeGroupColumn"/>
+    </transition>
+    <transition on="changeGroupAlignment" to="listGroupFields">
+        <evaluate expression="defineDynamicFormFlow.changeGroupAlignment"/>
+    </transition>
+    <transition on="removegroups" to="listGroupFields">
+        <evaluate expression="defineDynamicFormFlow.removeGroups"/>
+    </transition>
+</view-state>
+    <view-state id="editGroupField" view="ipdms.module.dynamicform.editgroupfield">
+        <transition on="back" to="listGroupFields"/>
+        <transition on="savegroup" to="listGroupFields">
+            <evaluate expression="defineDynamicFormFlow.resetGroupCheckBoxes"/>
+            <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+                <attribute name="validatorMethod" value="validateGroupField"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.saveGroup"/>
+        </transition>
+    </view-state>
+
+    <!-- Choose field type that is going to be added to the form --><view-state id="choosefieldtype" view="ipdms.module.dynamicform.choosefieldtype">
+    <transition on="back" to="#{flowScope.returnView}"/>
+    <transition on="next" to="choosefieldtypedecision">
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+</view-state>
+    <action-state id="choosefieldtypedecision">
+        <evaluate expression="flowScope.dynamicForm.editFieldType"/>
+        <transition on="STRING" to="editstringfield">
+            <evaluate expression="defineDynamicFormFlow.initEditStringField"/>
+        </transition>
+        <transition on="INTEGER" to="editintfield">
+            <evaluate expression="defineDynamicFormFlow.initEditIntField"/>
+        </transition>
+        <transition on="DATE" to="editdatefield">
+            <evaluate expression="defineDynamicFormFlow.initEditDateField"/>
+        </transition>
+        <transition on="RADIOINPUT" to="editradiofield">
+            <evaluate expression="defineDynamicFormFlow.initEditRadioField"/>
+        </transition>
+        <transition on="COMBOBOX" to="editcomboboxfield">
+            <evaluate expression="defineDynamicFormFlow.initEditComboboxField"/>
+        </transition>
+        <transition on="ALERT" to="editalertfield">
+            <evaluate expression="defineDynamicFormFlow.initEditAlertField"/>
+        </transition>
+        <transition on="NIVELDIMENSIONAL" to="editniveldimensionalfield">
+            <evaluate expression="defineDynamicFormFlow.initEditNivelDimensionalField"/>
+        </transition>
+        <transition on="MORADA" to="editmoradafield">
+            <evaluate expression="defineDynamicFormFlow.initEditMoradaField"/>
+        </transition>
+        <transition on="DIMENSAO" to="editdimensaofield">
+            <evaluate expression="defineDynamicFormFlow.initEditDimensaoField"/>
+        </transition>
+        <transition on="ENTIDADE" to="editentidadefield">
+            <evaluate expression="defineDynamicFormFlow.initEditEntidadeField"/>
+        </transition>
+        <transition on="MULTILINE" to="editmultilinefield">
+            <evaluate expression="defineDynamicFormFlow.initEditMultilineField"/>
+        </transition>
+        <transition on="EXTERNALOPTION" to="editexternaloptionfield">
+            <evaluate expression="defineDynamicFormFlow.initEditExternalOptionField"/>
+        </transition>
+        <transition on="TABLEOFFIELDS" to="edittableoffieldsfield">
+            <evaluate expression="defineDynamicFormFlow.initEditTableOfFieldsField"/>
+        </transition>
+        <transition on="PHOTO" to="editphotofield">
+            <evaluate expression="defineDynamicFormFlow.initEditPhotoField"/>
+        </transition>
+        <transition on="MULTIPLEPHOTO" to="editmultiplephotofield">
+            <evaluate expression="defineDynamicFormFlow.initEditMultiplePhotoField"/>
+        </transition>
+        <transition on="ORGANICA" to="editorganicafield">
+            <evaluate expression="defineDynamicFormFlow.initEditOrganicaField"/>
+        </transition>
+        <transition on="COLABORADOR" to="editcolaboradorfield">
+            <evaluate expression="defineDynamicFormFlow.initEditColaboradorField"/>
+        </transition>
+        <transition on="COMENTARIOPESSOAL" to="editcomentariopessoalfield">
+            <evaluate expression="defineDynamicFormFlow.initEditComentarioPessoalField"/>
+        </transition>
+        <transition on="BOOLEAN" to="editbooleanfield">
+            <evaluate expression="defineDynamicFormFlow.initEditBooleanField"/>
+        </transition>
+        <transition on="PROCESS" to="editprocessofield">
+            <evaluate expression="defineDynamicFormFlow.initEditProcessoField"/>
+        </transition>
+    </action-state>
+
+    <!--  EDIT FIELD VIEW STATES --><view-state id="edittableoffieldsfield" view="ipdms.module.dynamicform.edittableoffieldsfield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes">
+            <attribute name="returnView" value="editForm"/>
+        </evaluate>
+    </on-entry>
+    <transition on="backToEditForm" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateTableOfFieldsField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.resetEditTableField"/>
+    </transition>
+    <transition on="newfield" to="choosefieldtype">
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes">
+            <attribute name="returnView" value="edittableoffieldsfield"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+    <transition on="editField" to="choosefieldtypedecision">
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes">
+            <attribute name="returnView" value="edittableoffieldsfield"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.editField"/>
+    </transition>
+    <transition on="removeFields" to="edittableoffieldsfield">
+        <evaluate expression="defineDynamicFormFlow.removeFieldsInTable"/>
+    </transition>
+    <transition on="upField" to="edittableoffieldsfield">
+        <evaluate expression="defineDynamicFormFlow.upFieldInTable"/>
+    </transition>
+    <transition on="downField" to="edittableoffieldsfield">
+        <evaluate expression="defineDynamicFormFlow.downFieldInTable"/>
+    </transition>
+    <transition on="addValidatorEditField" to="edittableoffieldsfield">
+        <evaluate expression="defineDynamicFormFlow.addValidatorToTableField"/>
+    </transition>
+    <transition on="removeValidatorEditField" to="edittableoffieldsfield">
+        <evaluate expression="defineDynamicFormFlow.removeValidatorOfTableField"/>
+    </transition>
+    <transition on="savefield" to="editForm">
+        <evaluate expression="defineDynamicFormFlow.resetTableFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateTableOfFieldsField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveTableField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type STRING --><view-state id="editstringfield" view="ipdms.module.dynamicform.editstringfield">
+    <on-entry>
+        <!-- Setting atribute for global transitions --><evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateStringField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type INT --><view-state id="editintfield" view="ipdms.module.dynamicform.editintfield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateIntField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type DATE --><view-state id="editdatefield" view="ipdms.module.dynamicform.editdatefield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateDateField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type RADIO --><view-state id="editradiofield" view="ipdms.module.dynamicform.editradiofield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="refresh" to="editradiofield">
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+    <transition on="addoption" to="editradiofield">
+        <evaluate expression="defineDynamicFormFlow.addOptionValueToField"/>
+    </transition>
+    <transition on="removeoption" to="editradiofield">
+        <evaluate expression="defineDynamicFormFlow.removeOptionValueOfField"/>
+    </transition>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateOptionFields"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type COMBOBOX --><view-state id="editcomboboxfield" view="ipdms.module.dynamicform.editcomboboxfield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="refresh" to="editcomboboxfield">
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+    <transition on="addoption" to="editcomboboxfield">
+        <evaluate expression="defineDynamicFormFlow.addOptionValueToField"/>
+    </transition>
+    <transition on="removeoption" to="editcomboboxfield">
+        <evaluate expression="defineDynamicFormFlow.removeOptionValueOfField"/>
+    </transition>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateOptionFields"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type ALERT --><view-state id="editalertfield" view="ipdms.module.dynamicform.editalertfield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateAlertField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type NIVELDIMENSIONAL --><view-state id="editniveldimensionalfield" view="ipdms.module.dynamicform.editniveldimensionalfield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateNivelDimensionalField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type MORADA --><view-state id="editmoradafield" view="ipdms.module.dynamicform.editmoradafield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateMoradaField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type DIMENSAO --><view-state id="editdimensaofield" view="ipdms.module.dynamicform.editdimensaofield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.resetField"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateDimensaoField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type ENTIDADE --><view-state id="editentidadefield" view="ipdms.module.dynamicform.editentidadefield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateEntidadeField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type MULTILINE --><view-state id="editmultilinefield" view="ipdms.module.dynamicform.editmultilinefield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateMultilineField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type EXTERNALOPTION --><view-state id="editexternaloptionfield" view="ipdms.module.dynamicform.editexternaloptionfield">
+    <on-entry>
+        <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="refresh" to="editexternaloptionfield">
+        <evaluate expression="defineDynamicFormFlow.bind"/>
+    </transition>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateExternalOptionField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type PHOTO --><view-state id="editphotofield" view="ipdms.module.dynamicform.editphotofield">
+    <on-entry>
+        <!-- Setting atribute for global transitions --><evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validatePhotoField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+
+    <!-- Edit field for type MULTIPLEPHOTO --><view-state id="editmultiplephotofield" view="ipdms.module.dynamicform.editmultiplephotofield">
+    <on-entry>
+        <!-- Setting atribute for global transitions --><evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+    </on-entry>
+    <transition on="savefield" to="#{flowScope.returnView}">
+        <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+        <evaluate expression="defineDynamicFormFlow.resetField"/>
+        <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+            <attribute name="validatorMethod" value="validateMultiplePhotoField"/>
+        </evaluate>
+        <evaluate expression="defineDynamicFormFlow.saveField"/>
+    </transition>
+</view-state>
+    <view-state id="editorganicafield" view="ipdms.module.dynamicform.editorganicafield">
+        <on-entry>
+            <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+        </on-entry>
+        <transition on="savefield" to="#{flowScope.returnView}">
+            <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+            <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+                <attribute name="validatorMethod" value="validateOrganicaField"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.saveField"/>
+        </transition>
+    </view-state>
+    <view-state id="editcolaboradorfield" view="ipdms.module.dynamicform.editcolaboradorfield">
+        <on-entry>
+            <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+        </on-entry>
+        <transition on="savefield" to="#{flowScope.returnView}">
+            <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+            <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+                <attribute name="validatorMethod" value="validateColaboradorField"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.saveField"/>
+        </transition>
+    </view-state>
+    <view-state id="editcomentariopessoalfield" view="ipdms.module.dynamicform.editcomentariopessoalfield">
+        <on-entry>
+            <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+        </on-entry>
+        <transition on="savefield" to="#{flowScope.returnView}">
+            <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+            <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+                <attribute name="validatorMethod" value="validateComentarioPessoalField"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.saveField"/>
+        </transition>
+    </view-state>
+    <view-state id="editbooleanfield" view="ipdms.module.dynamicform.editbooleanfield">
+        <on-entry>
+            <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+        </on-entry>
+        <transition on="savefield" to="#{flowScope.returnView}">
+            <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+            <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+                <attribute name="validatorMethod" value="validateBooleanField"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.saveField"/>
+        </transition>
+    </view-state>
+    <view-state id="editprocessofield" view="ipdms.module.dynamicform.editprocessofield">
+        <on-entry>
+            <evaluate expression="defineDynamicFormFlow.setFlowScopeAttributes"/>
+        </on-entry>
+        <transition on="savefield" to="#{flowScope.returnView}">
+            <evaluate expression="defineDynamicFormFlow.resetEditFieldCheckBoxes"/>
+            <evaluate expression="defineDynamicFormFlow.bindAndValidate">
+                <attribute name="validatorMethod" value="validateOrganicaField"/>
+            </evaluate>
+            <evaluate expression="defineDynamicFormFlow.saveField"/>
+        </transition>
+    </view-state>
+
+    <!-- Resumo --><action-state id="resumoaction">
+    <evaluate expression="defineDynamicFormFlow.bindAndValidate"/>
+    <transition on="error" to="editForm"/>
+    <transition on="success" to="resumo"/>
+</action-state>
+    <view-state id="resumo" view="ipdms.module.dynamicform.resumowebflow">
+        <transition on="back" to="editForm"/>
+        <transition on="saveform" to="saveform"/>
+    </view-state>
+
+    <!-- Save Dynamic Form and all of its fields--><action-state id="saveform">
+    <evaluate expression="defineDynamicFormFlow.saveDynamicForm"/>
+    <transition on="success" to="endflow"/>
+    <transition on="error" to="editForm"/>
+    <transition on="invalid-state" to="invalidStateAtSave"/>
+</action-state>
+    <view-state id="invalidStateAtSave" view="ipdms.module.dynamicform.invalidstateatsave">
+        <transition on="next" to="endflow"/>
+    </view-state>
+    <end-state id="cancelEndState" view="externalRedirect:/listDynamicForms.do2"/>
+    <end-state id="endflow" view="externalRedirect:/listDynamicForms.do2"/>
+    <global-transitions>
+        <transition on="cancel" to="cancelEndState"/>
+        <transition on="cancelEditField" to="#{flowScope.returnView}"/>
+        <transition on="addRelationEditField" to="#{currentState.id}">
+            <evaluate expression="defineDynamicFormFlow.addRelationToField"/>
+        </transition>
+        <transition on="removeRelationEditField" to="#{currentState.id}">
+            <evaluate expression="defineDynamicFormFlow.removeRelationOfField"/>
+        </transition>
+        <transition on="addValidatorEditField" to="#{currentState.id}">
+            <evaluate expression="defineDynamicFormFlow.addValidatorToField"/>
+        </transition>
+        <transition on="removeValidatorEditField" to="#{currentState.id}">
+            <evaluate expression="defineDynamicFormFlow.removeValidatorOfField"/>
+        </transition>
+    </global-transitions>
+</flow>

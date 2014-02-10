@@ -1,0 +1,1 @@
+cat /var/lib/tomcat7/webapps/ROOT/WEB-INF/classes/conf/agoraConfig.properties.template | sed -e s/\${agora-server-ip}/`echo $AGORA3_SERVER_PORT_8080_TCP_ADDR`/ -e s/\${agora-server-port}/`echo $AGORA3_SERVER_PORT_8080_TCP_PORT`/ > /var/lib/tomcat7/webapps/ROOT/WEB-INF/classes/conf/agoraConfig.properties

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webflow:flow xmlns:webflow="http://www.springframework.org/schema/webflow"
+              xmlns:ns0="http://www.w3.org/2001/XMLSchema-instance"
+              ns0:schemaLocation="http://www.springframework.org/schema/webflow
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+              start-state="formScreen">
+
+    <webflow:input name="tipo"/>
+    <webflow:input name="entidadeId"/>
+    <webflow:input name="assunto"/>
+    <webflow:input name="form"/>
+    <webflow:on-start>
+        <webflow:evaluate expression="dynamicFormAction.setupForm"/>
+        <webflow:evaluate expression="dynamicFormAction.preFillSessionValues"/>
+        <webflow:evaluate expression="flowUtils.establishReferer"/>
+    </webflow:on-start>
+
+    <!-- DYNAMIC SCREEN FORM -->
+    <!--<webflow:view-state id="formScreen" view="webflow.dynamic.formscreen">-->
+    <webflow:view-state id="formScreen" view="agora.webflow.dynamic.formscreen">
+    <!--entry-actions>
+                <action bean="dynamicFormAction" method="initializeFlowBeanWithDynamicTemplate">
+                    <attribute name="form" value="141" />
+                </action>
+            </entry-actions-->
+        <webflow:transition on="next" to="processDynamicForm"/>
+    <webflow:transition on="refreshDynamicValues" to="formScreenAjax">
+        <webflow:evaluate expression="dynamicFormAction.refreshDynamicValues"/>
+    </webflow:transition>
+    <webflow:transition on="suspend" to="suspender"/>
+    </webflow:view-state>
+    <!--<webflow:view-state id="formScreenAjax" view="webflow.dynamic.formscreen.ajax">-->
+    <webflow:view-state id="formScreenAjax" view="agora.webflow.dynamic.formscreen.ajax">
+        <webflow:transition on="next" to="processDynamicForm"/>
+        <webflow:transition on="refreshDynamicValues" to="formScreenAjax">
+            <webflow:evaluate expression="dynamicFormAction.refreshDynamicValues"/>
+        </webflow:transition>
+        <webflow:transition on="suspend" to="suspender"/>
+    </webflow:view-state>
+    <webflow:action-state id="processDynamicForm">
+        <webflow:on-entry>
+            <webflow:evaluate expression="dynamicFormAction.bindDynamicValues"/>
+        </webflow:on-entry>
+        <webflow:evaluate expression="dynamicFormAction.bindAndValidate">
+            <webflow:attribute name="validatorMethod" value="validateDynamicForm"/>
+        </webflow:evaluate>
+        <webflow:transition on="success" to="resumo"/>
+        <webflow:transition on="error" to="formScreenAjax"/>
+    </webflow:action-state>
+
+    <!-- PRESUBMIT SCREEN -->
+    <!--<webflow:view-state id="resumo" view="webflow.dynamic.resumoscreen">-->
+    <webflow:view-state id="resumo" view="agora.webflow.dynamic.resumoscreen">
+    <webflow:transition on="back" to="formScreenAjax">
+        <webflow:evaluate expression="dynamicFormAction.bind"/>
+    </webflow:transition>
+    <webflow:transition on="next" to="save"/>
+    </webflow:view-state>
+
+    <!-- SAVE -->
+    <webflow:action-state id="save">
+    <webflow:evaluate expression="dynamicFormAction.save"/>
+    <webflow:transition on="success" to="relatorio"/>
+    <webflow:transition on="save-error" to="save.error"/>
+    </webflow:action-state>
+
+    <!-- END SCREEN -->
+    <!--<webflow:view-state id="relatorio" view="webflow.dynamic.endscreen">-->
+    <webflow:view-state id="relatorio" view="agora.webflow.dynamic.endscreen">
+
+    <webflow:transition on="next" to="concluir"/>
+    </webflow:view-state>
+
+    <!-- GLOBAL END STATES -->
+    <webflow:end-state id="concluir" view="externalRedirect:${flowScope.relativeReferer}"/>
+    <webflow:end-state id="cancelar" view="externalRedirect:${flowScope.relativeReferer}"/>
+    <webflow:end-state id="save.error" view="ipdms.error.default.ajax"/>
+    <webflow:global-transitions>
+        <webflow:transition on="cancel" to="cancelar"/>
+    </webflow:global-transitions>
+</webflow:flow>

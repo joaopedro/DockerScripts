@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+	"http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean id="propertyPlaceholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  		<property name="location" value="classpath:conf/ipdmsConfig.properties" />
+ 	</bean>
+
+ 		<!-- Licensing 
+	<bean id="keyStoreLicensingProperties" class="com.sinfic.ipdms.utils.security.KeyStoreProperties">
+		<property name="type" value="${licensing.ks.type}" />
+		<property name="provider" value="${licensing.ks.provider}" />
+		<property name="keyStoreFile" value="${licensing.ks.file}" />
+		<property name="keyStorePassword" value="${licensing.ks.password}" />
+		<property name="alias" value="${licensing.cert.alias}" />
+		<property name="selfSignedWithMD5" value="${licensing.cert.selfSignedMD5}" />
+		<property name="selfSignedWithSHA1" value="${licensing.cert.selfSignedSHA1}" />
+		<property name="veriSigned" value="${licensing.cert.veriSigned}" />		
+	</bean>
+	<bean id="licensingKeyStoreFactory" class="com.sinfic.ipdms.utils.security.KeyStoreFactory">
+		<constructor-arg ref="keyStoreLicensingProperties" />
+	</bean>	
+	<bean id="KeyStoreBean" class="java.security.KeyStore" factory-bean="licensingKeyStoreFactory"
+		factory-method="getKeyStore"/>
+		-->
+	<bean id="licenseFile" class="java.io.File">
+		<constructor-arg value="${licensing.licenseFile}" />
+	</bean>
+
+</beans> 	

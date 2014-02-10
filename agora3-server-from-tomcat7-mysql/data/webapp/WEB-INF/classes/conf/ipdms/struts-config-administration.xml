@@ -1,0 +1,1088 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE struts-config PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+
+	<form-beans>
+
+		<form-bean name="listFormBean" type="com.sinfic.ipdms.administration.formbean.ListForm" />
+		
+		<form-bean 	name="multiOrganicaDeleteForm" 
+					type="org.apache.struts.validator.DynaValidatorForm" 
+					dynamic="true" >
+			<description>Bean respeitante ao formulário para a criação e lancamento de novos sub processos com respectivos documentos e atributos associados.</description>
+			<form-property initial="" name="org" type="java.lang.String[]" />
+		</form-bean>
+
+		<form-bean 	name="multiMenuGuichetDeleteForm" 
+					type="org.apache.struts.validator.DynaValidatorForm" 
+					dynamic="true" >
+			<description>Bean respeitante ao formulário para a criação e lancamento de novos sub processos com respectivos documentos e atributos associados.</description>
+			<form-property initial="" name="menu" type="java.lang.String[]" />
+		</form-bean>
+
+		<form-bean name="colaboradorFormBean"
+			type="com.sinfic.ipdms.administration.formbean.ColaboradorForm" />
+
+		<form-bean name="geographicServiceFormBean" type="com.sinfic.ipdms.administration.formbean.GeographicServiceForm" />
+
+		<!--
+		<form-bean name="conjuntoFormBean" type="com.sinfic.ipdms.administration.formbean.ConjuntoForm" />
+		-->
+
+		<form-bean name="etapaFormBean" type="com.sinfic.ipdms.administration.formbean.EtapaForm" />
+
+		<form-bean name="funcaoFormBean" type="com.sinfic.ipdms.administration.formbean.FuncaoForm" />
+
+		<form-bean name="grupoFormBean" type="com.sinfic.ipdms.administration.formbean.GrupoForm" />
+		
+		<form-bean name="grupoVarianteFormBean" type="com.sinfic.ipdms.administration.formbean.GrupoVarianteForm" />
+		
+		<form-bean name="informacaoFormBean"
+			type="com.sinfic.ipdms.administration.formbean.InformacaoForm" />
+
+		<form-bean name="listaOpcoesFormBean" type="com.sinfic.ipdms.administration.formbean.ListaOpcoesForm" />
+
+		<form-bean name="organicaFormBean"
+			type="com.sinfic.ipdms.administration.formbean.OrganicaForm" />
+
+		<form-bean name="processoFormBean" type="com.sinfic.ipdms.administration.formbean.ProcessoForm" />
+
+		<form-bean name="relatorioFormBean"
+			type="com.sinfic.ipdms.administration.formbean.RelatorioForm" />
+
+		<form-bean name="templateinstrucaoFormBean" type="com.sinfic.ipdms.administration.formbean.TemplateInstrucaoForm" />
+
+		<form-bean name="tarefaFormBean" type="com.sinfic.ipdms.administration.formbean.TarefaForm" />
+
+		<form-bean name="moduloFormBean" type="com.sinfic.ipdms.administration.formbean.ModuloForm" />
+
+		<form-bean name="tarefaEtapaFormBean"
+			type="com.sinfic.ipdms.administration.formbean.TarefasAssociadasForm" />
+
+		<form-bean name="associacaoFormBean"
+			type="com.sinfic.ipdms.administration.formbean.AssociacaoForm" />
+			
+		<form-bean name="apresentacaoFormBean" 
+				   type="com.sinfic.ipdms.administration.formbean.ApresentacaoForm"/>
+
+		<form-bean 	name="entidadeRoleFormBean" 
+					type="com.sinfic.ipdms.administration.formbean.EntidadeRoleForm" />
+		
+		<form-bean name="menuGuichetFormBean"
+			type="com.sinfic.ipdms.guichetadministration.formbean.MenuGuichetForm" />
+		
+		<form-bean name="menuItemGuichetFormBean"
+			type="com.sinfic.ipdms.guichetadministration.formbean.MenuItemGuichetForm" />
+			
+		<form-bean name="noticiaGuichetFormBean"
+			type="com.sinfic.ipdms.guichetadministration.formbean.NoticiaGuichetForm" />
+		
+		<form-bean name="tipoDocumentoAnexadoFormBean" 
+					type="com.sinfic.ipdms.administration.formbean.TipoDocumentoAnexadoForm" />
+
+		<form-bean name="tipoDocumentoVarianteAssociationFormBean"
+					type="com.sinfic.ipdms.administration.formbean.TipoDocumentoVarianteAssociationForm" /> 
+
+		<form-bean name="importConfigurationForm" 
+					type="com.sinfic.ipdms.administration.action.export.ImportConfigurationForm" />
+					
+		<form-bean 	name="lockUserForm" 
+					type="com.sinfic.ipdms.administration.action.authentication.LockUserForm" />
+	</form-beans>
+
+	<action-mappings type="org.apache.struts.action.ActionMapping">
+
+		<!-- PRIVATE Action to unlock a user. Uses the service UserAuthenticationManager -->
+		<action path="/admin/unlockUser"
+			type="com.sinfic.ipdms.administration.action.authentication.UnlockColaboradorAction">
+			<forward name="ok" path="/editColaborador.do2" />
+		</action>
+		
+		<!-- PUBLIC Action to unlock a user. Uses the service UserAuthenticationManager -->
+		<action path="/public/unlockUserByCode"
+			type="com.sinfic.ipdms.administration.action.authentication.UnlockColaboradorByCodeAction">
+			<forward name="ok" path="ipdms.colaborador.unlock.unlocked" />
+			<forward name="error" path="ipdms.colaborador.unlock.error" />
+		</action>
+
+		<!-- PUBLIC Action - Form to send the e-mail with the unlock code -->
+		<action path="/public/unlockUserForm"
+			type="com.sinfic.ipdms.comum.action.RedirectAction"
+			name="lockUserForm" validate="false" scope="request">
+			<forward name="default" path="ipdms.user.lock.form" />
+		</action>
+		
+		<!-- PUBLIC Action - Send the e-mail with the unlock code -->
+		<action path="/public/getUnlockCodeForUser"
+			type="com.sinfic.ipdms.administration.action.authentication.GetUnlockCodeAction"
+			name="lockUserForm" validate="true" input="ipdms.user.lock.form" scope="request">
+			<forward name="invalid" path="ipdms.user.lock.unlockvaluesinvalid" />
+			<forward name="ok" path="ipdms.user.lock.unlockcodesent" />
+		</action>
+	
+		<!-- GeographicService -->
+		<action path="/listGeographicService"
+				name="listFormBean"
+				type="com.sinfic.ipdms.administration.action.list.ListGeographicServiceAction"
+				scope="session">
+			<forward name="sucesso" path="ipdms.listGeographicService" />
+		</action>
+
+		<action path="/editGeographicService" 
+				name="geographicServiceFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditGeographicServiceAction" 
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="ipdms.editGeographicService" />
+		</action>
+
+		<action path="/parseGeographicService"
+				type="com.sinfic.ipdms.administration.action.edit.ParseGeographicServiceAction" 
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="ipdms.parseGeographicService" />
+		</action>
+
+		<action path="/saveGeographicService"
+				name="geographicServiceFormBean"
+				type="com.sinfic.ipdms.administration.action.save.SaveGeographicServiceAction"
+				input="ipdms.editGeographicService"
+				validate="true"
+				scope="request">
+			<forward name="sucesso" path="/listGeographicService.do2" />
+		</action>
+
+		<action path="/deleteGeographicService"
+				name="listFormBean"
+				type="com.sinfic.ipdms.administration.action.delete.DeleteGeographicServiceAction"
+				scope="session">
+			<forward name="sucesso" path="/listGeographicService.do2" />
+		</action>
+	
+		<!-- Colaborador -->
+		<action path="/listColaborador" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListColaboradorAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listcolaborador" />
+		</action>
+
+		<action path="/listColaboradorFromLDAP" 
+				type="com.sinfic.ipdms.administration.action.list.ListColaboradorFromLDAPAction" >
+			<forward name="sucesso" path="ipdms.listcolaboradorfromldap" />
+		</action>
+
+		<action path="/editColaborador" 
+				name="colaboradorFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditColaboradorAction" 
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="ipdms.editcolaborador" />
+		</action>
+
+		<action path="/saveColaborador" 
+				name="colaboradorFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveColaboradorAction" 
+				input="ipdms.editcolaborador" 
+				validate="true"
+				scope="request">
+			<forward name="sucesso" path="/listColaborador.do2" />
+		</action>
+
+		<action path="/deleteColaborador" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteColaboradorAction" 
+				scope="session">
+			<forward name="sucesso" path="/listColaborador.do2" />
+		</action>
+
+<!-- CACHE -->
+		<action path="/cleanCache" type="com.sinfic.ipdms.comum.cache.CleanCacheAction" 
+				parameter="method">
+			<forward name="ok" path="ipdms.cache.list"></forward>
+		</action>
+		
+<!-- /CACHE -->		
+		<!-- Conjuntos -->
+		<!--
+		<action path="/listConjunto" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListConjuntoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listconjunto" />
+		</action>
+		<action path="/editConjunto" 
+				name="conjuntoFormBean" 
+				scope="session"
+				type="com.sinfic.ipdms.administration.action.edit.EditConjuntoAction" 
+				validate="false">
+			<forward name="sucesso" path="ipdms.editconjunto" />
+		</action>		
+		<action path="/saveConjunto" 
+				name="conjuntoFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveConjuntoAction" 
+				input="ipdms.editconjunto" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listConjunto.do2" />
+		</action>		
+		<action path="/deleteConjunto" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteConjuntoAction" 
+				scope="session">
+			<forward name="sucesso" path="/listConjunto.do2" />
+		</action>
+				
+		<action path="/detailItemConjunto" 
+				type="com.sinfic.ipdms.administration.action.association.DetailItemConjuntoAction"  
+				validate="false" 
+				parameter="option">
+			<forward name="DOC" path="ipdms.detailconjuntodocoutput" />
+			<forward name="RBT" path="ipdms.detailconjuntousatexto" />
+			<forward name="CBX" path="ipdms.detailconjuntousatexto" />
+			<forward name="default" path="ipdms.detailconjuntotexto" />
+		</action>
+		-->
+		
+		
+		<!-- Etapas -->
+		<action path="/listEtapa" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListEtapaAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listetapa" />
+		</action>
+
+		<action path="/editEtapa" 
+				name="etapaFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditEtapaAction" 
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="ipdms.editetapa" />
+		</action>
+
+		<action path="/saveEtapa" 
+				name="etapaFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveEtapaAction" 
+				input="ipdms.editetapa" 
+				validate="true"
+				scope="request">
+			<forward name="sucesso" path="/listEtapa.do2" />
+		</action>
+
+		<action path="/deleteEtapa" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteEtapaAction" 
+				scope="session">
+			<forward name="sucesso" path="/listEtapa.do2" />
+		</action>
+
+		<!--  Função  -->
+		<action path="/listFuncao" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListFuncaoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listfuncao" />
+		</action>
+
+		<action path="/deleteFuncao" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteFuncaoAction" 
+				scope="session">
+			<forward name="sucesso" path="/listFuncao.do2" />
+		</action>
+
+		<action path="/editFuncao" 
+				name="funcaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditFuncaoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editfuncao" />
+		</action>
+
+
+		<action path="/saveFuncao" 
+				name="funcaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveFuncaoAction" 
+				input="ipdms.editfuncao" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listFuncao.do2" />
+		</action>
+
+		<!--  Grupo  -->
+		<action path="/listGrupo" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListGrupoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listgrupo" />
+		</action>
+
+		<action path="/deleteGrupo" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteGrupoAction" 
+				scope="session">
+			<forward name="sucesso" path="/listGrupo.do2" />
+		</action>
+
+		<action path="/editGrupo" 
+				name="grupoFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditGrupoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editgrupo" />
+		</action>
+
+
+		<action path="/saveGrupo" 
+				name="grupoFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveGrupoAction" 
+				input="ipdms.editgrupo" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listGrupo.do2" />
+		</action>
+
+		<action path="/addColaboradorGrupo" 
+				name="grupoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.AddColaboradorGrupoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="administration.ajax.status" />
+		</action>
+
+		<action path="/removeColaboradorGrupo" 
+				name="grupoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.RemoveColaboradorGrupoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="administration.ajax.status" />
+		</action>
+
+		<!--  Grupo Variante -->
+		
+		<action path="/listGrupoVariante" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListGrupoVarianteAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listgrupo.variante" />
+		</action>
+		
+		<action path="/deleteGrupoVariante" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteGrupoVarianteAction" 
+				scope="session">
+			<forward name="sucesso" path="/listGrupoVariante.do2" />
+		</action>
+		
+		<action path="/saveGrupoVariante" 
+				name="grupoVarianteFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveGrupoVarianteAction" 
+				input="ipdms.editgrupo.variante" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listGrupoVariante.do2" />
+		</action>
+		
+		<action path="/editGrupoVariante" 
+				name="grupoVarianteFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditGrupoVarianteAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editgrupo.variante" />
+		</action>		
+		
+
+		<action path="/addVarianteGrupo" 
+				name="grupoVarianteFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.AddVarianteGrupoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="administration.ajax.status" />
+		</action>
+
+		<action path="/removeVarianteGrupo" 
+				name="grupoVarianteFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.RemoveVarianteGrupoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="administration.ajax.status" />
+		</action>
+		
+
+		<!-- Informacoes -->
+		<action path="/listInformacao" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListInformacaoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listinformacao" />
+		</action>
+
+		<action path="/editInformacao" 
+				name="informacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditInformacaoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editinformacao" />
+		</action>
+
+		<action path="/saveInformacao" 
+				name="informacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveInformacaoAction" 
+				input="ipdms.editinformacao" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listInformacao.do2" />
+		</action>
+
+		<action path="/deleteInformacao" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteInformacaoAction" 
+				scope="session">
+			<forward name="sucesso" path="/listInformacao.do2" />
+		</action>
+				
+		<!-- Lista de Opcões -->
+		<action path="/listListaOpcoes" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListListaOpcoesAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listlistaopcoes" />
+		</action>
+		
+		<action path="/deleteListaOpcoes" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteListaOpcoesAction" 
+				scope="session">
+			<forward name="sucesso" path="/listListaOpcoes.do2" />
+		</action>
+		
+		<action path="/editListaOpcoes" 
+				name="listaOpcoesFormBean" 
+				scope="request"
+				type="com.sinfic.ipdms.administration.action.edit.EditListaOpcoesAction" 
+				validate="false">
+			<forward name="sucesso" path="ipdms.editlistaopcoes" />
+		</action>
+		
+		<action path="/saveListaOpcoes" 
+				name="listaOpcoesFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveListaOpcoesAction" 
+				input="ipdms.editlistaopcoes" 
+				validate="true"
+				scope="request">
+			<forward name="sucesso" path="/listListaOpcoes.do2" />
+		</action>
+
+		<!--  Organica  -->
+		<action path="/listOrganica" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListOrganicaAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listorganica" />
+		</action>
+
+		<action path="/deleteOrganica" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteOrganicaAction">
+			<forward name="sucesso" path="/listOrganica.do2" />
+		</action>
+
+		<action path="/deleteMultiOrganica" 
+				name="multiOrganicaDeleteForm"
+				type="com.sinfic.ipdms.administration.action.delete.DeleteMultiOrganicaAction">
+			<forward name="sucesso" path="/listOrganica.do2" />
+		</action>
+
+		<action path="/editOrganica" 
+				name="organicaFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditOrganicaAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editorganica" />
+		</action>
+
+		<action path="/refreshBindedFuncoes" 
+				name="organicaFormBean" 
+				scope="session" 
+				validate="false"
+				type="com.sinfic.ipdms.administration.action.association.OrganicaBindedFuncoesAction">
+				<forward name="sucesso" path="ipdms.parts.organicabindedfuncoes"/>
+		</action>
+
+		<action path="/saveOrganica" 
+				name="organicaFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveOrganicaAction" 
+				input="ipdms.editorganica" 
+				validate="true">
+			<forward name="sucesso" path="/listOrganica.do2" />
+		</action>
+
+		<action path="/addFuncaoOrganica" 
+				name="organicaFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.AddFuncaoOrganicaAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="administration.ajax.status" />
+		</action>
+
+		<action path="/removeFuncaoOrganica" 
+				name="organicaFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.RemoveFuncaoOrganicaAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="administration.ajax.status" />
+			<forward name="error" path="administration.ajax.error" />
+		</action>
+
+		<action path="/showOrganicaNode"
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListOrganicaNodeAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="administration.ajax.treenode.organica" />
+		</action>
+
+		<!-- Processo -->
+		<action path="/listProcesso" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListProcessoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listprocesso" />
+		</action>
+
+		<action path="/editProcesso" 
+				name="processoFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditProcessoAction" 
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="ipdms.editprocesso" />
+		</action>
+
+		<action path="/saveProcesso" 
+				name="processoFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveProcessoAction" 
+				input="ipdms.editprocesso" 
+				validate="true"
+				scope="request">
+			<forward name="sucesso" path="/listProcesso.do2" />
+		</action>
+
+		<action path="/deleteProcesso" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteProcessoAction" 
+				scope="session">
+			<forward name="sucesso" path="/listProcesso.do2" />
+		</action>
+
+
+		<!-- Relatorio -->
+		<action path="/listRelatorio" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListRelatorioAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listrelatorio" />
+		</action>
+
+		<action path="/editRelatorio" 
+				name="relatorioFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditRelatorioAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editrelatorio" />
+		</action>
+
+		<action path="/saveRelatorio" 
+				name="relatorioFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveRelatorioAction" 
+				input="ipdms.editrelatorio" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listRelatorio.do2" />
+		</action>
+
+		<action path="/deleteRelatorio" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteRelatorioAction" 
+				scope="session">
+			<forward name="sucesso" path="/listRelatorio.do2" />
+		</action>
+		
+
+		<!-- Tarefa -->
+		<action path="/listTarefa" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListTarefaAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listtarefa" />
+		</action>
+
+		<action path="/editTarefa" 
+				name="tarefaFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditTarefaAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.edittarefa" />
+		</action>
+
+		<action path="/saveTarefa" 
+				name="tarefaFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveTarefaAction" 
+				input="ipdms.edittarefa" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listTarefa.do2" />
+		</action>
+
+		<action path="/deleteTarefa" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteTarefaAction" 
+				scope="session">
+			<forward name="sucesso" path="/listTarefa.do2" />
+		</action>
+		
+		
+		<!-- Modulo -->
+		<action path="/listModulo" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListModuloAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listmodulo" />
+		</action>
+
+		<action path="/editModulo" 
+				name="moduloFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditModuloAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editmodulo" />
+		</action>
+
+		<action path="/saveModulo" 
+				name="moduloFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveModuloAction" 
+				input="ipdms.editmodulo" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listModulo.do2" />
+		</action>
+
+		<action path="/deleteModulo" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteModuloAction" 
+				scope="session">
+			<forward name="sucesso" path="/listModulo.do2" />
+		</action>
+	
+		<!--  Roles de Entidade -->
+		<action path="/listEntidadeRole" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListEntidadeRoleAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listentidaderole" />
+		</action>
+
+		<action path="/deleteEntidadeRole" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteEntidadeRoleAction" 
+				scope="session">
+			<forward name="sucesso" path="/listEntidadeRole.do2" />
+		</action>
+
+		<action path="/editEntidadeRole" 
+				name="entidadeRoleFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditEntidadeRoleAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.editentidaderole" />
+		</action>
+
+
+		<action path="/saveEntidadeRole" 
+				name="entidadeRoleFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveEntidadeRoleAction" 
+				input="ipdms.editentidaderole" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listEntidadeRole.do2" />
+		</action>
+	
+		<!-- Accoes de Associacao -->
+
+		<!-- Etapa - Tarefa -->		
+		<action path="/listTarefaEtapaRelation" 
+				name="tarefaEtapaFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.ListTarefaEtapaAssociationAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listtarefaetapa" />
+		</action>
+
+		<action path="/saveTarefaEtapaRelation" 
+				name="tarefaEtapaFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.SaveTarefaEtapaAssociationAction" 
+				input="ipdms.listtarefaetapa"
+				scope="session">
+			<forward name="sucesso" path="/editEtapa.do2" />
+		</action>
+						
+		<!-- Etapa - Lista de Opções -->		
+		<action path="/listEtapaListaOpcoesRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.listaopcoes.ListListaOpcoesForAssociationToEtapaAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listetapalistaopcoes" />
+		</action>
+
+		<action path="/saveEtapaListaOpcoesRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.listaopcoes.SaveListaOpcoesAssociationsToEtapaAction" 
+				input="ipdms.listetapalistaopcoes"
+				scope="session">
+			<forward name="sucesso" path="/editEtapa.do2" />
+		</action>
+
+		<!-- Etapa - GrupoVariante -->	
+		<action path="/listGrupoVarianteEtapaRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.ListGrupoVarianteForAssociationToEtapaAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listgrupovariantetapa" />
+		</action>
+
+		<action path="/saveGrupoVarianteEtapaRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.SaveGrupoVarianteEtapaAssociationAction" 								
+				scope="session">
+			<forward name="sucesso" path="/editEtapa.do2" />
+		</action>
+
+		<!-- Etapa - Conjunto -->
+		<!--
+		<action path="/listConjuntoEtapaRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.ListConjuntoForAssociationToEtapaAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listconjuntoetapa" />
+		</action>
+
+		<action path="/saveConjuntoEtapaRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.SaveConjuntoAssociationsToEtapaAction"
+				input="ipdms.listconjuntoetapa" 
+				scope="session">
+			<forward name="sucesso" path="/editEtapa.do2" />
+		</action>
+		-->
+
+		<!-- Variante - Conjunto -->
+		<!--
+		<action path="/listConjuntoVarianteRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.ListConjuntoForAssociationToVarianteAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listconjuntovariante" />
+		</action>
+
+		<action path="/saveConjuntoVarianteRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.SaveConjuntoAssociationsToVarianteAction"
+				input="ipdms.listconjuntovariante" 
+				scope="session">
+			<forward name="sucesso" path="/editProcesso.do2" />
+		</action>
+		-->	
+			
+			<!-- Variante - Template de Instrução -->
+		<action path="/associarTemplateInstrucao" 
+				name="templateinstrucaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.templateinstrucao.AssociarTemplateInstrucaoAction" 
+				scope="request">
+			<forward name="sucesso" path="ipdms.associartemplateinstrucao" />
+		</action>
+
+		<action path="/saveTemplateInstrucaoAssociation" 
+				name="templateinstrucaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.templateinstrucao.SaveTemplateInstrucaoAssociationsAction"
+				input="ipdms.associartemplateinstrucao" 
+				scope="session">
+			<forward name="sucesso" path="/editProcesso.do2" />
+		</action>	
+				
+		<!-- Variante - Lista de Opções -->
+		<action path="/listVarianteListaOpcoesRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.listaopcoes.ListListaOpcoesForAssociationToVarianteAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listvariantelistaopcoes" />
+		</action>
+
+		<action path="/saveVarianteListaOpcoesRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.listaopcoes.SaveListaOpcoesAssociationsToVarianteAction"
+				input="ipdms.listvariantelistaopcoes" 
+				scope="session">
+			<forward name="sucesso" path="/editProcesso.do2" />
+		</action>
+		
+		<!--  Variante - Tipo Documento Anexado -->
+		<action path="/listTipoDocumentoVarianteAssociation" 
+				name="tipoDocumentoVarianteAssociationFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.ListTiposDocumentoAnexadoForAssociationAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listtipodocumentovariante" />
+		</action>
+
+		<action path="/saveTipoDocumentoVarianteAssociation" 
+				name="tipoDocumentoVarianteAssociationFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.SaveTiposDocumentoAnexadoAssociationAction" 
+				input="ipdms.listtipodocumentovariante"
+				scope="session">
+			<forward name="sucesso" path="/editProcesso.do2" />
+		</action>
+						
+
+		<!-- Processo - Conjunto -->
+		<!--
+		<action path="/listConjuntoProcessoRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.ListConjuntoForAssociationToProcessoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listconjuntoprocesso" />
+		</action>
+
+		<action path="/saveConjuntoProcessoRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.SaveConjuntoAssociationsToProcessoAction"
+				input="ipdms.listconjuntoprocesso" 
+				scope="session">
+			<forward name="sucesso" path="/editProcesso.do2" />
+		</action>
+		-->
+
+		<!-- Processo - Etapa -->
+		<action path="/listProcessoEtapaRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.ListEtapaForAssociationToProcessoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listprocessoetapa" />
+		</action>
+		
+		<action path="/saveProcessoEtapaRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.SaveEtapaAssociationsToProcessoAction"
+				input="ipdms.listprocessoetapa" 
+				scope="session">
+			<forward name="sucesso" path="/editProcesso.do2" />
+		</action>
+
+		<!-- Processo - Lista de Opções -->
+		<action path="/listProcessoListaOpcoesRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.listaopcoes.ListListaOpcoesForAssociationToProcessoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listprocessolistaopcoes" />
+		</action>
+
+		<action path="/saveProcessoListaOpcoesRelation" 
+				name="associacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.association.listaopcoes.SaveListaOpcoesAssociationsToProcessoAction"
+				input="ipdms.listprocessolistaopcoes" 
+				scope="session">
+			<forward name="sucesso" path="/editProcesso.do2" />
+		</action>
+
+		<!-- Apresentacao -->
+		<action path="/editApresentacao" 
+				name="apresentacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditApresentacaoAction" 
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="ipdms.editapresentacao" />
+		</action>
+
+		<action path="/saveApresentacao" 
+				name="apresentacaoFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveApresentacaoAction"
+				input="ipdms.editapresentacao"  
+				validate="true"
+				scope="request">
+			<forward name="sucesso" path="/redirectHomepage.do2" />
+		</action>
+
+
+		<!--  Tipo Documento Anexado   -->
+		<action path="/listTipoDocumentoAnexado" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.list.ListTipoDocumentoAnexadoAction" 
+				scope="session">
+			<forward name="sucesso" path="ipdms.listtipodocumentoanexado" />
+		</action>
+
+		<action path="/deleteTipoDocumentoAnexado" 
+				name="listFormBean" 
+				type="com.sinfic.ipdms.administration.action.delete.DeleteTipoDocumentoAnexadoAction" 
+				scope="session">
+			<forward name="sucesso" path="/listTipoDocumentoAnexado.do2" />
+		</action>
+
+		<action path="/editTipoDocumentoAnexado" 
+				name="tipoDocumentoAnexadoFormBean" 
+				type="com.sinfic.ipdms.administration.action.edit.EditTipoDocumentoAnexadoAction" 
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.edittipodocumentoanexado" />
+		</action>
+
+		<action path="/saveTipoDocumentoAnexado" 
+				name="tipoDocumentoAnexadoFormBean" 
+				type="com.sinfic.ipdms.administration.action.save.SaveTipoDocumentoAnexadoAction" 
+				input="ipdms.edittipodocumentoanexado" 
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listTipoDocumentoAnexado.do2" />
+		</action>
+		
+		<!-- ADMINISTRAÇÃO DO GUICHET ELECTRONICO -->
+		
+		<action path="/listMenuGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.ListAllMenuGuichetAction"
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="ipdms.guichetadmin.listmenuguichet" />
+		</action>
+		
+		<action path="/deleteMenuGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.DeleteMenuGuichetAction"
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="/listMenuGuichet.do2" />
+		</action>
+		
+		<action path="/deleteMultiMenuGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.DeleteMultiMenuGuichetAction"
+				name="multiMenuGuichetDeleteForm"
+				scope="request">
+			<forward name="sucesso" path="/listMenuGuichet.do2" />
+		</action>
+
+		<action path="/editMenuGuichet" 
+				name="menuGuichetFormBean"
+				type="com.sinfic.ipdms.guichetadministration.action.EditMenuGuichetAction"
+				validate="false"
+				scope="session"
+				parameter="method">
+			<forward name="sucesso" path="ipdms.guichetadmin.editmenuguichet" />
+		</action>
+
+		<action path="/saveMenuGuichet" 
+				name="menuGuichetFormBean"
+				type="com.sinfic.ipdms.guichetadministration.action.SaveMenuGuichetAction"
+				input="ipdms.guichetadmin.editmenuguichet"
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listMenuGuichet.do2" />
+		</action>
+
+		<action path="/ajaxListMenuGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.ListAllMenuGuichetAction">
+			<forward name="sucesso" path="ipdms.guichetadmin.menuguichet.list" />
+		</action>
+
+		<action path="/ajaxListMenuGuichetTree" 
+				type="com.sinfic.ipdms.guichetadministration.action.ListAllMenuGuichetAction">
+			<forward name="sucesso" path="ipdms.guichetadmin.menuguichet.tree" />
+		</action>
+
+		<action path="/ajaxListMenuGuichetNode" 
+				type="com.sinfic.ipdms.guichetadministration.action.ListAllMenuGuichetAction">
+			<forward name="sucesso" path="ipdms.guichetadmin.menuguichet.node" />
+		</action>
+
+		<action path="/listMenuItemGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.ListMenuItemGuichetAction"
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.guichetadmin.listmenuitemguichet" />
+		</action>
+		
+		<action path="/editMenuItemGuichet" 
+				name="menuItemGuichetFormBean"
+				type="com.sinfic.ipdms.guichetadministration.action.EditMenuItemGuichetAction"
+				validate="false"
+				scope="session"
+				parameter="method">
+			<forward name="sucesso" path="ipdms.guichetadmin.editmenuitemguichet" />
+		</action>
+
+		<action path="/saveMenuItemGuichet" 
+				name="menuItemGuichetFormBean"
+				type="com.sinfic.ipdms.guichetadministration.action.SaveMenuItemGuichetAction"
+				input="ipdms.guichetadmin.editmenuitemguichet"
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listMenuItemGuichet.do2" />
+		</action>
+		
+		<action path="/deleteMenuItemGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.DeleteMenuItemGuichetAction"
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="/listMenuItemGuichet.do2" />
+		</action>
+		
+		<action path="/listNoticiaGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.ListNoticiaGuichetAction"
+				validate="false"
+				scope="session">
+			<forward name="sucesso" path="ipdms.guichetadmin.listnoticiaguichet" />
+		</action>
+		
+		<action path="/editNoticiaGuichet" 
+				name="noticiaGuichetFormBean"
+				type="com.sinfic.ipdms.guichetadministration.action.EditNoticiaGuichetAction"
+				validate="false"
+				scope="session"
+				parameter="method">
+			<forward name="sucesso" path="ipdms.guichetadmin.editnoticiaguichet" />
+		</action>
+
+		<action path="/saveNoticiaGuichet" 
+				name="noticiaGuichetFormBean"
+				type="com.sinfic.ipdms.guichetadministration.action.SaveNoticiaGuichetAction"
+				input="ipdms.guichetadmin.editnoticiaguichet"
+				validate="true"
+				scope="session">
+			<forward name="sucesso" path="/listNoticiaGuichet.do2" />
+		</action>
+		
+		<action path="/deleteNoticiaGuichet" 
+				type="com.sinfic.ipdms.guichetadministration.action.DeleteNoticiaGuichetAction"
+				validate="false"
+				scope="request">
+			<forward name="sucesso" path="/listNoticiaGuichet.do2" />
+		</action>
+		
+		<action path="/ajaxListVariante" 
+				type="com.sinfic.ipdms.guichetadministration.action.ListAllValidVarianteAction">
+			<forward name="sucesso" path="ipdms.guichetadmin.listvariante" />
+		</action>
+		
+		<!-- EXPORT/IMPORT -->
+		<action path="/admin/exportimporthomepage" 
+			type="com.sinfic.ipdms.administration.action.export.ExportImportHomepageAction">
+			<forward name="ok" path="ipdms.administration.export.homepage" />
+		</action>
+	
+		<action path="/admin/exportconfiguration" 
+			type="com.sinfic.ipdms.administration.action.export.ExportConfigurationAction">
+			<forward name="ok" path="ipdms.administration.export.result" />
+		</action>
+		
+		<action path="/admin/downloadexportfile" 
+			type="com.sinfic.ipdms.administration.action.export.DownloadExportFileAction" />
+		
+	</action-mappings>
+</struts-config>

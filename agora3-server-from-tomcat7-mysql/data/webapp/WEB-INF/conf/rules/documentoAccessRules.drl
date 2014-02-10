@@ -1,0 +1,294 @@
+package com.sinfic.ipdms.integration.drools;
+
+import java.lang.Boolean;
+import com.sinfic.ipdms.domain.entity.documento.Documento;
+import com.sinfic.ipdms.domain.entity.ColaboradorInfo;
+import com.sinfic.ipdms.domain.entity.ColOrganicaFuncao;
+import com.sinfic.ipdms.comum.rules.result.ObjectResult;
+import com.sinfic.ipdms.domain.business.rules.DocumentoAccessContextSupport;
+
+
+rule "Is SuperUser?"
+salience 100
+when
+	$contextSupport : DocumentoAccessContextSupport()
+	$result : ObjectResult(value == false) //If the user is not granted yet
+	exists(
+		(ColaboradorInfo(superuser == "S")) or 
+		(ColaboradorInfo(superuser == "S") from $contextSupport.delegated)
+	)		
+then
+	System.out.println("Rule: Is SuperUser? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "Is Same User that Uplodaded the Document?"
+salience 99
+when
+	$result : ObjectResult(value == false) //If the user is not granted yet
+	$user : ColaboradorInfo()	
+	Documento(creator.login == $user.login)	
+then
+	System.out.println("Rule: Is Same User that Uplodaded the Document? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE)Is Same User that Uplodaded the Document?"
+salience 98
+when
+	$result : ObjectResult(value == false) //If the user is not granted yet
+	$user : ColaboradorInfo()
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.delegated)
+then
+	System.out.println("Rule: (DELEGATE) Is Same User that Uplodaded the Document? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "Is who created the ServicoOnline?"
+salience 92
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	$user : ColaboradorInfo()
+	Documento(servicoOnline.creator.login == $user.login)
+then
+	System.out.println("Rule: Is who created the ServicoOnline? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE)Is who created the ServicoOnline?"
+salience 91
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	Documento($socreatorlogin : servicoOnline.creator.login)	
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $socreatorlogin) from $contextSupport.delegated)
+then
+	System.out.println("(DELEGATE) Rule: Is who created the ServicoOnline? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "Is Superior Hierarquico of the user that uploaded the document?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	$user : ColaboradorInfo()
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.superioresAccessUser)
+then
+	System.out.println("Rule: Is Superior Hierarquico of the user that uploaded the document? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE) Is Superior Hierarquico of the user that uploaded the document?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	DocumentoAccessContextSupport($superiores : superioresAccessUser)
+	DocumentoAccessContextSupport($delegated : delegated)
+	$d : ColaboradorInfo() from $delegated
+	exists(ColaboradorInfo(login == $d.login) from $superiores)
+then
+	System.out.println("Rule: Is Superior Hierarquico of the user that uploaded the document? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "Is Superior Hierarquico of the user that created the ServicoOnline?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	$user : ColaboradorInfo()
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.superioresServicoOnlineCreator)
+then
+	System.out.println("Rule: Is Superior Hierarquico of the user that created the ServicoOnline? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE) Is Superior Hierarquico of the user that created the ServicoOnline?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	DocumentoAccessContextSupport($superioresSoCreator : superioresServicoOnlineCreator)
+	DocumentoAccessContextSupport($delegated : delegated)
+	$d : ColaboradorInfo() from $delegated
+	exists(ColaboradorInfo(login == $d.login) from $superioresSoCreator)
+then
+	System.out.println("Rule: (DELEGATE) Is Superior Hierarquico of the user that created the ServicoOnline? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "Can user tramitar ServicoOnline of Document?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	$user : ColaboradorInfo()
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.whoCanTramitarSO)
+then
+	System.out.println("Rule: Can user tramitar ServicoOnline of Document? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE) Can user tramitar ServicoOnline of Document?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	DocumentoAccessContextSupport($whocantramitar : whoCanTramitarSO)
+	DocumentoAccessContextSupport($delegated : delegated)
+	$d : ColaboradorInfo() from $delegated
+	exists(ColaboradorInfo(login == $d.login) from $whocantramitar)
+then
+	System.out.println("Rule: (DELEGATE) Can user tramitar ServicoOnline of Document? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "Can User tramitar ServicoOnline that can see the Documento?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	$user : ColaboradorInfo()
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.whoCanTramitarSubSO)
+then
+	System.out.println("Rule: Can User tramitar ServicoOnline that can see the Documento? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE) Can User tramitar ServicoOnline that can see the Documento?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	DocumentoAccessContextSupport($whocantramitarsub : whoCanTramitarSubSO)
+	DocumentoAccessContextSupport($delegated : delegated)
+	$d : ColaboradorInfo() from $delegated
+	exists(ColaboradorInfo(login == $d.login) from $whocantramitarsub)
+then
+	System.out.println("Rule: (DELEGATE) Can User tramitar ServicoOnline that can see the Documento? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "Can User tramitar ServicoOnline Pai of the Documento?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	$user : ColaboradorInfo()
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.whoCanTramitarParentSO)
+then
+	System.out.println("Rule: Can User tramitar ServicoOnline Pai of the Documento? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE) Can User tramitar ServicoOnline Pai of the Documento?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	DocumentoAccessContextSupport($whocantramitar : whoCanTramitarParentSO)
+	DocumentoAccessContextSupport($delegated : delegated)
+	$d : ColaboradorInfo() from $delegated
+	exists(ColaboradorInfo(login == $d.login) from $whocantramitar)
+then
+	System.out.println("Rule: (DELEGATE) Can User tramitar ServicoOnline Pai of the Documento? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "Is user from Organica principal of the Processo?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	$user : ColaboradorInfo()	
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.usersFromOrganicaPrincipalProcesso)
+then
+	System.out.println("Rule: Is user from Organica principal of the Processo? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATED) Is user from Organica principal of the Processo?"
+no-loop true
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result : ObjectResult()
+	DocumentoAccessContextSupport($usersorganicaprincipal : usersFromOrganicaPrincipalProcesso)
+	DocumentoAccessContextSupport($delegated : delegated)
+	$d : ColaboradorInfo() from $delegated	
+	exists(ColaboradorInfo(login == $d.login) from $usersorganicaprincipal)
+then
+	System.out.println("Rule: (DELEGATED) Is user from Organica principal of the Processo? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "User has Funcao in Organica Principal of the Processo?"
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result: ObjectResult()
+	$user: ColaboradorInfo()
+	$contextSupport : DocumentoAccessContextSupport()
+	exists(ColOrganicaFuncao(organicaFuncao.organica == $contextSupport.processo.organicaPrincipal) from $user.permissoesColaborador)	
+then
+	System.out.println("Rule: User has Funcao in Organica Principal of the Processo? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "(DELEGATE) User has Funcao in Organica Principal of the Processo?"
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result: ObjectResult()	
+	DocumentoAccessContextSupport($delegated : delegated)
+	DocumentoAccessContextSupport($organicaPrincipal : processo.organicaPrincipal)
+	$cols : ColaboradorInfo() from $delegated
+	$permissoes : ColOrganicaFuncao() from $cols.permissoesColaborador
+	exists(ColOrganicaFuncao(organicaFuncao.organica == $organicaPrincipal) from $permissoes)	
+then
+	System.out.println("Rule: (DELEGATE) User has Funcao in Organica Principal of the Processo? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+
+rule "Check if user has responded to the document's ServicoOnline?"
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result: ObjectResult()
+	$user: ColaboradorInfo()	
+	$contextSupport : DocumentoAccessContextSupport()
+	
+	exists(ColaboradorInfo(login == $user.login) from $contextSupport.whoRespondedToSO)
+then
+	System.out.println("Rule: Check if user has responded to the document's ServicoOnline? Result: Yes!");
+	modify($result) {setValue(true)}
+end
+
+rule "(DELEGATE) Check if user has responded to the document's ServicoOnline?"
+when
+	ObjectResult(value == false) //If the user is not granted yet
+	$result: ObjectResult()
+	DocumentoAccessContextSupport($whoresponded : whoRespondedToSO)
+	DocumentoAccessContextSupport($delegated : delegated)
+	$d : ColaboradorInfo() from $delegated	
+	exists(ColaboradorInfo(login == $d.login) from $whoresponded)
+then
+	System.out.println("Rule: (DELEGATE) Check if user has responded to the document's ServicoOnline? Result: Yes!");
+	modify($result) {setValue(true)}
+end

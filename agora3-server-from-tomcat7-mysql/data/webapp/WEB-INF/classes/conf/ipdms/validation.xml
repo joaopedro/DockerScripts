@@ -1,0 +1,1198 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE form-validation PUBLIC
+     "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.2.0//EN"
+     "http://jakarta.apache.org/commons/dtds/validator_1_2_0.dtd">
+<form-validation>
+	<global>
+		<constant>
+			<constant-name>ipdmsDatePattern</constant-name>
+			<constant-value>dd-MM-yyyy</constant-value>
+		</constant>
+		<constant>
+			<constant-name>titulolen</constant-name>
+			<constant-value>80</constant-value>
+		</constant>
+		<constant>
+			<constant-name>subtitulolen</constant-name>
+			<constant-value>80</constant-value>
+		</constant>
+		<constant>
+			<constant-name>siglalen</constant-name>
+			<constant-value>40</constant-value>
+		</constant>
+		<constant>
+			<constant-name>descricaolen</constant-name>
+			<constant-value>2000</constant-value>
+		</constant>
+		<constant>
+			<constant-name>linklen</constant-name>
+			<constant-value>150</constant-value>
+		</constant>
+		<constant>
+			<constant-name>idexternolen</constant-name>
+			<constant-value>40</constant-value>
+		</constant>
+		<constant>
+			<constant-name>passwordmaxlen</constant-name>
+			<constant-value>50</constant-value>
+		</constant>
+		<constant>
+			<constant-name>passwordminlen</constant-name>
+			<constant-value>5</constant-value>
+		</constant>		
+		<constant>
+			<constant-name>loginmaxlen</constant-name>
+			<constant-value>20</constant-value>
+		</constant>
+		<constant>
+			<constant-name>loginminlen</constant-name>
+			<constant-value>3</constant-value>
+		</constant>
+		<constant>
+			<constant-name>SINGULAR</constant-name>
+			<constant-value>1</constant-value>
+		</constant>
+		<constant>
+			<constant-name>COLECTIVO</constant-name>
+			<constant-value>2</constant-value>
+		</constant>
+		<constant>
+			<constant-name>DISTORGANICAFUNCAO</constant-name>
+			<constant-value>12</constant-value>
+		</constant>
+		<constant>
+			<constant-name>DISTGRUPONPAX</constant-name>
+			<constant-value>13</constant-value>
+		</constant>
+	</global>
+  <formset>
+  
+    <!-- Validacao para o formulario de autenticacao -->
+    <form name="autenticacaoForm">
+      <field property="utilizador" depends="required">
+        <arg position="0" key="Utilizador" resource="false"/>
+      </field>
+
+      <field property="password" depends="required">
+        <arg position="0"  key="Password" resource="false"/>
+      </field>
+    </form>
+    
+    <!--================================================================== 
+    	 IPDMS
+        ================================================================== -->
+    <form name="apresentacaoFormBean">
+    	<field property="descricao" depends="required">
+    		<arg position="0" key="ipdms.apresentacao.texto" />
+    	</field>
+    </form>
+        
+    <form name="colaboradorFormBean">
+    	<field property="nome" depends="required,maxlength">
+    		<arg position="0" key="ipdms.colaborador.nome" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="morada" depends="required,maxlength">
+    		<arg position="0" key="ipdms.colaborador.morada" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>1000</var-value></var>
+    	</field>
+    	<field property="telefone" depends="maxlength">
+    		<arg position="0" key="ipdms.colaborador.telefone" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="telemovel" depends="maxlength">
+    		<arg position="0" key="ipdms.colaborador.telemovel" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="fax" depends="maxlength">
+    		<arg position="0" key="ipdms.colaborador.fax" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="email" depends="required,maxlength,email">
+    		<arg position="0" key="ipdms.colaborador.email" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="login" depends="required,maxlength,minlength,uniqueLogin,validLogin">
+    		<arg position="0" key="ipdms.colaborador.login" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${loginmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${loginminlen}</var-value></var>
+    	</field>
+    	<field property="passwordNova" depends="maxlength,minlength,equalvalues">
+    		<arg position="0" key="ipdms.colaborador.password" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>
+    		<arg position="2" name="equalvalues" key="errors.confirmacaopassword"/>
+	          <var>
+	             <var-name>confirma</var-name>
+	             <var-value>confirmacao</var-value>
+	          </var>
+    	</field>
+    	<field property="confirmacao" depends="maxlength,minlength">
+    		<arg position="0" key="ipdms.colaborador.confirmacao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>
+    	</field>
+    	<field property="departamento" depends="required">
+    		<arg position="0" key="ipdms.colaborador.departamentomestre" />
+    	</field>
+    </form>
+    
+    <!--
+    <form name="conjuntoFormBean">
+    	<field property="numero" depends="required,integer" />
+    	<field property="nome" depends="required,maxlength">
+    		<arg position="0" key="ipdms.conjunto.nome" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="descricao" depends="required,maxlength">
+    		<arg position="0" key="ipdms.conjunto.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+    	</field>
+    	<field property="idexterno" depends="required,maxlength">
+    		<arg position="0" key="ipdms.conjunto.idexterno" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${idexternolen}</var-value></var>
+    	</field>
+    	<field property="sigla" depends="required,maxlength">
+    		<arg position="0" key="ipdms.conjunto.sigla" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${siglalen}</var-value></var>
+    	</field>
+    	<field property="siglaClassificacao" depends="required">
+    		<arg position="0" key="ipdms.conjunto.classificacao" />
+    	</field>
+    	<field property="itens" depends="itens">
+    		<var>
+    			<var-name>campos-obrigatorios</var-name>
+    			<var-value>titulo,idExterno</var-value>
+    		</var>
+    		<var>
+    			<var-name>campos-opcionais</var-name>
+    			<var-value>descricao,linkAcesso,subTitulo</var-value>
+    		</var>
+    	</field>
+    </form>
+    -->
+
+	<form name="dadosPessoaisFormBean">
+    	<field property="nome" depends="required,maxlength">
+    		<arg position="0" key="ipdms.colaborador.nome" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="morada" depends="required,maxlength">
+    		<arg position="0" key="ipdms.colaborador.morada" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>1000</var-value></var>
+    	</field>
+    	<field property="telefone" depends="maxlength">
+    		<arg position="0" key="ipdms.colaborador.telefone" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="telemovel" depends="maxlength">
+    		<arg position="0" key="ipdms.colaborador.telemovel" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="fax" depends="maxlength">
+    		<arg position="0" key="ipdms.colaborador.fax" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="email" depends="required,maxlength,email">
+    		<arg position="0" key="ipdms.colaborador.email" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="passwordNova" depends="maxlength,minlength,equalvalues">
+    		<arg position="0" key="ipdms.colaborador.passwordnova" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>
+    		<arg position="2" name="equalvalues" key="ourb.colaborador.erro.confirmacaoerrada"/>
+	          <var>
+	             <var-name>confirma</var-name>
+	             <var-value>confirmacao</var-value>
+	          </var>
+    	</field>
+    	<field property="confirmacao" depends="maxlength,minlength">
+    		<arg position="0" key="ipdms.colaborador.confirmacao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>    		
+    	</field>
+	</form>
+
+    <form name="areaFuncionalFormBean">
+    	<field property="numero" depends="required,integer" />
+    	<field property="nome" depends="required,maxlength">
+    		<arg position="0" key="ipdms.departamento.nome" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.departamento.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+    	</field>
+    </form>
+    
+    <form name="etapaFormBean">
+    	<field property="titulo" depends="required,maxlength">
+    		<arg position="0" key="ipdms.etapa.nome" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="nomeActividade" depends="required,maxlength">
+    		<arg position="0" key="ipdms.etapa.nomeactividade" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${idexternolen}</var-value></var>
+    	</field>
+    	<field property="descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.etapa.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+    	</field>
+    	<field property="limite" depends="required,integer,maxlength">
+    		<arg position="0" key="ipdms.etapa.limite" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="funcao" depends="validwhen">
+    		<arg position="0" key="ipdms.etapa.funcaosigla" />
+    		<var>
+    		<var-name>test</var-name>
+    		<var-value>((distribuicaoId!=${DISTORGANICAFUNCAO}) or (*this* !=null) )</var-value>
+    		</var>
+    	</field>
+    	<field property="grupoId" depends="validwhen">
+    		<arg position="0" key="ipdms.etapa.grupo" />
+    		<var>
+    		<var-name>test</var-name>
+    		<var-value>((distribuicaoId!=${DISTGRUPONPAX}) or (*this* != 0) )</var-value>
+    		</var>
+    	</field>
+    </form>
+
+    <form name="funcaoFormBean">
+		<field property="funcao.titulo" depends="required,maxlength">
+			<arg position="0" key="ipdms.funcao.titulo" />
+			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+			<var><var-name>maxlength</var-name><var-value>100</var-value></var>
+		</field>
+		<field property="funcao.sigla" depends="required,maxlength">
+			<arg position="0" key="ipdms.funcao.sigla" />
+			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+			<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+		</field>
+    </form>
+
+
+    <form name="tarefaFormBean">
+		<field property="tarefa.id" depends="required,integer" />
+		<field property="tarefa.titulo" depends="required,maxlength">
+			<arg position="0" key="ipdms.tarefa.nome" />
+			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+			<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+		</field>
+		<field property="tarefa.label" depends="required,maxlength">
+			<arg position="0" key="ipdms.tarefa.label" />
+			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+			<var><var-name>maxlength</var-name><var-value>${subtitulolen}</var-value></var>
+		</field>
+		<field property="tarefa.descricao" depends="maxlength">
+			<arg position="0" key="ipdms.tarefa.descricao" />
+			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+			<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+		</field>
+		<field property="tarefa.link" depends="required,maxlength">
+			<arg position="0" key="ipdms.tarefa.link" />
+			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+			<var><var-name>maxlength</var-name><var-value>${linklen}</var-value></var>
+		</field>
+    </form>
+    
+    <form name="tarefaEtapaFormBean">
+    	<field property="tarefas" depends="valueobjects">
+    		<var>
+    			<var-name>campo-identificador</var-name>
+    			<var-value>id</var-value>
+    		</var>
+    		<var>
+    			<var-name>campos-opcionais</var-name>
+    			<var-value>ordenacaoGeral,ordenacaoEspecifica</var-value>
+    		</var>
+    		<var>
+    			<var-name>tipo-campos-opcionais</var-name>
+    			<var-value>integer,integer</var-value>
+    		</var>
+    	</field>
+    </form>
+    
+    <form name="categoriaFormBean">
+    	<field property="numero" depends="required,integer" />
+    	<field property="nome" depends="required,maxlength">
+    		<arg position="0" key="ipdms.departamento.nome" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.departamento.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+    	</field>
+    </form>
+
+	<form name="moduloFormBean">
+		<field property="modulo.titulo" depends="required">
+			<arg position="0" key="ipdms.modulo.nome" />
+		</field>
+		<field property="modulo.qname" depends="required">
+			<arg position="0" key="ipdms.modulo.qname" />
+		</field>
+		<field property="modulo.link" depends="required,mask">
+			<arg position="0" key="ipdms.modulo.link" />
+			<msg name="mask" key="ipdms.modulo.linkMaskMsg" />
+			<var>
+				<var-name>mask</var-name>
+				<var-value>^/.*$</var-value>
+			</var>
+		</field>
+		<field property="modulo.agrupamento" depends="validwhen">
+    		<arg position="0" key="ipdms.modulo.agrupamento" />
+    		<var>
+    			<var-name>test</var-name>
+          		<var-value>((modulo.pesquisa=='false') or (*this* !=null))</var-value>
+          	</var>    		
+		</field>
+	</form>
+	
+	    
+    <form name="informacaoFormBean">
+    	<field property="informacao.id" depends="required,integer" />
+    	<field property="informacao.titulo" depends="required,maxlength">
+    		<arg position="0" key="ipdms.info.titulo" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="informacao.subTitulo" depends="required,maxlength">
+    		<arg position="0" key="ipdms.info.subtitulo" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>80</var-value></var>
+    	</field>
+    	<field property="informacao.descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.info.descricaocurta" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+    	</field>
+    </form>
+    
+    <form name="organicaFormBean">
+    	<field property="organica.designacao" depends="required,maxlength">
+    		<arg position="0" key="ipdms.organica.designacao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>100</var-value></var>
+    	</field>
+    	<field property="organica.sigla" depends="required,maxlength">
+    		<arg position="0" key="ipdms.organica.sigla" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="organica.idExterno" depends="required,maxlength">
+    		<arg position="0" key="ipdms.organica.idexterno" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="organica.telefone" depends="maxlength">
+    		<arg position="0" key="ipdms.organica.telefone" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="organica.fax" depends="maxlength">
+    		<arg position="0" key="ipdms.organica.fax" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="organica.email" depends="maxlength,email">
+    		<arg position="0" key="ipdms.organica.email" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="organica.idExterno" depends="maxlength">
+    		<arg position="0" key="ipdms.organica.idexterno" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="organica.active" depends="canOrganicaBeInactive">
+    		<arg position="0" key="ipdms.organica.activa" />
+    	</field>    	
+    </form>
+        
+    <form name="relatorioFormBean">
+    	<field property="relatorio.id" depends="required,integer" />
+    	<field property="relatorio.titulo" depends="required,maxlength">
+    		<arg position="0" key="ipdms.relatorio.titulo" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="relatorio.descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.relatorio.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+    	</field>
+    	<field property="ficheiroBIRT.formFile" depends="required, fileUpload">
+    		<arg position="0" key="ipdms.relatorio.ficheiroBIRT" />
+    	</field>
+    </form>
+    
+    <form name="processoFormBean">
+    	<field property="processo.titulo" depends="required,maxlength">
+    		<arg position="0" key="ipdms.processo.nome" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${titulolen}</var-value></var>
+    	</field>
+    	<field property="processo.descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.processo.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${descricaolen}</var-value></var>
+    	</field>
+    	<field property="processo.codWorkflow" depends="required,maxlength">
+    		<arg position="0" key="ipdms.processo.workflow" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${idexternolen}</var-value></var>
+    	</field>
+    	<field property="processo.sigla" depends="required,maxlength">
+    		<arg position="0" key="ipdms.processo.sigla" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${siglalen}</var-value></var>
+    	</field>    	
+    	<field property="processo.departamento" depends="required">
+    		<arg position="0" key="ipdms.processo.departamento" />
+    	</field>
+    	
+    	<field property="titulo" depends="requiredif" indexedListProperty="variantes">
+    	  <arg position="0" key="ipdms.variante.nome"/>
+		  <var>
+		    <var-name>field[0]</var-name>
+		    <var-value>empty</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[0]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[0]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[0]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>field[1]</var-name>
+		    <var-value>toDelete</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[1]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[1]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[1]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldJoin</var-name>
+		    <var-value>AND</var-value>
+		  </var>
+    	</field>
+    	<field property="sigla" depends="requiredif" indexedListProperty="variantes">
+    	  <arg position="0" key="ipdms.variante.sigla"/>
+		  <var>
+		    <var-name>field[0]</var-name>
+		    <var-value>empty</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[0]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[0]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[0]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>field[1]</var-name>
+		    <var-value>toDelete</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[1]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[1]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[1]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldJoin</var-name>
+		    <var-value>AND</var-value>
+		  </var>
+    	</field>    	
+    	<field property="idExterno" depends="requiredif" indexedListProperty="variantes">
+    	  <arg position="0" key="ipdms.variante.idexterno"/>
+		  <var>
+		    <var-name>field[0]</var-name>
+		    <var-value>empty</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[0]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[0]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[0]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>field[1]</var-name>
+		    <var-value>toDelete</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[1]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[1]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[1]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldJoin</var-name>
+		    <var-value>AND</var-value>
+		  </var>
+    	</field>
+    	<field property="classeSuporte" depends="requiredif" indexedListProperty="variantes">
+    	  <arg position="0" key="ipdms.variante.classesuporte"/>
+		  <var>
+		    <var-name>field[0]</var-name>
+		    <var-value>empty</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[0]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[0]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[0]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>field[1]</var-name>
+		    <var-value>toDelete</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[1]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[1]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[1]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldJoin</var-name>
+		    <var-value>AND</var-value>
+		  </var>
+    	</field>    	
+    	<field property="linkCriacao" depends="requiredif" indexedListProperty="variantes">
+    	  <arg position="0" key="ipdms.variante.linkcriacao"/>
+		  <var>
+		    <var-name>field[0]</var-name>
+		    <var-value>empty</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[0]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[0]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[0]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>field[1]</var-name>
+		    <var-value>toDelete</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldIndexed[1]</var-name>
+		    <var-value>true</var-value>
+		  </var> 
+		  <var>
+		    <var-name>fieldTest[1]</var-name>
+		    <var-value>EQUAL</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldValue[1]</var-name>
+		    <var-value>false</var-value>
+		  </var>
+		  <var>
+		    <var-name>fieldJoin</var-name>
+		    <var-value>AND</var-value>
+		  </var>
+    	</field>    	
+    </form>
+    
+   <form name="entidadeRoleFormBean">
+    	<field property="role.sigla" depends="required,maxlength">
+    		<arg position="0" key="ipdms.entidaderole.sigla" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="role.descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.entidaderole.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>200</var-value></var>
+    	</field>
+    </form>
+    
+    
+    <form name="delegacaoForm">
+    	<field property="colaborador" depends="required" page="1">
+			<msg name="required" key="errors.delegacaoForm.user.required"/>
+    	</field>
+    </form>
+    
+	<form name="notificationForm">
+    	<field property="result" depends="validwhen" page="1">
+    		<msg key="workflow.notificationForm.respostaFeita" name="validwhen"/>
+	    	<var>
+          		<var-name>test</var-name>
+          		<var-value>((emptyResult == "true") or (*this* != null))</var-value>
+        	</var>
+    	</field>
+    </form>
+
+	<form name="assignActivityForm" extends="notificationForm">
+    	<field property="roles" depends="validwhen" page="1">
+    		<msg key="errors.roles.required" name="validwhen"/>
+	    	<var>
+          		<var-name>test</var-name>
+          		<var-value>(*this* != null)</var-value>
+        	</var>
+    	</field>
+    </form>
+    
+    
+	<form name="entidadeFormBean">
+   		<field property="tipoEntidade" depends="required">
+    		<arg position="0" key="ipdms.modules.entidade.tipoentidade" />
+    	</field>
+   		<field property="nome" depends="required, maxlength">
+    		<arg position="0" key="ipdms.modules.entidade.nome" />
+	  		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+	  		<var><var-name>maxlength</var-name><var-value>80</var-value></var>   		
+    	</field>
+    	<field property="nif" depends="uniqueNif">
+    		<arg position="0" key="ipdms.modules.entidade.nif" />
+    	</field>
+   		<field property="siglaPais" depends="required">
+    		<arg position="0" key="ipdms.modules.entidade.pais" />
+    	</field>
+   		<field property="idExterno" depends="maxlength">
+    		<arg position="0" key="ipdms.modules.entidade.idexterno" />
+	  		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+	  		<var><var-name>maxlength</var-name><var-value>20</var-value></var>   		
+    	</field>
+    	
+    	<!-- Campos Entidade Singular -->
+    	<field property="singular.bi" depends="maxlength">
+    		<arg position="0" key="ipdms.modules.entidade.bi" />
+	  		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+	  		<var><var-name>maxlength</var-name><var-value>20</var-value></var>   		
+    	</field>	
+    	<field property="singular.pai" depends="maxlength">
+    		<arg position="0" key="ipdms.modules.entidade.pai" />
+	  		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+	  		<var><var-name>maxlength</var-name><var-value>200</var-value></var>   		
+    	</field>
+    	<field property="singular.mae" depends="maxlength">
+    		<arg position="0" key="ipdms.modules.entidade.mae" />
+	  		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+	  		<var><var-name>maxlength</var-name><var-value>200</var-value></var>   		
+    	</field>
+    	<field property="singular.dataNascimento" depends="date">
+    		<arg position="0" key="ipdms.modules.entidade.dataNascimento" />
+    		<arg position="1" key="${ipdmsDatePattern}" resource="false" name="date"/>
+	  		<var><var-name>datePatternStrict</var-name><var-value>${ipdmsDatePattern}</var-value></var>
+    	</field>
+    	<field property="singular.emitidoEm" depends="date">
+    		<arg position="0" key="ipdms.modules.entidade.emitidoEm" />
+    		<arg position="1" key="${ipdmsDatePattern}" resource="false" name="date"/>
+	  		<var><var-name>datePatternStrict</var-name><var-value>${ipdmsDatePattern}</var-value></var>
+    	</field>
+    	<field property="singular.validoAte" depends="date">
+    		<arg position="0" key="ipdms.modules.entidade.validoAte" />
+    		<arg position="1" key="${ipdmsDatePattern}" resource="false" name="date"/>
+	  		<var><var-name>datePatternStrict</var-name><var-value>${ipdmsDatePattern}</var-value></var>
+    	</field>
+    	<field property="singular.sexo" depends="validwhen">
+    		<arg position="0" key="ipdms.modules.entidade.sexo" />
+    		<var>
+    			<var-name>test</var-name>
+          		<var-value>((tipoEntidade == ${COLECTIVO}) or (*this* != null))</var-value>
+          	</var>    		
+    	</field>
+    	<field property="singular.telefone1" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.telefone1" />
+    	</field>
+    	<field property="singular.telefone2" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.telefone2" />
+    	</field>
+    	<field property="singular.telemovel" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.telemovel" />
+    	</field>
+    	<field property="singular.fax" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.fax" />
+    	</field>
+    	<field property="singular.email" depends="email">
+    		<arg position="0" key="ipdms.modules.entidade.email" />
+    	</field>
+    	
+    	<!-- Campos Entidade Colectiva -->
+    	<field property="colectivo.cae" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.cae" />
+    	</field>
+    	<field property="colectivo.descricaoCae" depends="maxlength">
+    		<arg position="0" key="ipdms.modules.entidade.descricaocae" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+	  		<var><var-name>maxlength</var-name><var-value>200</var-value></var>
+    	</field>
+    	<field property="colectivo.telefone1" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.telefone1" />
+    	</field>
+    	<field property="colectivo.telefone2" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.telefone2" />
+    	</field>
+    	<field property="colectivo.telemovel" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.telemovel" />
+    	</field>
+    	<field property="colectivo.fax" depends="long">
+    		<arg position="0" key="ipdms.modules.entidade.fax" />
+    	</field>
+    	<field property="colectivo.email" depends="email">
+    		<arg position="0" key="ipdms.modules.entidade.email" />
+    	</field>
+    	<!-- 
+    	<field property="colectivo.homepage" depends="url">
+    		<arg position="0" key="ipdms.modules.entidade.homepage" />
+    	</field> -->
+    </form>
+    
+	<form name="templateFormBean">
+		<field property="tipoTemplate" depends="required">
+			<arg position="0" key="ipdms.modules.templates.template.tipotemplate" />
+		</field>
+		<field property="titulo" depends="required">
+			<arg position="0" key="ipdms.modules.templates.template.titulo" />
+		</field>
+		<field property="ficheiro.formFile" depends="fileUpload">
+			<arg position="0" key="ipdms.modules.templates.template.ficheiro" />
+		</field>
+	</form>
+
+	<form name="grupoFormBean">
+		<field property="grupo.titulo" depends="required">
+			<arg position="0" key="ipdms.grupo.titulo" />
+		</field>		
+	</form>	
+
+	<form name="grupoVarianteFormBean">
+		<field property="grupoVariante.titulo" depends="required">
+			<arg position="0" key="ipdms.variante.titulo" />
+		</field>
+	</form>
+
+	    <form name="emitirTemplateFormBean">	    
+	    	<field property="uploadFile.formFile" depends="validwhen">
+	    		<arg key="ipdms.modules.templates.template.ficheiro"/>
+	    		<var>
+          			<var-name>test</var-name>
+          			<var-value>((numeroDocumento != null) or (*this* != null))</var-value>
+        		</var>
+	    	</field>
+	    	<field property="uploadFile.description" depends="required">
+	    		<msg name="required" key="errors.ficheiro.semdescricao" />
+	    	</field>
+    	</form>
+    	
+    	<form name="menuGuichetFormBean">
+    		<field property="tituloMenuSuperior" depends="equalObjects">
+    			<arg position="0" key="ipdms.guichetadmin.menu.menuSuperior" />
+    			<var>
+    				<var-name>test</var-name>
+          			<var-value>(id != idMenuSuperior)</var-value>
+          		</var>    		
+    		</field>
+    		<field property="titulo" depends="required,maxlength">
+    			<arg position="0" key="ipdms.guichetadmin.menu.menu" />
+    			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    			<var><var-name>maxlength</var-name><var-value>30</var-value></var>
+    		</field>
+    		<field property="ordem" depends="required,integer">
+    			<arg position="0" key="ipdms.guichetadmin.menu.ordem" />
+    		</field>
+    		<field property="permLogin" depends="required">
+    			<arg position="0" key="ipdms.guichetadmin.menu.permissoes" />
+    		</field>
+    		<field property="permSingular" depends="validwhen">
+    			<arg position="0" key="ipdms.guichetadmin.menu.permissoes.singularoucolectivo" />
+    			<var>
+    				<var-name>test</var-name>
+          			<var-value>((permEntidade=='true') or (*this* == 'true'))</var-value>
+          		</var>    		
+    		</field>
+    	</form>
+    	
+    	<form name="menuItemGuichetFormBean">
+    		<field property="tituloMenuSuperior" depends="required">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.menuSuperior" /> 		
+    		</field>
+    		<field property="descricaoCurta" depends="required,maxlength">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.descricaoCurta" />
+    			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    			<var><var-name>maxlength</var-name><var-value>30</var-value></var>
+    		</field>
+    		<field property="descricao" depends="required,maxlength">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.descricao" />
+    			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    			<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    		</field>
+    		<field property="ordem" depends="required">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.ordem" />
+    		</field>
+    		<field property="permLogin" depends="required">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.permissoes" />
+    		</field>
+    		<field property="permSingular" depends="validwhen">
+    			<arg position="0" key="ipdms.guichetadmin.menu.permissoes.singularoucolectivo" />
+    			<var>
+    				<var-name>test</var-name>
+          			<var-value>((permEntidade=='true') or (*this* == 'true'))</var-value>
+          		</var>    		
+    		</field>
+    		<field property="conteudo" depends="required">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.link.conteudo" />
+    		</field>
+    		<field property="nomeVariante" depends="validwhen">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.instrucao.variante" />
+    			<var>
+    				<var-name>test</var-name>
+          			<var-value>((tipo!='instrucao') or (*this* != null))</var-value>
+          		</var>    		
+    		</field>
+    		<field property="linkUrl" depends="validwhen">
+    			<arg position="0" key="ipdms.guichetadmin.menuitem.link.linkUrl" />
+    			<var>
+    				<var-name>test</var-name>
+          			<var-value>((tipo!='link') or (*this* != null))</var-value>
+          		</var>    		
+    		</field>
+    	</form>
+    	
+    	<form name="noticiaGuichetFormBean">
+    		<field property="titulo" depends="required,maxlength">
+    			<arg position="0" key="ipdms.guichetadmin.noticia.edit.titulo" />
+    			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    			<var><var-name>maxlength</var-name><var-value>50</var-value></var>	
+    		</field>
+    		<field property="subtitulo" depends="required,maxlength">
+    			<arg position="0" key="ipdms.guichetadmin.noticia.edit.subtitulo" />
+    			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    			<var><var-name>maxlength</var-name><var-value>100</var-value></var>
+    		</field>
+    		<field property="descricao" depends="required,maxlength">
+    			<arg position="0" key="ipdms.guichetadmin.noticia.edit.descricao" />
+    			<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    			<var><var-name>maxlength</var-name><var-value>2000</var-value></var>
+    		</field>
+    	</form>
+    	
+    	
+    <!--
+    	================================================================== 
+    	 GUICHET
+        ================================================================== 
+     -->	
+    <form name="registoFormBean">
+    	<field property="morada" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.morada" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>1000</var-value></var>
+    	</field>
+    	<field property="localidade" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.localidade" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="codPostal1" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.codPostal" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>4</var-value></var>
+    	</field>
+    	<field property="codPostal2" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.codPostal" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>3</var-value></var>
+    	</field>
+    	<field property="codPostal3" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.codPostal" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="telefone" depends="maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.telefone" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="telemovel" depends="maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.telemovel" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="email" depends="required,maxlength,email">
+    		<arg position="0" key="guichetelectronico.editdados.email" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="password" depends="required,maxlength,minlength,equalvalues">
+    		<arg position="0" key="guichetelectronico.editdados.password" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>
+    		<arg position="2" name="equalvalues" key="guichetelectronico.registo.password.erro"/>
+	          <var>
+	             <var-name>confirma</var-name>
+	             <var-value>confirmacao</var-value>
+	          </var>
+    	</field>
+    	<field property="confirmacao" depends="required,maxlength,minlength">
+    		<arg position="0" key="guichetelectronico.editdados.confirmacao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>    		
+    	</field>
+    </form>
+    
+    <form name="dadosPessoaisGuichetFormBean">
+    	<field property="morada" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.morada" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>1000</var-value></var>
+    	</field>
+    	<field property="localidade" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.localidade" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="codPostal1" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.codPostal" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>4</var-value></var>
+    	</field>
+    	<field property="codPostal2" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.codPostal" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>3</var-value></var>
+    	</field>
+    	<field property="codPostal3" depends="required,maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.codPostal" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="telefone" depends="maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.telefone" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="telemovel" depends="maxlength">
+    		<arg position="0" key="guichetelectronico.editdados.telemovel" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="email" depends="required,maxlength,email">
+    		<arg position="0" key="guichetelectronico.editdados.email" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>50</var-value></var>
+    	</field>
+    	<field property="password" depends="required,maxlength,minlength,equalvalues">
+    		<arg position="0" key="guichetelectronico.editdados.password" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>
+    		<arg position="2" name="equalvalues" key="guichetelectronico.registo.password.erro"/>
+	          <var>
+	             <var-name>confirma</var-name>
+	             <var-value>confirmacao</var-value>
+	          </var>
+    	</field>
+    	<field property="confirmacao" depends="required,maxlength,minlength">
+    		<arg position="0" key="guichetelectronico.editdados.confirmacao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>${passwordmaxlen}</var-value></var>
+    		<arg position="1" name="minlength" key="${var:minlength}" resource="false" />
+    		<var><var-name>minlength</var-name><var-value>${passwordminlen}</var-value></var>    		
+    	</field>
+    </form>
+    
+    <form name="geographicServiceFormBean">
+    	<field property="url" depends="required">
+    		<arg position="0" key="ipdms.geographicService.url" />
+    	</field>
+    	<field property="title" depends="required">
+    		<arg position="0" key="ipdms.geographicService.title" />
+    	</field>
+    </form>
+
+
+    <form name="tipoDocumentoAnexadoFormBean">
+    	<field property="tipo.descricao" depends="required,maxlength">
+    		<arg position="0" key="ipdms.tipodocumentoanexado.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>200</var-value></var>
+    	</field>
+    	<field property="tipo.sigla" depends="required,maxlength">
+    		<arg position="0" key="ipdms.tipodocumentoanexado.sigla" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+	</form>
+
+   <form name="entidadeRelationRoleFormBean">
+    	<field property="role.sigla" depends="required,maxlength">
+    		<arg position="0" key="ipdms.modules.entidaderelationrole.sigla" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>20</var-value></var>
+    	</field>
+    	<field property="role.descricao" depends="maxlength">
+    		<arg position="0" key="ipdms.modules.entidaderelationrole.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>200</var-value></var>
+    	</field>
+    </form>
+    
+    <form name="dimensaoForm">
+    	<field property="designacao" depends="required,maxlength">
+    		<arg position="0" key="ipdms.dimensoes.edit.designacao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>100</var-value></var>
+    	</field>
+    	<field property="descricao" depends="required,maxlength">
+    		<arg position="0" key="ipdms.dimensoes.edit.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>1000</var-value></var>
+    	</field>
+    </form>
+	
+	<form name="envioQuestionarioForm">
+    	<field property="descricao" depends="required,maxlength">
+    		<arg position="0" key="ipdms.questionario.envio.descricao" />
+    		<arg position="1" name="maxlength" key="${var:maxlength}" resource="false" />
+    		<var><var-name>maxlength</var-name><var-value>100</var-value></var>
+    	</field>
+    	<field property="dataAbertura" depends="required">
+    		<arg position="0" key="ipdms.questionario.envio.dataabertura" />
+    	</field>
+    	<field property="dataFecho" depends="required">
+    		<arg position="0" key="ipdms.questionario.envio.datafecho" />
+    	</field>
+    </form>
+
+    <form name="importConfigurationForm">
+		<field property="configFile" depends="required, fileUpload">
+			<arg position="0" key="ipdms.administration.export.configfile" />
+		</field>
+	</form>
+		
+	<form name="lockUserForm">
+		<field property="username" depends="required">
+			<arg  position="0" key="ipdms.lockuser.username"/>
+		</field>
+		<field property="email" depends="required, email">
+			<arg  position="0" key="ipdms.lockuser.email"/>
+		</field>
+	</form>
+	
+	<form name="importBundleForm">
+		<field property="bundleFile" depends="required, fileUpload">
+			<arg position="0" key="ipdms.documentos.bundle" />
+		</field>
+	</form>
+	
+	<form name="comentarioPessoalForm">
+		<field property="comentario" depends="required">
+			<arg position="0" key="ipdms.comentariopessoal.comentario" />
+		</field>
+	</form>
+
+	<form name="multipleNotificationForm">
+    	<field property="result" depends="validwhen" page="1">
+    		<msg key="workflow.notificationForm.respostaFeita" name="validwhen"/>
+	    	<var>
+          		<var-name>test</var-name>
+          		<var-value>((emptyResult == "true") or (*this* != null))</var-value>
+        	</var>
+    	</field>
+    </form>
+
+    <form name="multipleDelegacaoForm">
+    	<field property="colaborador" depends="required" page="1">
+			<msg name="required" key="errors.delegacaoForm.user.required"/>
+    	</field>
+    </form>	
+  </formset>
+</form-validation>

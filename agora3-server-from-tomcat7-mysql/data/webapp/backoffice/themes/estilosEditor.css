@@ -1,0 +1,46 @@
+.ED_Link {
+	color: #AA2222; 
+	font-family: Verdana, Helvetica, Sans-serif;
+	text-decoration: underline;
+	font-size: 11px;
+}
+.ED_TextoJustificado {
+	color: #333333;
+	font-family: Verdana, Helvetica, Sans-serif;
+	font-size: 11px;
+	MARGIN-BOTTOM: 12pt; 
+	LINE-HEIGHT: 150%;
+	text-align:justify;	
+}
+.ED_CorTexto {
+	color: #333333;	
+}
+.ED_CorLink {
+	color: #AA2222;	
+}
+.ED_Center {
+	text-align: center;
+}
+.ED_Justify {
+	text-align: justify;
+}
+.ED_Alignment {
+	MARGIN-BOTTOM: 12pt; 
+	LINE-HEIGHT: 150%;
+}
+.ED_Table {
+	border: 0px;
+}
+.ED_Table {
+	border: 1px;
+}
+.ED_Bullet {
+	color: #AA2222;
+	
+}
+.ED_TextoJustificado#ED_TextoNegrito {
+	text-decoration: bold;
+}
+.ED_TextoJustificado#ED_TextoItalico {
+	text-decoration: italic;
+}

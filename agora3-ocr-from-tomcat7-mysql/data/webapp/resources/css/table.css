@@ -1,0 +1,91 @@
+	/* 
+	Generic Styling, for Desktops/Laptops 
+	*/
+	#Table table { 
+		width: 100%; 
+		border-collapse: collapse; 
+		}
+	/* Zebra striping */
+	#Table table  tr:nth-of-type(odd) { 
+		background: #eee;
+		}
+	#Table table  tr:nth-of-type(even) { 
+		background: #eee;	 
+		}
+	#Table table tr td a {
+		display:block;
+		height:100%;
+		width:100%;
+				}
+	#Table table th { 
+		/*background: #00a4e8; */
+			background: #c1cd1d; 
+		color: white; 
+		font-weight: normal; 
+		white-space:nowrap;
+		}
+	#Table table td, th { 
+		padding: 6px; 
+		border-right:1px solid white;
+		border-bottom:1px solid white;
+		
+		}
+	#Table table tr:hover { background: #e8e8e8; } 
+	#Table table td:last-child,
+	#Table table th:last-child {
+   		 border-right: none;
+	 	}
+
+	#Table table  th:first-child,
+	#Table table  td:first-child {
+		border-left: none;
+		}
+    #Table input { 
+        background: #eee;
+        width: 100%;
+        }
+
+/*Open  list process
+	#Table table tr.teste1 { border:1px solid red;display:table-row;}
+	#Table table tr.teste1:hover { border:1px solid blue; display:block; }
+	#Table table tr.teste { border:1px solid green; display:none;}*/
+
+
+/*table menu
+
+.table-wrapper {
+   position: relative;
+   margin: 5em 5%;
+   border:1px solid red;
+}
+.table-menu-wrapper {
+   position: absolute;
+   top: -3em;
+   right: 0;
+}
+.table-menu {
+   position: absolute;
+   background-color: #fff;
+   padding: 10px;
+   border: 1px solid #ccc;
+   font-size: 1.2em;
+   width: 12em;
+   right: 0;
+   left: auto;
+}
+.table-menu-hidden {
+   left: -999em;
+   right: auto;
+}
+.table-menu-btn {
+   text-decoration: none;
+   color: #333;
+   font-size: 1.2em;
+   background: #eee url(../_img/icon-menu.png) no-repeat 5px center;
+   padding: .3em 10px .3em 20px;
+   border: 1px solid #ccc;
+}
+.table-menu li {
+   padding: .3em 0;
+}
+*/

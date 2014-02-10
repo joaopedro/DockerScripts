@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><Licence xmlns="http://www.sinfic.com/licensing">
+	
+<Organization>JP</Organization><InstallationMacAddress>00:21:6a:81:17:d6</InstallationMacAddress><MaxNumberOfSessions>0</MaxNumberOfSessions><LicenceType>DEV</LicenceType><LicenceCreationDate>27-07-2013</LicenceCreationDate><Products><Product><ProductName>IPDMS</ProductName><ProductVersion>2.5</ProductVersion><BeginDate>27-07-2013</BeginDate></Product></Products><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#dsa-sha1"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>EK2dxOgGvhptXwYwbouwgc4WwUw=</DigestValue></Reference></SignedInfo><SignatureValue>FgZSLJ98VWqTlmExJ+/EmZnLzZMwixkXPk6nnKipvhsosYCZ/giw+w==</SignatureValue><KeyInfo><X509Data><X509SubjectName>CN=IPDMS Licensing,OU=P.E.,O=Sinfic,L=Lisbon,ST=Lisbon,C=PT</X509SubjectName><X509Certificate>MIICRTCCAgKgAwIBAgIESkjJCTALBgcqhkjOOAQBBQAwaTELMAkGA1UEBhMCUFQxDzANBgNVBAgT
+Bkxpc2JvbjEPMA0GA1UEBxMGTGlzYm9uMQ8wDQYDVQQKEwZTaW5maWMxDTALBgNVBAsTBFAuRS4x
+GDAWBgNVBAMTD0lQRE1TIExpY2Vuc2luZzAeFw0wOTA2MjkxNDAwNDFaFw0xMTA2MjkxNDAwNDFa
+MGkxCzAJBgNVBAYTAlBUMQ8wDQYDVQQIEwZMaXNib24xDzANBgNVBAcTBkxpc2JvbjEPMA0GA1UE
+ChMGU2luZmljMQ0wCwYDVQQLEwRQLkUuMRgwFgYDVQQDEw9JUERNUyBMaWNlbnNpbmcwgfEwgagG
+ByqGSM44BAEwgZwCQQD8poLOjhLKuibvzPcRDlJtsHiwXt7LzR60ogjzrhYXrgHzW5Gkfm32NBPF
+4S7QiZvNEyrNUNmRUb3EPuc3WS4XAhUAli7dzDacuo67Jg7mtqEm2TRuOMUCQGeEcbJ6nPRO6RpJ
+xRR9samq8kTwWkNNZIaTHS0UJxueNQMLcf1z2heQabMuKTVjDhwgYjVNDaIKbEFuUL55TKQDRAAC
+QQCVC7ZIvefoWAExm9qqoz/gNJcgCPvE1UFOmJiKuPrG+jkmkxYzRr92r3xOkFKjoQKLBQsFEj7J
+yU98cH52Hgj7MAsGByqGSM44BAEFAAMwADAtAhRyZhayf+BX/UevWu7s8dqKDdUTCwIVAI/Cgp27
+U6Az+RZCWKONk7V5V8o7</X509Certificate></X509Data></KeyInfo></Signature></Licence>

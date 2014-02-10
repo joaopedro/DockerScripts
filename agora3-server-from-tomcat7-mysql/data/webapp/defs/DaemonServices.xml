@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<daemon>
+     <!--
+     <servicos> 
+        <nome>SendDimensao</nome>
+        <periodicidade>oncely</periodicidade>
+        <inicio>30:05:2011:20:27</inicio>
+        <classe>com.sinfic.ipdms.daemon.SyncronizeEntityDaemon</classe>
+        <parametros>syncronizeDimensaoService</parametros>
+    </servicos>
+
+	<servicos> 
+        <nome>SendMailRegistryDaemon</nome>
+        <periodicidade>every</periodicidade>
+        <inicio>1</inicio>
+        <classe>com.sinfic.ipdms.daemon.comunication.SendMailRegistryDaemon</classe>
+        <parametros></parametros>        
+    </servicos>
+    -->
+
+<!-- 	<servicos> 
+        <nome>AnularPagamentoDaemon</nome>
+        <periodicidade>every</periodicidade>
+        <inicio>1</inicio>
+        <classe>com.sonangol.daemon.SendServicoOnlineDaemon</classe>
+        <parametros></parametros>
+    </servicos>
+
+     <servicos> 
+        <nome>CleanWorkflowRolesDaemon</nome>
+        <periodicidade>oncely</periodicidade>
+        <inicio>21:05:2011:23:20</inicio>
+        <classe>com.sinfic.ipdms.daemon.workflow.CleanWorkflowRolesDaemon</classe>
+        <parametros></parametros>
+    </servicos>
+
+     -->
+</daemon>

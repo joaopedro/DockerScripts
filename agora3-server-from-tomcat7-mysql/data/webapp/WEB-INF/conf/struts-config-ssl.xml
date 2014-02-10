@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE struts-config PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<!-- Form Bean Definitions -->
+	<form-beans/>
+
+	<!-- Global Exception Definitions -->
+	<global-exceptions />
+
+	<!-- Global Forward Definitions -->
+	<global-forwards type="org.apache.struts.action.ActionForward" />
+
+	<!-- ========== Action Mapping Definitions =============================== -->
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+	</action-mappings>
+
+	<!-- ========== Controller Configuration ================================  -->
+	<controller processorClass="org.apache.struts.action.SecureTilesRequestProcessor"  />
+
+	<!-- ========== Message Resources Definitions ============================
+	<message-resources parameter="resources.IPDMSResources" null="true" /-->
+
+	<!-- ========== Plug Ins Configuration ================================= -->
+	<plug-in className="org.apache.struts.tiles.SecureTilesPlugin">
+		<set-property property="definitions-config" value="/conf/ipdms/tiles-definition-ssl.xml" />
+		<set-property property="definitions-debug" value="2" />
+		<set-property property="definitions-parser-details" value="2" />
+		<set-property property="definitions-parser-validate" value="true" />
+		<set-property property="moduleAware" value="true" />
+	</plug-in>
+    <plug-in className="org.apache.struts.action.SecurePlugIn">
+    	<set-property property="httpPort" value="8080"/>
+    	<set-property property="httpsPort" value="8443"/>  	
+    	<set-property property="enable" value="true"/>  	
+    	<set-property property="addSession" value="true"/>  	
+    </plug-in>
+</struts-config>
