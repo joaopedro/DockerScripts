@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
-	<bean id="scgpService" class="com.sinfic.ipdms.integration.scgp.impl.SCGPServiceImpl">
-		<constructor-arg value="http://10.69.69.223:8080/SCGPWeb/services/ReferenciaPagamentoWebService" />
-		<constructor-arg value="http://10.69.69.223:8080/SCGPWeb/services/PagamentoWebService" />
-	</bean>
-</beans>

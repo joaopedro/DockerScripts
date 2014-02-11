@@ -1,1 +1,0 @@
-Proj4js.defs["EPSG:27492"] = "+title=Hayford-Gauss, Datum 73, IGP +proj=tmerc +ellps=intl +lat_0=39.66666666666666 +lon_0=-8.131906111111112 +k=1.000000 +x_0=180.598 +y_0=-86.990 +units=m +nadgrids=ptd73";
