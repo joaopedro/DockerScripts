@@ -1,4 +1,0 @@
-ADD resources/cfgmysql.sh /tmp/
-RUN chmod +x /tmp/cfgmysql.sh
-RUN /tmp/cfgmysql.sh
-RUN rm /tmp/cfgmysql.sh

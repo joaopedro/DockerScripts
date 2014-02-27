@@ -2,12 +2,8 @@ FROM ubuntu:precise
 
 MAINTAINER João Pedro < jpedro [at] sinfic {dot} pt>
 
-# Because docker replaces /sbin/init: https://github.com/dotcloud/docker/issues/1024 
-RUN dpkg-divert --local --rename --add /sbin/initctl
-RUN ln -s /bin/true /sbin/initctl
-
 RUN apt-get update
-RUN apt-get upgrade -y
+#RUN apt-get upgrade -y
 
 RUN apt-get -y install mysql-server
 

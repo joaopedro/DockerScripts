@@ -1,5 +1,5 @@
 FROM ubuntu:precise
-MAINTAINER João Pedro < jpedro [at] sinfic {dot} pt>
+MAINTAINER João Pedro < jpedro@sinfic.pt>
 # make sure the package repository is up to date
 RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 
