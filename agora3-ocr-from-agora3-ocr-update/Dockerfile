@@ -2,6 +2,8 @@ FROM development.bp.sinfic.pt:5000/agora3-ocr:m1
 
 MAINTAINER João Pedro < jpedro@sinfic.pt>
 
+RUN apt-get -y install ghostscript
+
 RUN rm /opt/agora-ocr/ocr_upload/*
 ADD data/default_images /opt/agora-ocr/ocr_upload
 
