@@ -1,24 +1,30 @@
-FROM ubuntu:precise
-MAINTAINER Nick Jones "nick@dischord.org"
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" >> /etc/apt/sources.list
-RUN apt-get -y update
+FROM    ubuntu:precise
+MAINTAINER João Pedro <jpedro@sinfic.pt>
 
-RUN locale-gen en_US en_US.UTF-8
-RUN dpkg-reconfigure locales
-
-RUN apt-get install -y apache2 php5 php5-gd php-xml-parser php5-intl php5-sqlite smbclient curl libcurl3 php5-mysql php5-curl bzip2 wget vim openssl ssl-cert sharutils
-
-RUN wget -O - http://download.owncloud.org/community/owncloud-6.0.0a.tar.bz2 | tar jx -C /var/www/
+RUN    sed -i 's/main/main universe/' /etc/apt/sources.list
+RUN    echo 'deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/ /' >> /etc/apt/sources.list.d/owncloud.list
+RUN    apt-get --force-yes -y install curl
+RUN    curl http://download.opensuse.org/repositories/isv:/ownCloud:/community/xUbuntu_12.04/Release.key | apt-key add -
+RUN    apt-get update && apt-get -y install owncloud language-pack-en-base language-pack-pt-base
+RUN    apt-get -y install php5-ldap
+ENV     APACHE_RUN_USER www-data
+ENV     APACHE_RUN_GROUP www-data
+ENV     APACHE_LOG_DIR /var/log/apache2
 
 RUN mkdir /etc/apache2/ssl
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/server.key -out /etc/apache2/ssl/server.crt -batch -subj "/C=PT/ST=Portugal/O=sinfic/localityName=lisbon/commonName=sinfic.pt/organizationalUnitName=bp/emailAddress=bp@sinfic.pt/"
 
 ADD resources/001-owncloud.conf /etc/apache2/sites-available/
-ADD resources/start.sh /
-
 RUN a2ensite 001-owncloud.conf
 RUN a2enmod rewrite ssl
 
-RUN chown -R www-data:www-data /var/www/owncloud
-RUN chmod +x /start.sh
+VOLUME ["/var/www/owncloud/data"]
 
-CMD ["/start.sh"]
+#RUN     echo "127.0.0.1     localhost" >> /etc/hosts
+RUN     echo "<? header('Location: /owncloud/'); ?>" > /var/www/index.php
+RUN	sed -i s/^\ *upload_max_filesize.*/upload_max_filesize\ =\ 500\ MB\;/ /etc/php5/apache2/php.ini
+RUN	sed -i s/^\ *post_max_filesize.*/post_max_filesize\ =\ 600\ MB\;/ /etc/php5/apache2/php.ini
+RUN	sed -i s/^\ *max_execution_time.*/max_execution_time\ =\ 300\;/ /etc/php5/apache2/php.ini
+RUN	sed -i s/^\ *max_input_time.*/max_input_time\ =\ 500\;/ /etc/php5/apache2/php.ini
+EXPOSE  80
+CMD service apache2 start && tail -f /var/log/apache2/error.log
